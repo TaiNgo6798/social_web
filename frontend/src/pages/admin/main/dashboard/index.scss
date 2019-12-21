@@ -1,0 +1,36 @@
+.content_dashboard{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 2em;
+  overflow: hidden;
+  overflow-x: hidden;
+  .static_dashboard{
+    margin-top: 3em;
+    margin-bottom: 3em;
+  }
+  .bottom_dashboard{
+    .calendar_dashboard{
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+      border-radius: 12px;
+      height: fit-content;
+      margin-left: 2em;
+      max-width: 32em;
+    }
+    .chart_dashboard{
+      max-width: 200em;
+      height: auto !important;
+      width: auto !important;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+      border-radius: 12px;
+      padding: 3em;
+      .content_chart{
+        margin-bottom: 1em;
+      }
+    }
+  }
+
+}

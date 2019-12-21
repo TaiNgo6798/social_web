@@ -1,0 +1,132 @@
+.postForm{
+  box-shadow: 0 2px 4px rgba(108,111,115,.1);
+  border: 1px #EBEDF0 solid;
+  border-radius: 10px;
+  background-color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+  .body{
+    >img{
+      object-fit: cover;
+      width: 100%;
+      max-height: 600px
+    }
+  }
+  .header{
+    display: flex;
+    width: 100%;
+    padding: 18px 10px;
+    align-items: center;
+    .avatar{
+      &:hover{
+        cursor: pointer;
+      }
+    }
+    >div{
+      margin: 0 8px 0 0
+    }
+    .top-right{
+      margin-left: auto;
+      &:hover{
+        cursor: pointer;
+      }
+      color: #47A8FF;
+    }
+    .username{
+      font-weight: 800;
+      >p{
+        margin: 0;
+        &:hover{
+          cursor: pointer;
+        }
+      }
+      .time{
+        display: flex;
+        color: #B5B8BE;
+        font-size: smaller;
+        >a{
+          margin: 0 4px 0 0;
+          color: #B5B8BE
+        }
+      }
+    }
+    
+  }
+
+.share-btn{
+      &:hover{
+        cursor: pointer;
+      }
+  }
+
+  .isLiked{
+    color: red
+  }
+
+  .likes{
+    width: 100%;
+    display: flex;
+    padding: 0 20px;
+    margin-top: .75em;
+    >i{
+      margin-right: 10px;
+      :hover{
+        cursor: pointer;
+      }
+    }
+    :last-child{
+      margin-left: auto;
+      margin-right: 0;
+    }
+  }
+
+  .commentsCount{
+    >a{
+      color: #9a9a9a  !important
+    }
+  }
+
+  .likeCount{
+    font-weight: bold;
+    >:first-child{
+      &:hover{
+        cursor: pointer;
+      }
+    }
+  }
+
+  .likes-and-comments{
+    width: 100%;
+    display: flex;
+    padding: 0 20px;
+    margin-top: .75em;
+    justify-content: space-between;
+  }
+
+  .userContent{
+    width: 100%;
+    display: flex;
+    padding: 0 20px;
+    margin-top: .75em;
+    flex-wrap:  wrap;
+    :first-child{
+      font-weight: bold;
+      margin-right: .5em;
+    }
+  }
+
+  .comments{
+    width: 100%;
+    padding: 0 20px;
+    .seeAll{
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+  }
+
+}

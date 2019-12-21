@@ -1,0 +1,52 @@
+.inforForm{
+  width: 300px;
+
+  .user{
+    display: flex;
+    align-items: center;
+    .avatar{
+      margin-right: 8px;
+    }
+  }
+  .suggestBooks{
+    box-shadow: 0 2px 4px rgba(108,111,115,.1);
+    width: 300px;
+    height: 500px;
+    border: 1.3px solid #EBEDF0;
+    margin-top: 8px;
+    background-color: #FFFFFF;
+    padding: 8px 0 0 14px;
+    border-radius: 8px;
+    .top{
+      color: #B5B5B5;
+    }
+    .listBooks{
+      height: fit-content;
+      margin-top: 12px;
+      overflow: scroll;
+      overflow-x: hidden;
+      height: 93.5%;
+    }
+    
+  }
+  .footer{
+    
+    flex-wrap: wrap;
+    font: inherit;
+    color: #D1D1D1;
+    margin-top: 18px;
+    > :nth-child(2){
+      font-size: 11px;
+    }
+    >:nth-child(1){
+      font-size: 12px;
+    }
+  }
+}
+
+.fixedPos{
+  position: fixed;
+  top: 0;
+  margin-top: 100px;
+
+}

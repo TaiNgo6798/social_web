@@ -1,0 +1,76 @@
+.ant-modal-body{
+	padding: 0
+}
+
+
+.editForm{
+  position: relative !important;
+  z-index: 11;
+  padding: 16px;
+  border: 1px solid #EBEDF0;
+  height: fit-content;
+  width: 100%;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  background-color: #FFFFFF;
+
+  .top-bar{
+    display: flex;
+    width: 100%;
+    padding-right: 10px;
+    >h3{
+      margin-right: auto
+    }
+    >a{
+      display: none;
+      margin-right: 0 !important;
+    }
+  }
+
+  .main{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    >:first-child{
+      margin-right: 12px;
+    }
+    .text{
+      &:focus{
+        box-shadow: none;
+      }
+
+    }
+
+  }
+
+  .tool-bar{
+    display: flex;
+    margin-top: 30px;
+    .input-form{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      >Input{
+        margin-bottom: 8px;
+      }
+    }
+  }
+  .ant-upload-picture-card-wrapper{
+    width: fit-content;
+  }
+  .ant-upload-select-picture-card{
+    display: flex !important;
+    >span{
+      display: flex !important;
+      justify-content: center;
+      >div{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      >img{
+        object-fit: contain !important;
+      }
+    }
+  }
+}
