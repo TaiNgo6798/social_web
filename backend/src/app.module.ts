@@ -14,7 +14,7 @@ import { UserModule } from './user/user.module';
     GraphQLModule.forRoot({
     autoSchemaFile: 'schema.gql',
   }),
-  MongooseModule.forRoot('mongodb://localhost/nest'),
+  MongooseModule.forRoot('mongodb+srv://taingo:taingo@cluster0-tjufa.mongodb.net/social?retryWrites=true&w=majority'),
   UserModule,
 ],
   controllers: [AppController],

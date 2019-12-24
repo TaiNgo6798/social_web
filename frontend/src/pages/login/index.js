@@ -47,7 +47,12 @@ const Index = (props) => {
     e.preventDefault()
     props.form.validateFields((err, values) => {
       if (!err) {
-        login({ variables: { email: emailRef.current.state.value, password: passwordRef.current.state.value } })
+        login({ 
+          variables: { 
+            email: emailRef.current.state.value, 
+            password: passwordRef.current.state.value 
+          } 
+        })
         .then((res) => {
           console.log(res.data)
         })
