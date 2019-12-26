@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "nest build --watch --webpack",
+    "build": "nest build",
     "start": "node dist/main",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start:dev": "nest start --watch",
@@ -24,8 +24,12 @@
     "@nestjs/core": "^6.7.2",
     "@nestjs/graphql": "^6.5.3",
     "@nestjs/mongoose": "^6.1.2",
-    "@nestjs/platform-express": "^6.7.2",
+    "@nestjs/platform-express": "^6.10.12",
     "apollo-server-express": "^2.9.14",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "firebase-admin": "^8.9.0",
+    "firebase-functions": "^3.3.0",
     "graphql": "^14.5.8",
     "graphql-tools": "^4.0.6",
     "mongoose": "^5.8.1",
@@ -66,5 +70,9 @@
     },
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "main": "dist/index.js",
+  "engines": {
+    "node": "8"
   }
 }
