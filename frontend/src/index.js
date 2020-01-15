@@ -17,7 +17,7 @@ import { ApolloProvider } from '@apollo/react-hooks';
 
 const cache = new InMemoryCache();
 const link = new HttpLink({
-  uri: 'https://us-central1-social-web-ee96e.cloudfunctions.net/api/graphql'
+  uri: 'https://nestjs-now.taingo6798.now.sh/graphql'
 })
 
 const client = new ApolloClient({
