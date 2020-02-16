@@ -1,0 +1,56 @@
+
+body{
+  background-color: #f8f8f8f8;
+}
+
+.minimize{
+  height: 57px !important
+}
+
+.nav{
+  transition: all 0.2s;
+  z-index: 9;
+  position: fixed;
+  top: 0;
+  height: 77px;
+  width: 100vw;
+  background-color: #FFFFFF;
+  border-bottom: 1px #DBDBDB solid; 
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  .container{
+    background-color: #FFFFFF;
+    max-width: 1000px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .logo{
+      content: url('../../assets/images/logo.png');
+      height: 100%;
+      max-width: 200px;
+      &:hover{
+        cursor: pointer;
+      }
+    }
+    .notify{
+      margin-right: 80px;
+      height: 80%;
+      width: 132px;
+      display: flex;
+      align-items: center;
+      >span{
+        margin-left: 26px
+      }
+      .icon{
+        font-size: 25px;
+        :hover{
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
