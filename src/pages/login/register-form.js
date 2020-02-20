@@ -3,7 +3,8 @@ import {
   Form,
   Input,
   Button,
-  Spin
+  Spin,
+  notification
 } from 'antd'
 import Swal from 'sweetalert2'
 import { withRouter } from 'react-router-dom'
@@ -25,6 +26,17 @@ function RegistrationForm(props) {
   const [confirmDirty, setConfirmDirty] = useState(false)
   const [loading, setLoading] = useState(false)
 
+  const openNotification = (status) => status ? (
+    notification.success({
+      message: 'Đăng kí thành công !',
+      placement: 'bottomRight'
+    })
+  ) : (
+    notification.error({
+      message: 'Email đã tồn tại !',
+      placement: 'bottomRight'
+    })
+  )
 
   const handleSubmit = e => {
     e.preventDefault()
@@ -44,14 +56,7 @@ function RegistrationForm(props) {
           }
         }).then((res) => {
           setLoading(false)
-
-          Swal.fire({
-            position: 'center',
-            type: res.data.createUser ? 'success' : 'error',
-            title: res.data.createUser ? 'Đăng kí thành công !' : 'Email da duoc dang ki !',
-            showConfirmButton: false,
-            timer: 1000
-          })
+          openNotification(res.data.createUser)
           if(res.data.createUser)
           props.history.push('/login')
         }).catch((err) => {
@@ -75,7 +80,7 @@ function RegistrationForm(props) {
   const compareToFirstPassword = (rule, value, callback) => {
     const { form } = props
     if (value && value !== form.getFieldValue('password')) {
-      callback('Two passwords that you enter is inconsistent!')
+      callback('Xác nhận mật khẩu không đúng !')
     } else {
       callback()
     }
@@ -107,22 +112,22 @@ function RegistrationForm(props) {
   return (
     <Spin spinning={loading}>
       <Form {...formItemLayout} onSubmit={handleSubmit}>
-        <Form.Item label="First Name" className='registerForm'>
+        <Form.Item label="Họ" className='registerForm'>
           {getFieldDecorator('firstName', {
             rules: [
               {
                 required: true,
-                message: 'Please input your First Name !',
+                message: 'Vui lòng nhập Họ !',
               },
             ],
           })(<Input />)}
         </Form.Item>
-        <Form.Item label="Last Name" className='registerForm'>
+        <Form.Item label="Tên" className='registerForm'>
           {getFieldDecorator('lastName', {
             rules: [
               {
                 required: true,
-                message: 'Please input your LastName !',
+                message: 'Vui lòng nhập Tên !',
               },
             ],
           })(<Input />)}
@@ -132,21 +137,21 @@ function RegistrationForm(props) {
             rules: [
               {
                 type: 'email',
-                message: 'The input is not valid E-mail!',
+                message: 'Địa chỉ E-mail không hợp lệ !',
               },
               {
                 required: true,
-                message: 'Please input your E-mail!',
+                message: 'Vui lòng nhập địa chỉ E-mail !',
               },
             ],
           })(<Input />)}
         </Form.Item>
-        <Form.Item label="Password" hasFeedback className='registerForm'>
+        <Form.Item label="Mật khẩu" hasFeedback className='registerForm'>
           {getFieldDecorator('password', {
             rules: [
               {
                 required: true,
-                message: 'Please input your password!',
+                message: 'Vui lòng nhập mật khẩu !',
               },
               {
                 validator: validateToNextPassword,
@@ -154,12 +159,12 @@ function RegistrationForm(props) {
             ],
           })(<Input.Password />)}
         </Form.Item>
-        <Form.Item label="Confirm Password" hasFeedback className='registerForm'>
+        <Form.Item label="Xác nhận mật khẩu" hasFeedback className='registerForm'>
           {getFieldDecorator('confirm', {
             rules: [
               {
                 required: true,
-                message: 'Please confirm your password!',
+                message: 'Vui lòng xác nhận mật khẩu !',
               },
               {
                 validator: compareToFirstPassword,
@@ -167,8 +172,8 @@ function RegistrationForm(props) {
             ],
           })(<Input.Password onBlur={handleConfirmBlur} />)}
         </Form.Item>
-        <Button type='primary' className='btnRegister' htmlType='submit'>Register</Button>
-        <Button className='btnBackLogin' onClick={() => { props.backLogin() }}>Back to login</Button>
+        <Button type='primary' className='btnRegister' htmlType='submit'>Đăng kí</Button>
+        <Button className='btnBackLogin' onClick={() => { props.backLogin() }}>Về trang đăng nhập</Button>
       </Form>
     </Spin>
 

@@ -26,7 +26,7 @@ mutation login($email: String!, $password: String!) {
 `
 const openNotification = placement => {
   notification.error({
-    message: 'Sai tai khoan hoac mat khau !',
+    message: 'Sai tài khoản hoặc mật khẩu !',
     placement,
   })
 }
@@ -87,12 +87,12 @@ const Index = (props) => {
         <div className='right-image'></div>
       </div>
       <div className='form-center login'>
-        <h1 style={{ display: 'block', textAlign: 'center' }}>Login</h1>
+        <h1 style={{ display: 'block', textAlign: 'center' }}>Đăng nhập</h1>
         <Spin spinning={loading}>
           <Form onSubmit={handleSubmit} className="login-form">
             <Form.Item>
               {getFieldDecorator('username', {
-                rules: [{ required: true, message: 'Please input your email!' }],
+                rules: [{ required: true, message: 'Vui lòng nhập địa chỉ E-mail !' }],
               })(
                 <Input
                   prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -103,7 +103,7 @@ const Index = (props) => {
             </Form.Item>
             <Form.Item>
               {getFieldDecorator('password', {
-                rules: [{ required: true, message: 'Please input your Password!' }],
+                rules: [{ required: true, message: 'Vui lòng nhập mật khẩu !' }],
               })(
                 <Input
                   prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -115,18 +115,18 @@ const Index = (props) => {
             </Form.Item>
             <Form.Item>
               <a className="forgotBtn" onClick={() => setForgotForm(true)}>
-                Forgot password
+                Quên mật khẩu ?
                 </a>
               <Button type="primary" htmlType="submit" className="login-form-button">
-                Log in
+                Đăng nhập
                   </Button>
-              Or <a onClick={() => registerClick()}>register now!</a>
+              Or <a onClick={() => registerClick()}>Đăng kí ngay !</a>
             </Form.Item>
           </Form>
         </Spin>
       </div>
       <div className='form-center register'>
-        <h2 style={{ display: 'block', textAlign: 'center' }}>Register</h2>
+        <h2 style={{ display: 'block', textAlign: 'center' }}>Đăng kí</h2>
         <RegisterForm className='form-register' backLogin={() => registerClick()} />
       </div>
       <ForgotForm onCancel={() => setForgotForm(false)} visible={forgotForm} />

@@ -141,7 +141,7 @@ const _default = (isDev, env) => {
                   options: {
                     javascriptEnabled: true,
                     modifyVars: {
-                      '@font-family': `'Nunito Sans', sans-serif`
+                      '@font-family': 'Comfortaa, sans-serif'
                     }
                   }
                 },
