@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 function withAuthUser(WrappedComponent) {
   return class index extends Component {
     constructor(props) {
-      super(props);
+      super(props)
       this.state = {
         authed: false
       }

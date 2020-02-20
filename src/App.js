@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense } from 'react'
 import './App.css'
 import AppRouters from './Router'
 import NavBar from './components/nav'
@@ -7,7 +7,7 @@ import Login from '../src/pages/login'
 
 import {
   BrowserRouter as Router
-} from "react-router-dom";
+} from 'react-router-dom'
 
 const App = (props) => {
   return (
@@ -20,7 +20,7 @@ const App = (props) => {
         </Router>
       </Suspense>
     </>
-  );
+  )
 }
 
 export default App

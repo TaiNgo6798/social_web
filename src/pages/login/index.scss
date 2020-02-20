@@ -12,7 +12,7 @@
     position: absolute;
 		margin-top: 5.5em;
 
-		.left-images{
+		.left-image{
 			content: url("../../assets/images/left.png");
 			margin-right: 28em;
 			z-index: 99;
@@ -20,7 +20,7 @@
 			transition: all 0.2s ease;
 			margin-top: 1em;
 		}
-		.right-images{
+		.right-image{
 			content: url("../../assets/images/right.png");
 			transition: all 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 			margin-left: 1em;
@@ -52,11 +52,11 @@
 	transform: translateY(200px);
 }
 
-.hide-images{
+.hide-image{
 	opacity: 0;
 }
 
-.change-images{
+.change-image{
 	content: url('../../assets/images/register.png') !important;
 	// margin-bottom: 3em;
 	// margin-right: 30em !important; 
@@ -117,7 +117,7 @@
 
 .form-center{
 	transition: all 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-  height: 390px;
+  height: fit-content;
   width: 460px;
   background-color: #FFFFFF;
   border: 1px #EBEDF0 solid;

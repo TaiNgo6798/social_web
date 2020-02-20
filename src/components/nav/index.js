@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Input, Badge, Icon } from 'antd';
+import { Input, Badge, Icon } from 'antd'
 import { withRouter } from 'react-router-dom'
 import './index.scss'
 
@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setPost } from '../../actions/posts/setPost'
 import { setUserPost } from '../../actions/userPost/setUserPost'
 
-const { Search } = Input;
+const { Search } = Input
 
 function Index(props) {
   const currentUser = JSON.parse(localStorage.getItem('user'))
@@ -19,7 +19,7 @@ function Index(props) {
   const loadNotify = () => {
     setInterval(() => {
       setMessageCount(messageCount => messageCount + 1)
-    }, 10000);
+    }, 10000)
   }
   useEffect(() => {
     loadNotify()
@@ -50,7 +50,7 @@ function Index(props) {
       window.location.pathname !== '/admin' ? (
         <div className='nav'>
           <div className='container'>
-            <div className='logo' onClick={() => props.history.push(`/newsFeed`)}></div>
+            <div className='logo' onClick={() => props.history.push('/newsFeed')}></div>
             <div className='searchBar'>
               <Search
               placeholder="input search text"

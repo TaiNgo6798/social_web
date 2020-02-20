@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from 'react'
 import {
   Avatar,
   Comment,
@@ -10,25 +10,24 @@ import {
   Spin,
   Menu,
   Dropdown
-} from "antd";
-import moment from "moment";
-import Swal from "sweetalert2";
-import htmlParser from "react-html-parser";
-import { Icon } from "react-icons-kit";
-import { heart } from "react-icons-kit/fa/heart";
-import { heartO } from "react-icons-kit/fa/heartO";
+} from 'antd'
+import moment from 'moment'
+import Swal from 'sweetalert2'
+import htmlParser from 'react-html-parser'
+import { Icon } from 'react-icons-kit'
+import { heart } from 'react-icons-kit/fa/heart'
+import { heartO } from 'react-icons-kit/fa/heartO'
 // import css
-import "./index.scss";
+import './index.scss'
 
-import CreateComment from "../createComment";
-import EditPostModal from "./editPostModal";
-import { withRouter } from "react-router-dom";
-import firebase from "firebase";
-import { FacebookShareButton } from "react-share";
+import CreateComment from '../createComment'
+import EditPostModal from './editPostModal'
+import { withRouter } from 'react-router-dom'
+import { FacebookShareButton } from 'react-share'
 //redux
-import { useDispatch } from "react-redux";
-import { setPost } from "../../actions/posts/setPost";
-import { setUserPost } from "../../actions/userPost/setUserPost";
+import { useDispatch } from 'react-redux'
+import { setPost } from '../../actions/posts/setPost'
+import { setUserPost } from '../../actions/userPost/setUserPost'
 
 const Index = props => {
   const {
@@ -43,92 +42,54 @@ const Index = props => {
     idCurrentUser,
     title,
     kind
-  } = props;
-  const postDay2 = new Date(postTime);
-  const { avatar, username } = user;
-  const [showAllComment, setShowAllComment] = useState(false);
-  const [commentData, setCommentData] = useState([]);
-  const [likeLocal, setLikeLocal] = useState([]);
+  } = props
+  const postDay2 = new Date(postTime)
+  const { avatar, username } = user
+  const [showAllComment, setShowAllComment] = useState(false)
+  const [commentData, setCommentData] = useState([])
+  const [likeLocal, setLikeLocal] = useState([])
   const [iconType, setIconType] = useState(
     Object.keys(likes).indexOf(idCurrentUser) !== -1 ? heart : heartO
-  );
-  const currentUser = JSON.parse(localStorage.getItem("user"));
-  const [loadingCmt, setLoadingCmt] = useState(false);
-  const [editModalVisible, setEditModalVisible] = useState(false);
-  const dateNow = Date.now();
-  const commentRef = firebase
-    .database()
-    .ref()
-    .child("Comments")
-    .child(id);
-  const { confirm } = Modal;
-  const dispatch = useDispatch();
-
-  commentRef.on("child_added", function(snapshot) {
-    if (snapshot.val()["numberTime"] > dateNow) {
-      var result = {
-        key: snapshot.key,
-        value: snapshot.val()
-      };
-
-      if (!commentData.some(v => v.id === result.key)) {
-        let newCmt = {
-          id: result.key,
-          body: result.value.body,
-          id_user: result.value.id_user,
-          imageUser: result.value.imageUser,
-          nameUser: result.value.nameUser,
-          time: result.value.time
-        };
-        commentData.unshift(newCmt);
-        setCommentData([...commentData]);
-      }
-    }
-  });
-
-  commentRef.on("child_changed", function(snapshot) {
-    var result = {
-      key: snapshot.key,
-      value: snapshot.val()
-    };
-  });
-
-  commentRef.on("child_removed", function(snapshot) {
-    var result = snapshot.key;
-  });
+  )
+  const currentUser = JSON.parse(localStorage.getItem('user'))
+  const [loadingCmt, setLoadingCmt] = useState(false)
+  const [editModalVisible, setEditModalVisible] = useState(false)
+  const dateNow = Date.now()
+ 
+  const { confirm } = Modal
 
   useEffect(() => {
-    let likeList = [];
+    let likeList = []
     Object.keys(likes).forEach((v, k) => {
       likeList.push({
         id: v,
         name: Object.values(likes)[k]
-      });
-    });
-    setLikeLocal(likeList);
+      })
+    })
+    setLikeLocal(likeList)
 
-    const likeBtn = window.document.querySelector(`[id=${id}]`);
-    likeBtn.addEventListener("click", () => {
-      likeBtn.classList.toggle("isLiked");
-      likeBtn.classList.contains("isLiked")
+    const likeBtn = window.document.querySelector(`[id=${id}]`)
+    likeBtn.addEventListener('click', () => {
+      likeBtn.classList.toggle('isLiked')
+      likeBtn.classList.contains('isLiked')
         ? setIconType(heart)
-        : setIconType(heartO);
-    });
-  }, []);
+        : setIconType(heartO)
+    })
+  }, [])
 
   const deleteHandler = () => {
     confirm({
-      title: "Bạn có chắc chắn muốn xoá bài viết này ?",
+      title: 'Bạn có chắc chắn muốn xoá bài viết này ?',
       onOk() {
 
       },
       onCancel() {}
-    });
-  };
+    })
+  }
 
   const editHandler = () => {
-    setEditModalVisible(true);
-  };
+    setEditModalVisible(true)
+  }
 
   const menu = (
     <Menu>
@@ -139,29 +100,29 @@ const Index = props => {
         <Ico type="delete" /> Delete this post
       </Menu.Item>
     </Menu>
-  );
+  )
 
   const loadComments = () => {
-    setLoadingCmt(true);
-    setShowAllComment(true);
+    setLoadingCmt(true)
+    setShowAllComment(true)
 
-  };
+  }
 
   const whoLikes = () => {
-    let html = ``;
+    let html = ''
     likeLocal.forEach(v => {
-      html += `<p>${v.name}<p/>`;
-    });
-    return htmlParser(html);
-  };
+      html += `<p>${v.name}<p/>`
+    })
+    return htmlParser(html)
+  }
 
   const likeHandler = () => {
 
-  };
+  }
 
   const renderComments = () => {
     return Object.values(commentData).map((v, k) => {
-      let time2 = new Date(v.time);
+      let time2 = new Date(v.time)
       return (
         <Comment
           key={v.id}
@@ -184,9 +145,9 @@ const Index = props => {
             </Tooltip>
           }
         />
-      );
-    });
-  };
+      )
+    })
+  }
 
   return (
     <>
@@ -219,9 +180,9 @@ const Index = props => {
           </div>
           <div className="top-right">
             {user.id.indexOf(idCurrentUser) !== -1 && (
-              <Dropdown overlay={menu} trigger={["click"]}>
+              <Dropdown overlay={menu} trigger={['click']}>
                 <Ico
-                  style={{ fontSize: "28px" }}
+                  style={{ fontSize: '28px' }}
                   type="ellipsis"
                   className="ant-dropdown-link"
                 />
@@ -237,26 +198,20 @@ const Index = props => {
             size={24}
             icon={iconType}
             className={
-              Object.keys(likes).indexOf(idCurrentUser) !== -1 ? "isLiked" : ""
+              Object.keys(likes).indexOf(idCurrentUser) !== -1 ? 'isLiked' : ''
             }
             id={id}
             onClick={() => likeHandler()}
           />
           <Ico
-            style={{ fontSize: "24px" }}
+            style={{ fontSize: '24px' }}
             type="message"
             onClick={() => {
-              loadComments();
+              loadComments()
             }}
           />
-          {/* <Ico style={{ fontSize: '24px' }} type="link" /> */}
-          <FacebookShareButton
-            children={<Ico style={{ fontSize: "24px" }} type="link" />}
-            url="https://taingo6798.github.io/"
-            className="share-btn"
-          />
+          <Ico style={{ fontSize: '24px' }} type="link" />
         </div>
-
         <div className="likes-and-comments">
           <div className="likeCount">
             <Popover content={whoLikes()}>
@@ -266,7 +221,7 @@ const Index = props => {
           <div className="commentsCount">
             <a
               onClick={() => {
-                loadComments();
+                loadComments()
               }}
             >
               {commentData.length > 1 ? commentData.length : commentCount} bình
@@ -275,14 +230,14 @@ const Index = props => {
           </div>
         </div>
         <div className="userContent">
-          <p style={{ margin: "0 5px 0 0" }}>{username}</p>
+          <p style={{ margin: '0 5px 0 0' }}>{username}</p>
           <p>{content}</p>
         </div>
         <CreateComment
           idPost={id}
           idCurrentUser={idCurrentUser}
           setShowAllComment={e => {
-            setShowAllComment(e);
+            setShowAllComment(e)
           }}
           commentData={commentData}
         />
@@ -294,7 +249,7 @@ const Index = props => {
             <div className="seeAll">
               <a
                 onClick={() => {
-                  setShowAllComment(false);
+                  setShowAllComment(false)
                 }}
               >
                 Hide comments
@@ -316,7 +271,7 @@ const Index = props => {
         />
       </div>
     </>
-  );
-};
+  )
+}
 
-export default withRouter(Index);
+export default withRouter(Index)

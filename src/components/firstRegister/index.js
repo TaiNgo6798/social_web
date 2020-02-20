@@ -74,7 +74,7 @@ const Index = (props) => {
                   placeholder='Giới tính'
                   setfieldvalue="Nam"
                   style={{ width: '100%', fontSize: '18px' }}
-                  size={"large"}
+                  size={'large'}
                 >
                   <Option setfieldvalue="male" key='male'>Nam</Option>
                   <Option setfieldvalue="female" key='female'>Nữ</Option>

@@ -4,23 +4,18 @@ import {
   Input,
   Button,
   Spin
-} from 'antd';
+} from 'antd'
 import Swal from 'sweetalert2'
 import { withRouter } from 'react-router-dom'
 //server
-import gql from 'graphql-tag';
-import { useMutation } from '@apollo/react-hooks';
+import gql from 'graphql-tag'
+import { useMutation } from '@apollo/react-hooks'
 // import css
 import './index.scss'
 
 const REGISTER = gql`
-mutation createUser($input: UserInput!) {
-  createUser(input: $input){
-    id
-    name
-    email
-    age
-  }
+mutation createUser($user: UserInput!) {
+  createUser(user: $user)
 }
 `
 
@@ -28,35 +23,36 @@ mutation createUser($input: UserInput!) {
 function RegistrationForm(props) {
   const [register] = useMutation(REGISTER)
   const [confirmDirty, setConfirmDirty] = useState(false)
-  const [autoCompleteResult, setAutoCompleteResult] = useState([])
   const [loading, setLoading] = useState(false)
 
 
   const handleSubmit = e => {
-    e.preventDefault();
+    e.preventDefault()
 
     props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         setLoading(true)
+        const { email, password, firstName, lastName } = values
         register({
           variables: {
-            input: {
-              name: 'new',
-              age: 0,
-              email: values.email,
-              password: values.password
+            user: {
+              email,
+              password,
+              firstName,
+              lastName
             }
           }
         }).then((res) => {
           setLoading(false)
-          console.log(res)
+
           Swal.fire({
             position: 'center',
-            type: 'success',
-            title: 'Đăng kí thành công !',
+            type: res.data.createUser ? 'success' : 'error',
+            title: res.data.createUser ? 'Đăng kí thành công !' : 'Email da duoc dang ki !',
             showConfirmButton: false,
             timer: 1000
           })
+          if(res.data.createUser)
           props.history.push('/login')
         }).catch((err) => {
             Swal.fire({
@@ -68,42 +64,33 @@ function RegistrationForm(props) {
             })
         })
       }
-    });
-  };
+    })
+  }
 
   const handleConfirmBlur = e => {
-    const { value } = e.target;
+    const { value } = e.target
     setConfirmDirty(confirmDirty || !!value)
-  };
+  }
 
   const compareToFirstPassword = (rule, value, callback) => {
-    const { form } = props;
+    const { form } = props
     if (value && value !== form.getFieldValue('password')) {
-      callback('Two passwords that you enter is inconsistent!');
+      callback('Two passwords that you enter is inconsistent!')
     } else {
-      callback();
+      callback()
     }
-  };
+  }
 
   const validateToNextPassword = (rule, value, callback) => {
-    const { form } = props;
+    const { form } = props
     if (value && confirmDirty) {
-      form.validateFields(['confirm'], { force: true });
+      form.validateFields(['confirm'], { force: true })
     }
-    callback();
-  };
+    callback()
+  }
 
-  const handleWebsiteChange = value => {
-    let autoCompleteResult;
-    if (!value) {
-      autoCompleteResult = [];
-    } else {
-      autoCompleteResult = ['.com', '.org', '.net'].map(domain => `${value}${domain}`);
-    }
-    setAutoCompleteResult(autoCompleteResult)
-  };
 
-  const { getFieldDecorator } = props.form;
+  const { getFieldDecorator } = props.form
 
   const formItemLayout = {
     labelCol: {
@@ -114,12 +101,32 @@ function RegistrationForm(props) {
       xs: { span: 24 },
       sm: { span: 16 },
     },
-  };
+  }
 
 
   return (
     <Spin spinning={loading}>
       <Form {...formItemLayout} onSubmit={handleSubmit}>
+        <Form.Item label="First Name" className='registerForm'>
+          {getFieldDecorator('firstName', {
+            rules: [
+              {
+                required: true,
+                message: 'Please input your First Name !',
+              },
+            ],
+          })(<Input />)}
+        </Form.Item>
+        <Form.Item label="Last Name" className='registerForm'>
+          {getFieldDecorator('lastName', {
+            rules: [
+              {
+                required: true,
+                message: 'Please input your LastName !',
+              },
+            ],
+          })(<Input />)}
+        </Form.Item>
         <Form.Item label="E-mail" className='registerForm'>
           {getFieldDecorator('email', {
             rules: [
@@ -165,9 +172,9 @@ function RegistrationForm(props) {
       </Form>
     </Spin>
 
-  );
+  )
 }
 
-const WrappedRegistrationForm = Form.create({ name: 'register' })(RegistrationForm);
+const WrappedRegistrationForm = Form.create({ name: 'register' })(RegistrationForm)
 
 export default withRouter(WrappedRegistrationForm)

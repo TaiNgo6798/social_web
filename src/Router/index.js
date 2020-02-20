@@ -1,10 +1,10 @@
-import React, { Suspense } from 'react';
+import React, { Suspense } from 'react'
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
-} from "react-router-dom";
+} from 'react-router-dom'
 import { routers } from '../configs'
 
 

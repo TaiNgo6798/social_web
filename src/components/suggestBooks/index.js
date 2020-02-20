@@ -43,8 +43,8 @@ const Index = () => {
       setData(dataNew)
       setList(dataNew)
       setLoading(false)
-    });
-  };
+    })
+  }
 
   const loadMore =
     !initLoading && !loading ? (
@@ -59,7 +59,7 @@ const Index = () => {
       >
         <Button onClick={onLoadMore}>loading more</Button>
       </div>
-    ) : null;
+    ) : null
 
   return (
     <>

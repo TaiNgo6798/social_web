@@ -57,7 +57,7 @@ const Index = (props) => {
         window.document.activeElement.blur()
         setTimeout(() => {
           body.classList.remove('show-fake-body')
-        }, 300);
+        }, 300)
       }
 
     })
@@ -69,7 +69,7 @@ const Index = (props) => {
         window.document.querySelector('.bottom-bar').classList.add('show-from-post-component')
         closeBtn.classList.add('show-from-post-component')
         body.classList.add('modal-active')
-      }, 1);
+      }, 1)
 
 
     })
@@ -80,7 +80,7 @@ const Index = (props) => {
       body.classList.remove('modal-active')
       setTimeout(() => {
         body.classList.remove('show-fake-body')
-      }, 300);
+      }, 300)
     }
     )
   }, [])
@@ -138,7 +138,7 @@ const Index = (props) => {
       <Icon type={isLoading ? 'loading' : 'plus'} />
       <div className="ant-upload-text">Upload</div>
     </div>
-  );
+  )
 
   return (
     <>

@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 function withShouldHide(WrappedComponent) {
   return class index extends Component {
     constructor(props) {
-      super(props);
+      super(props)
       this.state = {
         authed: false
       }
