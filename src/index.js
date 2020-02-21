@@ -4,13 +4,14 @@ import './index.css'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 
-import UserContextProvider  from './contexts/userContext'
+import UserContextProvider from './contexts/userContext'
 
 //server
 import { ApolloClient } from 'apollo-client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { HttpLink } from 'apollo-link-http'
 import { ApolloProvider } from '@apollo/react-hooks'
+import { BrowserRouter as Router } from 'react-router-dom'
 
 const cache = new InMemoryCache()
 const link = new HttpLink({
@@ -25,7 +26,9 @@ const client = new ApolloClient({
 ReactDOM.render(
   <ApolloProvider client={client}>
     <UserContextProvider>
-      <App />
+      <Router>
+        <App />
+      </Router>
     </UserContextProvider>
   </ApolloProvider>
   , document.getElementById('root'))

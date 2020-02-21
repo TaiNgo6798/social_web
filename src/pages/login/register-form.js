@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import {
   Form,
   Input,
@@ -14,6 +14,8 @@ import { useMutation } from '@apollo/react-hooks'
 // import css
 import './index.scss'
 
+import { UserContext } from '../../contexts/userContext'
+
 const REGISTER = gql`
 mutation createUser($user: UserInput!) {
   createUser(user: $user)
@@ -25,6 +27,7 @@ function RegistrationForm(props) {
   const [register] = useMutation(REGISTER)
   const [confirmDirty, setConfirmDirty] = useState(false)
   const [loading, setLoading] = useState(false)
+  const { refreshCurrentUrl } = useContext(UserContext)
 
   const openNotification = (status) => status ? (
     notification.success({
@@ -57,8 +60,9 @@ function RegistrationForm(props) {
         }).then((res) => {
           setLoading(false)
           openNotification(res.data.createUser)
-          if(res.data.createUser)
-          props.history.push('/login')
+          if(res.data.createUser) {
+            props.history.push('/login')
+          }
         }).catch((err) => {
             Swal.fire({
               position: 'center',

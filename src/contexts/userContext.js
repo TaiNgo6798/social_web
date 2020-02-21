@@ -18,9 +18,8 @@ function Index(props) {
     return () => {mounted = false}
   }, [])
 
-  const refreshCurrentUrl = () => {
-    
-    setCurrentURL(window.location.pathname)
+  const refreshCurrentUrl = (url) => {
+    setCurrentURL(url)
   }
 
   const refreshUser = () => {
