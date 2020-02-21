@@ -24,10 +24,7 @@ import CreateComment from '../createComment'
 import EditPostModal from './editPostModal'
 import { withRouter } from 'react-router-dom'
 import { FacebookShareButton } from 'react-share'
-//redux
-import { useDispatch } from 'react-redux'
-import { setPost } from '../../actions/posts/setPost'
-import { setUserPost } from '../../actions/userPost/setUserPost'
+
 
 const Index = props => {
   const {

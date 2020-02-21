@@ -3,17 +3,12 @@ import { Input, Badge, Icon } from 'antd'
 import { withRouter } from 'react-router-dom'
 import './index.scss'
 
-//import redux
-import { useSelector, useDispatch } from 'react-redux'
-import { setPost } from '../../actions/posts/setPost'
-import { setUserPost } from '../../actions/userPost/setUserPost'
 
 const { Search } = Input
 
 function Index(props) {
   const currentUser = JSON.parse(localStorage.getItem('user'))
   const [messageCount, setMessageCount] = useState(0)
-  const dispatch = useDispatch()
 
   let heightChange = true
   const loadNotify = () => {
@@ -45,9 +40,6 @@ function Index(props) {
   }
 
   return (
-    window.location.pathname !== '/' ? (
-      window.location.pathname !== '/login' ? (
-      window.location.pathname !== '/admin' ? (
         <div className='nav'>
           <div className='container'>
             <div className='logo' onClick={() => props.history.push('/newsFeed')}></div>
@@ -76,7 +68,6 @@ function Index(props) {
             </div>
           </div>
         </div>
-      ) : '') : '' ) : ''
   )
 }
 

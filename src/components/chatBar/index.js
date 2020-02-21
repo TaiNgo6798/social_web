@@ -58,9 +58,6 @@ function Index() {
   }
 
   return (
-    window.location.pathname !== '/' ? (
-      window.location.pathname !== '/login' ? (
-      window.location.pathname !== '/admin' ? (
         <>
           <div className='container_chatBar'>
             {loadUsers()}
@@ -69,7 +66,6 @@ function Index() {
             {loadActiveChat()}
           </div>
         </>
-      ) : '') : '' ) : ''
   )
 }
 

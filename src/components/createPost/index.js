@@ -2,13 +2,6 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Button, Divider, Avatar, Input, Upload, Icon, message, Spin, Select } from 'antd'
 // import css
 import './index.scss'
-//import firebase
-
-
-//redux
-import { useDispatch } from 'react-redux'
-import { setUserPost } from '../../actions/userPost/setUserPost'
-import { setPost } from '../../actions/posts/setPost'
 
 //import HOC
 import withAuthLogged from '../../components/utils/hoc/authLogged'
@@ -31,8 +24,6 @@ const Index = (props) => {
   const [posting, setPosting] = useState(false)
   const [ready, setReady] = useState(false)
 
-  //redux
-  const dispatch = useDispatch()
 
 
   const onSubmitPost = () => {

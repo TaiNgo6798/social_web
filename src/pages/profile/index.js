@@ -12,12 +12,6 @@ import { withRouter } from 'react-router-dom'
 // import css
 import './index.scss'
 
-//firebase
-
-//import redux
-import { useSelector, useDispatch } from 'react-redux'
-import { setUserPost } from '../../actions/userPost/setUserPost'
-
 const { TabPane } = Tabs
 
 function Index(props) {
@@ -27,9 +21,7 @@ function Index(props) {
   const [user, setUser] = useState({})
   const [profileKey, setProfileKey] = useState('1')
   const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('user')))
-  //redux
-  const posts = useSelector(state => state.userPostReducer)
-  const dispatch = useDispatch()
+
   const { userID } = props.match.params
 
   var heightChange = true
@@ -50,34 +42,34 @@ function Index(props) {
 
 
   const loadPosts = () => {
-    const list = (posts ? posts : postList)
-    try {
-      return list.map((v, k) => {
-        let value = Object.values(v)[0]
-        let id = Object.keys(v)[0] //id bai viet
-        let postUser = {
-          id: value.uid,
-          avatar: value.urlUser,
-          username: value.name
-        }
-        return <Post key={k}
-          params={props.match.params} // kiem tra post dang o trang profile hay newsFeed de load lai danh sach post  theo redux
-          img={value.urlImage}
-          user={postUser} // nguoi dang
-          likes={value.likes ? value.likes : {}}
-          commentCount={value.comments ? Object.keys(value.comments).length : 0}
-          content={value.desc}
-          postTime={value.time}
-          id={id}
-          idCurrentUser={currentUser ? currentUser.id : null}
-          title={value.title}
-          kind={value.kind}
-        />
-      })
-    }
-    catch (err) {
-      return <Empty />
-    }
+    // const list = (posts ? posts : postList)
+    // try {
+    //   return list.map((v, k) => {
+    //     let value = Object.values(v)[0]
+    //     let id = Object.keys(v)[0] //id bai viet
+    //     let postUser = {
+    //       id: value.uid,
+    //       avatar: value.urlUser,
+    //       username: value.name
+    //     }
+    //     return <Post key={k}
+    //       params={props.match.params} // kiem tra post dang o trang profile hay newsFeed de load lai danh sach post  theo redux
+    //       img={value.urlImage}
+    //       user={postUser} // nguoi dang
+    //       likes={value.likes ? value.likes : {}}
+    //       commentCount={value.comments ? Object.keys(value.comments).length : 0}
+    //       content={value.desc}
+    //       postTime={value.time}
+    //       id={id}
+    //       idCurrentUser={currentUser ? currentUser.id : null}
+    //       title={value.title}
+    //       kind={value.kind}
+    //     />
+    //   })
+    // }
+    // catch (err) {
+    //   return <Empty />
+    // }
   }
 
   const refetchUser = (data) => {

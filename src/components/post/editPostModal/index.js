@@ -2,13 +2,6 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Button, Divider, Avatar, Input, Upload, Icon, message, Spin, Modal, Form, Select } from 'antd'
 // import css
 import './index.scss'
-//import firebase
-
-
-//redux
-import { useDispatch } from 'react-redux'
-import { setUserPost } from '../../../actions/userPost/setUserPost'
-import { setPost } from '../../../actions/posts/setPost'
 
 //import HOC
 // import withAuthLogged from '../../components/utils/hoc/authLogged'
@@ -26,7 +19,7 @@ const Index = (props) => {
   const [desc, setDesc] = useState(props.desc)
   const [imageUrl, setImageUrl] = useState(props.url)
   const [posting, setPosting] = useState(false)
-  const dispatch = useDispatch()
+  
   const beforeUpload = (file) => {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
     if (!isJpgOrPng) {

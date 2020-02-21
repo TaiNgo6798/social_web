@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 
-
-
 function withAuthLogged(WrappedComponent) {
   return class index extends Component {
     constructor(props) {
@@ -11,7 +9,7 @@ function withAuthLogged(WrappedComponent) {
       }
     }
     componentDidMount() {
-        if(!JSON.parse(localStorage.getItem('user')) || !localStorage.getItem('token')){
+        if(!localStorage.getItem('Authorization')){
           this.setState({
             logged: false
           })
@@ -22,7 +20,7 @@ function withAuthLogged(WrappedComponent) {
         }
     }
     render() {
-      return this.state.logged && <WrappedComponent {...this.props} />
+      return this.state.logged && <WrappedComponent {...this.props} /> 
     }
   }
 }

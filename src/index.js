@@ -5,9 +5,7 @@ import App from './App'
 import * as serviceWorker from './serviceWorker'
 
 import { createStore } from 'redux'
-//import reducer
-import allReducer from './reducers'
-import { Provider } from 'react-redux'
+
 
 //server
 import { ApolloClient } from 'apollo-client'
@@ -25,13 +23,9 @@ const client = new ApolloClient({
   link
 })
 
-const store = createStore(allReducer)
-
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <Provider store={store}>
       <App />
-    </Provider>
   </ApolloProvider>
   , document.getElementById('root'))
 
