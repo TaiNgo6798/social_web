@@ -37,45 +37,50 @@ const Index = (props) => {
   }
 
   useEffect(() => {
-    const postEditor = window.document.querySelector('.text')
-    const closeBtn = window.document.querySelector('.close-button')
-    const body = window.document.querySelector('.body-fake')
-    const createPostForm = window.document.querySelector('.createPostForm')
+    console.log('reload create post !!!')
+    let mounted = true
+    if (mounted) {
+      const postEditor = window.document.querySelector('.text')
+      const closeBtn = window.document.querySelector('.close-button')
+      const body = window.document.querySelector('.body-fake')
+      const createPostForm = window.document.querySelector('.createPostForm')
 
-    window.document.addEventListener('scroll', () => {
-      if (window.scrollY >= 350) {
-        body.classList.remove('modal-active')
-        window.document.querySelector('.bottom-bar') && window.document.querySelector('.bottom-bar').classList.remove('show-from-post-component')
+      window.document.addEventListener('scroll', () => {
+        if (window.scrollY >= 350) {
+          body.classList.remove('modal-active')
+          window.document.querySelector('.bottom-bar') && window.document.querySelector('.bottom-bar').classList.remove('show-from-post-component')
+          closeBtn.classList.remove('show-from-post-component')
+          window.document.activeElement.blur()
+          setTimeout(() => {
+            body.classList.remove('show-fake-body')
+          }, 300)
+        }
+
+      })
+
+      postEditor.addEventListener('focus', () => {
+        createPostForm.setAttribute('style', 'z-index: 11')
+        body.classList.add('show-fake-body')
+        setTimeout(() => {
+          window.document.querySelector('.bottom-bar').classList.add('show-from-post-component')
+          closeBtn.classList.add('show-from-post-component')
+          body.classList.add('modal-active')
+        }, 1)
+
+
+      })
+      closeBtn.addEventListener('click', () => {
+        createPostForm.setAttribute('style', 'z-index: 8')
+        window.document.querySelector('.bottom-bar').classList.remove('show-from-post-component')
         closeBtn.classList.remove('show-from-post-component')
-        window.document.activeElement.blur()
+        body.classList.remove('modal-active')
         setTimeout(() => {
           body.classList.remove('show-fake-body')
         }, 300)
       }
-
-    })
-
-    postEditor.addEventListener('focus', () => {
-      createPostForm.setAttribute('style', 'z-index: 11')
-      body.classList.add('show-fake-body')
-      setTimeout(() => {
-        window.document.querySelector('.bottom-bar').classList.add('show-from-post-component')
-        closeBtn.classList.add('show-from-post-component')
-        body.classList.add('modal-active')
-      }, 1)
-
-
-    })
-    closeBtn.addEventListener('click', () => {
-      createPostForm.setAttribute('style', 'z-index: 8')
-      window.document.querySelector('.bottom-bar').classList.remove('show-from-post-component')
-      closeBtn.classList.remove('show-from-post-component')
-      body.classList.remove('modal-active')
-      setTimeout(() => {
-        body.classList.remove('show-fake-body')
-      }, 300)
+      )
     }
-    )
+    return () => { mounted = false }
   }, [])
 
 

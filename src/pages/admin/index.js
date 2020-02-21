@@ -10,27 +10,30 @@ function Index() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    setLoading(true)
-    let tokenAdmin = localStorage.getItem('tokenAdmin') ?  localStorage.getItem('tokenAdmin') : 'shit'
-
+    let mounted = true
+    if (mounted) {
+      setLoading(true)
+      let tokenAdmin = localStorage.getItem('tokenAdmin') ? localStorage.getItem('tokenAdmin') : 'shit'
+    }
+    return () => { mounted = false }
   }, [])
 
 
 
   return (
     <>
-    <Spin spinning={loading} style={{maxHeight: '100vh'}}>
-      
-      <div className='content_admin'>
-        <div className='wrapper_admin'>
-        {
-            !isLogged ? (
-              <Login checkAccount={() => setIsLogged(true)} />
-            ) : <Main setIsLogged={() => setIsLogged(false)}/>
-          }
+      <Spin spinning={loading} style={{ maxHeight: '100vh' }}>
+
+        <div className='content_admin'>
+          <div className='wrapper_admin'>
+            {
+              !isLogged ? (
+                <Login checkAccount={() => setIsLogged(true)} />
+              ) : <Main setIsLogged={() => setIsLogged(false)} />
+            }
+          </div>
         </div>
-      </div>
-        </Spin>
+      </Spin>
     </>
   )
 }

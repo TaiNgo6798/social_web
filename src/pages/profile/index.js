@@ -28,17 +28,20 @@ function Index(props) {
   var heightChange = true
 
   useEffect(() => {
-    window.addEventListener('scroll', () => {
-      if (window.scrollY >= 440 && heightChange === true) {
-        window.document.querySelector('.infor_profile') && window.document.querySelector('.infor_profile').classList.add('fixedPos_profile')
-        heightChange = false
-      }
-      if (window.scrollY <= 440 && heightChange === false) {
-        window.document.querySelector('.infor_profile') && window.document.querySelector('.infor_profile').classList.remove('fixedPos_profile')
-        heightChange = true
-      }
-    })
-
+    let mounted = true
+    if (mounted) {
+      window.addEventListener('scroll', () => {
+        if (window.scrollY >= 440 && heightChange === true) {
+          window.document.querySelector('.infor_profile') && window.document.querySelector('.infor_profile').classList.add('fixedPos_profile')
+          heightChange = false
+        }
+        if (window.scrollY <= 440 && heightChange === false) {
+          window.document.querySelector('.infor_profile') && window.document.querySelector('.infor_profile').classList.remove('fixedPos_profile')
+          heightChange = true
+        }
+      })
+    }
+    return () => { mounted = false }
   }, [])
 
 

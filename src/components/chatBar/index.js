@@ -15,7 +15,7 @@ function Index() {
   const currentUser = JSON.parse(localStorage.getItem('user'))
 
   useEffect(() => {
-    
+    console.log('reload chat bar !!!')
   }, [])
 
   const loadUsers = () => {

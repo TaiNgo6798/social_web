@@ -27,7 +27,7 @@ function Index(props) {
 
 
   const loadPosts = () => {
-    console.log(currentUser)
+
     // const list = (posts ? posts : postList)
     // try {
     //   return list.map((v, k) => {

@@ -10,7 +10,11 @@ function Index() {
   const [loadingData, setLoadingData] = useState(true)
 
   useEffect(() => {
-    loadData()
+    let mounted = true
+    if (mounted) {
+      loadData()
+    }
+    return () => { mounted = false }
   }, [])
 
   const deleteHandler = (id) => {
@@ -113,7 +117,7 @@ function Index() {
   return (
     <>
       <Button style={{ display: 'block', float: 'right', margin: '1em', zIndex: 100 }} onClick={() => loadData()} type='primary'>Refresh</Button>
-        <Table pagination={{ pageSize: 6 }} columns={columns} dataSource={data} loading={loadingData}/>
+      <Table pagination={{ pageSize: 6 }} columns={columns} dataSource={data} loading={loadingData} />
     </>
   )
 }

@@ -5,11 +5,9 @@ import {
   Redirect,
 } from 'react-router-dom'
 import { routers } from '../configs'
-import NavBar from '../components/nav'
-import Chatbar from '../components/chatBar'
+
 
 function Index() {
-  const unCommonRoutes = ['/login', '/admin', '/'] // các route không cho hiện Nav và ChatBar
   return (
     <Switch>
       {routers.map((route, idx) => (
@@ -20,13 +18,6 @@ function Index() {
           render={() => {
             const Component = React.lazy(() => import(`../pages/${route.component}`))
             return <>
-              {
-                unCommonRoutes.indexOf(route.path) !== -1 ||
-                (<>
-                  <NavBar />
-                  <Chatbar />
-                </>)
-              }
               {
                 route.path === '/newsFeed' &&
                   (!localStorage.getItem('Authorization')) ?

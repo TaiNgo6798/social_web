@@ -1,5 +1,5 @@
 import React, { useState, createContext, useEffect } from 'react'
-import jwt, { decode } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 
 
 export const UserContext = createContext()
@@ -7,14 +7,23 @@ export const UserContext = createContext()
 
 function Index(props) {
   const [user, setUser] = useState(null)
+  const [currentUrl, setCurrentURL] = useState('')
 
   useEffect(() => {
-    console.log('useEffect ran !')
-    setUser(decodeToken())
+    let mounted = true
+    if(mounted) {
+      setCurrentURL(window.location.pathname)
+      setUser(decodeToken())
+    }
+    return () => {mounted = false}
   }, [])
 
+  const refreshCurrentUrl = () => {
+    
+    setCurrentURL(window.location.pathname)
+  }
+
   const refreshUser = () => {
-    console.log('user refreshed !')
     setUser(decodeToken())
   }
 
@@ -29,7 +38,7 @@ function Index(props) {
   }
 
   return (
-    <UserContext.Provider value={{user, setUser, refreshUser}}>
+    <UserContext.Provider value={{user, setUser, refreshUser, currentUrl, refreshCurrentUrl}}>
       {props.children}
     </UserContext.Provider>
   )

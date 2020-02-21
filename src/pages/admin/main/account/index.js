@@ -10,7 +10,11 @@ function Index() {
   const [loadingData, setLoadingData] = useState(true)
 
   useEffect(() => {
-    loadData()
+    let mounted = true
+    if (mounted) {
+      loadData()
+    }
+    return () => { mounted = false }
   }, [])
 
   const loadData = () => {

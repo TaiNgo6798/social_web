@@ -19,7 +19,11 @@ function Index(props) {
   }
 
   useEffect(() => {
-    props.form.validateFields()
+    let mounted = true
+    if (mounted) {
+      props.form.validateFields()
+    }
+    return () => { mounted = false }
   }, [])
 
 
@@ -37,7 +41,7 @@ function Index(props) {
     <>
       <div className='form_login_admin'>
         <h1>Login to Admin's page</h1>
-        <Form  onSubmit={(e) => handleSubmit(e)}>
+        <Form onSubmit={(e) => handleSubmit(e)}>
           <Form.Item validateStatus={usernameError ? 'error' : ''} help={usernameError || ''}>
             {getFieldDecorator('username', {
               rules: [{ required: true, message: 'Please input your username!' }],

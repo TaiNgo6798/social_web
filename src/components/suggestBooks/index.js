@@ -15,13 +15,15 @@ const Index = () => {
   const fakeDataUrl = `https://randomuser.me/api/?results=${count}&inc=name,gender,email,nat&noinfo`
 
   useEffect(() => {
-
-    getData(res => {
-      setInitLoading(false)
-      setData(res.results)
-      setList(res.results)
-    })
-
+    let mounted = true
+    if (mounted) {
+      getData(res => {
+        setInitLoading(false)
+        setData(res.results)
+        setList(res.results)
+      })
+    }
+    return () => { mounted = false }
   }, [])
 
   const getData = callback => {

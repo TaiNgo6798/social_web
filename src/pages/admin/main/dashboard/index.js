@@ -37,7 +37,7 @@ function Index() {
     var myChart = new Chart(ctx, {
       type: 'line',
       data: {
-        labels: [`Tháng ${currentMonth-3}`, `Tháng ${currentMonth-2}`, `Tháng ${currentMonth-1}`, `Tháng ${currentMonth}`],
+        labels: [`Tháng ${currentMonth - 3}`, `Tháng ${currentMonth - 2}`, `Tháng ${currentMonth - 1}`, `Tháng ${currentMonth}`],
         datasets: [{
           data,
           backgroundColor: [
@@ -81,9 +81,12 @@ function Index() {
   }
 
   useEffect(() => {
-    loadData()
-    loadDataApprove()
-
+    let mounted = true
+    if (mounted) {
+      loadData()
+      loadDataApprove()
+    }
+    return () => { mounted = false }
   }, [])
 
   return (

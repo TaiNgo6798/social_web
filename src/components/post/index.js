@@ -52,26 +52,30 @@ const Index = props => {
   const [loadingCmt, setLoadingCmt] = useState(false)
   const [editModalVisible, setEditModalVisible] = useState(false)
   const dateNow = Date.now()
- 
+
   const { confirm } = Modal
 
   useEffect(() => {
-    let likeList = []
-    Object.keys(likes).forEach((v, k) => {
-      likeList.push({
-        id: v,
-        name: Object.values(likes)[k]
+    let mounted = true
+    if (mounted) {
+      let likeList = []
+      Object.keys(likes).forEach((v, k) => {
+        likeList.push({
+          id: v,
+          name: Object.values(likes)[k]
+        })
       })
-    })
-    setLikeLocal(likeList)
+      setLikeLocal(likeList)
 
-    const likeBtn = window.document.querySelector(`[id=${id}]`)
-    likeBtn.addEventListener('click', () => {
-      likeBtn.classList.toggle('isLiked')
-      likeBtn.classList.contains('isLiked')
-        ? setIconType(heart)
-        : setIconType(heartO)
-    })
+      const likeBtn = window.document.querySelector(`[id=${id}]`)
+      likeBtn.addEventListener('click', () => {
+        likeBtn.classList.toggle('isLiked')
+        likeBtn.classList.contains('isLiked')
+          ? setIconType(heart)
+          : setIconType(heartO)
+      })
+    }
+    return () => { mounted = false }
   }, [])
 
   const deleteHandler = () => {
@@ -80,7 +84,7 @@ const Index = props => {
       onOk() {
 
       },
-      onCancel() {}
+      onCancel() { }
     })
   }
 
@@ -124,7 +128,7 @@ const Index = props => {
         <Comment
           key={v.id}
           author={v.nameUser}
-          avatar={<Avatar src={v.imageUser} alt={v.time} onClick={() => props.history.push(`profile/${v.id_user}`)}/>}
+          avatar={<Avatar src={v.imageUser} alt={v.time} onClick={() => props.history.push(`profile/${v.id_user}`)} />}
           content={<p>{v.body}</p>}
           datetime={
             <Tooltip title={time2.toLocaleString()}>
