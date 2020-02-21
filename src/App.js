@@ -23,7 +23,7 @@ const App = (props) => {
     return () => { mounted = false }
   }, [])
 
-  const exceptRoute = ['/', '/login', '']
+  const exceptRoute = ['/', '/login', ''] // cac route khong hien thanh chat va thanh NAV
   const { currentUrl, refreshCurrentUrl } = useContext(UserContext)
   return (
     <>

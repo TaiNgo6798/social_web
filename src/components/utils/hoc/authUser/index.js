@@ -14,7 +14,6 @@ function withAuthUser(WrappedComponent) {
       if(this.props.params)
       {
       let token = localStorage.getItem('token') ? localStorage.getItem('token') : 'shittoken'
-
     } else{
       this.setState({
         authed: true

@@ -26,10 +26,10 @@ function Index(props) {
     setUser(decodeToken())
   }
 
-  const decodeToken = () => {
+  const decodeToken =  () => {
     try {
       const token = localStorage.getItem('Authorization').split(' ')[1]
-      const user = jwt.verify(token, 'taingo6798')
+      const user =  jwt.verify(token, 'taingo6798')
       return user
     } catch (error) {
       return null
@@ -37,7 +37,7 @@ function Index(props) {
   }
 
   return (
-    <UserContext.Provider value={{user, setUser, refreshUser, currentUrl, refreshCurrentUrl}}>
+    <UserContext.Provider value={{user, setUser, refreshUser, currentUrl, refreshCurrentUrl, decodeToken}}>
       {props.children}
     </UserContext.Provider>
   )

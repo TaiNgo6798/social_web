@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
   Switch,
   Route,
@@ -6,8 +6,10 @@ import {
 } from 'react-router-dom'
 import { routers } from '../configs'
 
+import { UserContext } from '../contexts/userContext'
 
 function Index() {
+  const { decodeToken } = useContext(UserContext)
   return (
     <Switch>
       {routers.map((route, idx) => (
@@ -20,7 +22,7 @@ function Index() {
             return <>
               {
                 route.path === '/newsFeed' &&
-                  (!localStorage.getItem('Authorization')) ?
+                  (!decodeToken()) ? 
                   <Redirect to='/login' /> :
                   <Component />
               }
