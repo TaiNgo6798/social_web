@@ -1,5 +1,5 @@
 
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useContext } from 'react'
 import { Form, Icon, Input, Button, notification, Spin } from 'antd'
 import { withRouter } from 'react-router-dom'
 
@@ -8,12 +8,12 @@ import ForgotForm from './forgot-form'
 
 // import css
 import './index.scss'
-//redux
-
 
 //server
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/react-hooks'
+
+import { UserContext } from '../../contexts/userContext'
 
 const LOGIN = gql`
 mutation login($email: String!, $password: String!) {
@@ -38,6 +38,7 @@ const Index = (props) => {
   const [forgotForm, setForgotForm] = useState(false)
   const [login] = useMutation(LOGIN)
   const [loading, setLoading] = useState(false)
+  const { refreshUser } = useContext(UserContext)
 
   const registerClick = () => {
     const loginForm = window.document.querySelector('.login')
@@ -66,6 +67,7 @@ const Index = (props) => {
           const { token } = res.data.login
           if (token) {
             localStorage.setItem('Authorization', `Bearer ${token}`)
+            refreshUser()
             history.push('/newsFeed')
           }
           else {

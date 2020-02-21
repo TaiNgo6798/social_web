@@ -4,8 +4,7 @@ import './index.css'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 
-import { createStore } from 'redux'
-
+import UserContextProvider  from './contexts/userContext'
 
 //server
 import { ApolloClient } from 'apollo-client'
@@ -25,7 +24,9 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
+    <UserContextProvider>
       <App />
+    </UserContextProvider>
   </ApolloProvider>
   , document.getElementById('root'))
 

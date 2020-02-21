@@ -3,6 +3,7 @@ import { Skeleton, Empty, Avatar, Tabs, Tag, Button, Upload, message, Spin, Tool
 import { books } from 'react-icons-kit/icomoon/books'
 import { Icon } from 'react-icons-kit'
 import { useBottomScrollListener } from 'react-bottom-scroll-listener'
+
 //import components
 import DetailProfile from './inforTab'
 import Post from '../../components/post'

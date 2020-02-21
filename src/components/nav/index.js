@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Input, Badge, Icon } from 'antd'
 import { withRouter } from 'react-router-dom'
+
 import './index.scss'
 
+import  { UserContext }  from '../../contexts/userContext' 
 
 const { Search } = Input
 
 function Index(props) {
-  const currentUser = JSON.parse(localStorage.getItem('user'))
   const [messageCount, setMessageCount] = useState(0)
+  const { user: currentUser } = useContext(UserContext)
 
   let heightChange = true
   const loadNotify = () => {
@@ -60,7 +62,7 @@ function Index(props) {
               {
                 currentUser && (
                   <Badge count={0}>
-                    <Icon type="user" className='icon' onClick={() => props.history.push(`/profile/${currentUser.id}`)} />
+                    <Icon type="user" className='icon' onClick={() => props.history.push(`/profile/${currentUser._id}`)} />
                   </Badge>
                 )
               }

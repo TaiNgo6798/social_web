@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Skeleton, Empty } from 'antd'
 import { useBottomScrollListener } from 'react-bottom-scroll-listener'
 import { withRouter } from 'react-router-dom'
@@ -11,18 +11,23 @@ import CreatePost from '../../components/createPost'
 // import css
 import './index.scss'
 
+//context
+import  { UserContext }  from '../../contexts/userContext'
+
 
 function Index(props) {
   const [loading, setLoading] = useState(true)
-  const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('user')))
   const [postList, setPostList] = useState([])
   const [lastPost, setLastPost] = useState({})
+  
+  const { user: currentUser } = useContext(UserContext)
 
   useBottomScrollListener(() => {
   })
 
 
   const loadPosts = () => {
+    console.log(currentUser)
     // const list = (posts ? posts : postList)
     // try {
     //   return list.map((v, k) => {
