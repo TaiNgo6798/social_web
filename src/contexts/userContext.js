@@ -18,13 +18,14 @@ function Index(props) {
     return () => {mounted = false}
   }, [])
 
-  const refreshCurrentUrl = (url) => {
+  const refreshCurrentUrl = (url) => { // cap nhat lai url hien tai khi chuyen route
     setCurrentURL(url)
   }
 
-  const refreshUser = () => {
+  const refreshUser = () => { // check lai user hien tai tu token
     setUser(decodeToken())
   }
+
 
   const decodeToken =  () => {
     try {
@@ -36,8 +37,17 @@ function Index(props) {
     }
   }
 
+  const contextValue = {
+    user,
+    setUser,
+    refreshUser,
+    currentUrl,
+    refreshCurrentUrl,
+    decodeToken,
+  }
+
   return (
-    <UserContext.Provider value={{user, setUser, refreshUser, currentUrl, refreshCurrentUrl, decodeToken}}>
+    <UserContext.Provider value={contextValue}>
       {props.children}
     </UserContext.Provider>
   )

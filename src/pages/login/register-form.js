@@ -4,8 +4,10 @@ import {
   Input,
   Button,
   Spin,
-  notification
+  notification,
+  Select
 } from 'antd'
+
 import Swal from 'sweetalert2'
 import { withRouter } from 'react-router-dom'
 //server
@@ -15,6 +17,8 @@ import { useMutation } from '@apollo/react-hooks'
 import './index.scss'
 
 import { UserContext } from '../../contexts/userContext'
+
+const { Option } = Select
 
 const REGISTER = gql`
 mutation createUser($user: UserInput!) {
@@ -35,11 +39,11 @@ function RegistrationForm(props) {
       placement: 'bottomRight'
     })
   ) : (
-    notification.error({
-      message: 'Email đã tồn tại !',
-      placement: 'bottomRight'
-    })
-  )
+      notification.error({
+        message: 'Email đã tồn tại !',
+        placement: 'bottomRight'
+      })
+    )
 
   const handleSubmit = e => {
     e.preventDefault()
@@ -47,30 +51,32 @@ function RegistrationForm(props) {
     props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         setLoading(true)
-        const { email, password, firstName, lastName } = values
+        const { email, password, firstName, lastName, gender } = values
+        console.log(values)
         register({
           variables: {
             user: {
               email,
               password,
               firstName,
-              lastName
+              lastName,
+              gender
             }
           }
         }).then((res) => {
           setLoading(false)
           openNotification(res.data.createUser)
-          if(res.data.createUser) {
+          if (res.data.createUser) {
             props.history.push('/login')
           }
         }).catch((err) => {
-            Swal.fire({
-              position: 'center',
-              type: 'error',
-              title: err,
-              showConfirmButton: true,
-              timer: 1500
-            })
+          Swal.fire({
+            position: 'center',
+            type: 'error',
+            title: err,
+            showConfirmButton: true,
+            timer: 1500
+          })
         })
       }
     })
@@ -149,6 +155,21 @@ function RegistrationForm(props) {
               },
             ],
           })(<Input />)}
+        </Form.Item>
+        <Form.Item label="Giới tính" className='registerForm'>
+          {getFieldDecorator('gender', {
+            rules: [
+              {
+                required: true,
+                message: 'Vui lòng chọn giới tính !',
+              },
+            ],
+          })(
+            <Select style={{ width: '100%' }}>
+              <Option value="male">Nam</Option>
+              <Option value="female">Nữ</Option>
+            </Select>
+          )}
         </Form.Item>
         <Form.Item label="Mật khẩu" hasFeedback className='registerForm'>
           {getFieldDecorator('password', {

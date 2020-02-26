@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { Skeleton, Empty } from 'antd'
 import { useBottomScrollListener } from 'react-bottom-scroll-listener'
 import { withRouter } from 'react-router-dom'
+import gql from 'graphql-tag'
 
 //import components
 import Post from '../../components/post'
@@ -12,49 +13,64 @@ import CreatePost from '../../components/createPost'
 import './index.scss'
 
 //context
-import  { UserContext }  from '../../contexts/userContext'
+import { UserContext } from '../../contexts/userContext'
+import { useQuery, useLazyQuery } from '@apollo/react-hooks'
+
+const POSTS = gql`
+query{
+  posts{
+    _id
+    who {
+      _id
+      firstName
+      lastName
+      avatar
+    }
+    image
+    content
+    time
+    likes
+  }
+}
+`
+
 
 
 function Index(props) {
+  const { loading: loadingData, data, refetch } = useQuery(POSTS)
+
   const [loading, setLoading] = useState(true)
-  const [postList, setPostList] = useState([])
-  const [lastPost, setLastPost] = useState({})
-  
+
   const { user: currentUser } = useContext(UserContext)
 
   useBottomScrollListener(() => {
   })
 
-
   const loadPosts = () => {
+    try {
 
-    // const list = (posts ? posts : postList)
-    // try {
-    //   return list.map((v, k) => {
-    //     let value = Object.values(v)[0]
-    //     let id = Object.keys(v)[0] //id bai viet 
-    //     let postUser = {
-    //       id: value.uid,
-    //       avatar: value.urlUser,
-    //       username: value.name
-    //     }
-    //     return <Post key={k}
-    //       img={value.urlImage}
-    //       user={postUser} // nguoi dang
-    //       likes={value.likes ? value.likes : {}}
-    //       commentCount={value.comments ? Object.keys(value.comments).length : 0}
-    //       content={value.desc}
-    //       postTime={value.time}
-    //       id={id}
-    //       idCurrentUser={currentUser ? currentUser.id : null}
-    //       title={value.title}
-    //       kind={value.kind}
-    //     />
-    //   })
-    // }
-    // catch (err) {
-    //   return <Empty />
-    // }
+      return data.posts.reverse().map((v, k) => {
+        const {
+          _id,
+          who,
+          image,
+          content,
+          time,
+          likes
+        } = v
+        return <Post key={k}
+          _id={_id}
+          image={image}
+          user={who}
+          likes={likes || []}
+          content={content}
+          time={time}
+        />
+      })
+    }
+    catch (err) {
+      return <Empty />
+    }
   }
 
   return (
@@ -65,9 +81,9 @@ function Index(props) {
         <div className='wrapper'>
           <div className='center-content'>
             <CreatePost user={currentUser ? currentUser : { image: '', firstName: 'anonymous' }} />
-            <Skeleton loading={loading} active >
+            <Skeleton loading={loadingData} active >
               <div className='posts'>
-                {loadPosts()}
+                {loadingData || loadPosts()}
               </div>
             </Skeleton>
           </div>

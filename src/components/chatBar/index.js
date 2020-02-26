@@ -2,45 +2,64 @@ import React, { useState, useEffect } from 'react'
 import { Avatar, Badge, Icon, Input } from 'antd'
 import ChatWindow from './chatWindow'
 import { withRouter } from 'react-router-dom'
-
-
+import gql from 'graphql-tag'
 
 import './index.scss'
+import { useQuery } from '@apollo/react-hooks'
 
+import maleUser from '@assets/images/man-user.png'
+import femaleUser from '@assets/images/woman-user.png'
+
+const USERS = gql`
+query {
+  users{
+    _id
+    email
+    firstName
+    lastName
+    avatar
+    dob
+    gender
+  }
+}
+`
 
 function Index() {
 
-  const [listUser, setListUser] = useState([])
+  const { data , loading } = useQuery(USERS)
+
   const [listActiveChat, setListActiveChat] = useState([])
   const currentUser = JSON.parse(localStorage.getItem('user'))
 
+  
   useEffect(() => {
-    console.log('reload chat bar !!!')
-  }, [])
+    if(!loading)
+    console.log(data)
+  }, [data])
 
   const loadUsers = () => {
-    return listUser.map((v, k) => {
+    return data.users.map((v, k) => {
       return (
-        <div className='user_chatBar' onClick={() => onUserClick(v.id)} key={k}>
-          <Avatar size={34} src={v.infor.image} />
-          <p >{`${v.infor.firstName} ${v.infor.secondName}`}</p>
+        <div className='user_chatBar' onClick={() => onUserClick(v._id)} key={k}>
+          <Avatar size={34} src={v.avatar || (v.gender === 'female' ? femaleUser : maleUser)} />
+          <p >{`${v.firstName} ${v.lastName}`}</p>
           <Badge color={'green'} />
         </div>
       )
     })
   }
 
-  const closeActiveChatHandler = (id) => {
-    setListActiveChat([...listActiveChat.filter(v => v.id !== id)])
+  const closeActiveChatHandler = (_id) => {
+    setListActiveChat([...listActiveChat.filter(v => v._id !== _id)])
   }
 
-  const onUserClick = (id) => {
-    const { image, firstName, secondName } = listUser.filter(v => v.id === id)[0].infor
-    if (!listActiveChat.some(v => v.id === id)) {
+  const onUserClick = (_id) => {
+    const { avatar, firstName, lastName, gender } = data.users.filter(v => v._id === _id)[0]
+    if (!listActiveChat.some(v => v._id === _id)) {
       listActiveChat.push({
-        id,
-        image,
-        name: `${firstName} ${secondName}`
+        _id,
+        avatar: avatar || (gender === 'female' ? femaleUser : maleUser),
+        name: `${firstName} ${lastName}`
       })
       setListActiveChat([...listActiveChat])
     }
@@ -50,9 +69,9 @@ function Index() {
     return listActiveChat.map((v, k) => {
       return <ChatWindow
         key={k}
-        htmlid={v.id}
-        onClose={(id) => closeActiveChatHandler(id)}
-        image={v.image}
+        htmlid={v._id}
+        onClose={(_id) => closeActiveChatHandler(_id)}
+        image={v.avatar}
         name={v.name}
       />
     })
@@ -61,7 +80,9 @@ function Index() {
   return (
         <>
           <div className='container_chatBar'>
-            {loadUsers()}
+            {
+              loading ? 'loading ...' : loadUsers()
+            }
           </div>
           <div className='listActiveChat_chatBar'>
             {loadActiveChat()}

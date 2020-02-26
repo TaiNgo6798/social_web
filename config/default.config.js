@@ -25,7 +25,8 @@ const _default = (isDev, env) => {
     '@configs': path.resolve(__dirname, '../src/configs'),
     '@pages': path.resolve(__dirname, '../src/pages'),
     '@assets': path.resolve(__dirname, '../src/assets'),
-    '@utils': path.resolve(__dirname, '../src/utils')
+    '@utils': path.resolve(__dirname, '../src/components/utils'),
+    '@contexts': path.resolve(__dirname, '../src/contexts')
   }
 
   const packageVendor = ['react', 'react-dom', 'react-router-dom']

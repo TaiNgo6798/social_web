@@ -4,8 +4,7 @@ import { Button, Divider, Avatar, Input, Upload, Icon, message, Spin, Modal, For
 import './index.scss'
 
 //import HOC
-// import withAuthLogged from '../../components/utils/hoc/authLogged'
-// import withAuthUser from '../../components/utils/hoc/authUser'
+
 const { Option } = Select
 const { TextArea } = Input
 

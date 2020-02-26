@@ -23,57 +23,55 @@ import './index.scss'
 import CreateComment from '../createComment'
 import EditPostModal from './editPostModal'
 import { withRouter } from 'react-router-dom'
-import { FacebookShareButton } from 'react-share'
+import gql from 'graphql-tag'
+import { useQuery } from '@apollo/react-hooks'
+
+//Context
+import { UserContext } from '@contexts/userContext'
+import { useContext } from 'react'
 
 
 const Index = props => {
   const {
-    commentCount,
+    _id,
+    image,
     user,
     likes,
-    img,
-    nameImage,
     content,
-    postTime,
-    id,
-    idCurrentUser,
-    title,
-    kind
+    time
   } = props
-  const postDay2 = new Date(postTime)
-  const { avatar, username } = user
-  const [showAllComment, setShowAllComment] = useState(false)
-  const [commentData, setCommentData] = useState([])
-  const [likeLocal, setLikeLocal] = useState([])
-  const [iconType, setIconType] = useState(
-    Object.keys(likes).indexOf(idCurrentUser) !== -1 ? heart : heartO
-  )
-  const currentUser = JSON.parse(localStorage.getItem('user'))
-  const [loadingCmt, setLoadingCmt] = useState(false)
-  const [editModalVisible, setEditModalVisible] = useState(false)
-  const dateNow = Date.now()
 
+
+
+  const postDay2 = new Date(time)
+  const [showAllComment, setShowAllComment] = useState(false)
+  const [likeLocal, setLikeLocal] = useState([])
+  const currentUser = useContext(UserContext)
+  const [editModalVisible, setEditModalVisible] = useState(false)
   const { confirm } = Modal
+
+
+
 
   useEffect(() => {
     let mounted = true
     if (mounted) {
       let likeList = []
-      Object.keys(likes).forEach((v, k) => {
-        likeList.push({
-          id: v,
-          name: Object.values(likes)[k]
-        })
-      })
+      // Object.keys(likes).forEach((v, k) => {
+      //   likeList.push({
+      //     id: v,
+      //     name: Object.values(likes)[k]
+      //   })
+      // })
       setLikeLocal(likeList)
 
-      const likeBtn = window.document.querySelector(`[id=${id}]`)
-      likeBtn.addEventListener('click', () => {
-        likeBtn.classList.toggle('isLiked')
-        likeBtn.classList.contains('isLiked')
-          ? setIconType(heart)
-          : setIconType(heartO)
-      })
+      // const likeBtn = window.document.querySelector(`[id=${_id}]`) 
+      // likeBtn.addEventListener('click', () => {
+      //   likeBtn.classList.toggle('isLiked')
+      //   likeBtn.classList.contains('isLiked')
+      //     ? setIconType(heart)
+      //     : setIconType(heartO)
+      // })
     }
     return () => { mounted = false }
   }, [])
@@ -103,52 +101,52 @@ const Index = props => {
     </Menu>
   )
 
-  const loadComments = () => {
-    setLoadingCmt(true)
-    setShowAllComment(true)
+  // const loadComments = () => {
+  //   setLoadingCmt(true)
+  //   setShowAllComment(true)
 
-  }
+  // }
 
-  const whoLikes = () => {
-    let html = ''
-    likeLocal.forEach(v => {
-      html += `<p>${v.name}<p/>`
-    })
-    return htmlParser(html)
-  }
+  // const whoLikes = () => {
+  //   let html = ''
+  //   likeLocal.forEach(v => {
+  //     html += `<p>${v.name}<p/>`
+  //   })
+  //   return htmlParser(html)
+  // }
 
   const likeHandler = () => {
 
   }
 
-  const renderComments = () => {
-    return Object.values(commentData).map((v, k) => {
-      let time2 = new Date(v.time)
-      return (
-        <Comment
-          key={v.id}
-          author={v.nameUser}
-          avatar={<Avatar src={v.imageUser} alt={v.time} onClick={() => props.history.push(`profile/${v.id_user}`)} />}
-          content={<p>{v.body}</p>}
-          datetime={
-            <Tooltip title={time2.toLocaleString()}>
-              <span>
-                {moment([
-                  time2.getFullYear(),
-                  time2.getMonth(),
-                  time2.getDate(),
-                  time2.getHours(),
-                  time2.getMinutes(),
-                  time2.getSeconds(),
-                  time2.getMilliseconds()
-                ]).fromNow()}
-              </span>
-            </Tooltip>
-          }
-        />
-      )
-    })
-  }
+  // const renderComments = () => {
+  //   return Object.values(commentData).map((v, k) => {
+  //     let time2 = new Date(v.time)
+  //     return (
+  //       <Comment
+  //         key={v.id}
+  //         author={v.nameUser}
+  //         avatar={<Avatar src={v.imageUser} alt={v.time} onClick={() => props.history.push(`profile/${v.id_user}`)} />}
+  //         content={<p>{v.body}</p>}
+  //         datetime={
+  //           <Tooltip title={time2.toLocaleString()}>
+  //             <span>
+  //               {moment([
+  //                 time2.getFullYear(),
+  //                 time2.getMonth(),
+  //                 time2.getDate(),
+  //                 time2.getHours(),
+  //                 time2.getMinutes(),
+  //                 time2.getSeconds(),
+  //                 time2.getMilliseconds()
+  //               ]).fromNow()}
+  //             </span>
+  //           </Tooltip>
+  //         }
+  //       />
+  //     )
+  //   })
+  // }
 
   return (
     <>
@@ -157,16 +155,16 @@ const Index = props => {
           <div className="avatar">
             <Avatar
               size={45}
-              src={avatar}
-              onClick={() => props.history.push(`/profile/${user.id}`)}
+              src={user.avatar}
+              onClick={() => props.history.push(`/profile/${user._id}`)}
             />
           </div>
           <div className="username">
-            <p onClick={() => props.history.push(`/profile/${user.id}`)}>
-              <i>{username}</i>
+            <p onClick={() => props.history.push(`/profile/${user._id}`)}>
+              <i>{`${user.firstName || ''} ${user.lastName || ' '}`}</i>
             </p>
             <div className="time">
-              <a title={postTime}>
+              <a title={time}>
                 {moment([
                   postDay2.getFullYear(),
                   postDay2.getMonth(),
@@ -180,7 +178,6 @@ const Index = props => {
             </div>
           </div>
           <div className="top-right">
-            {user.id.indexOf(idCurrentUser) !== -1 && (
               <Dropdown overlay={menu} trigger={['click']}>
                 <Ico
                   style={{ fontSize: '28px' }}
@@ -188,69 +185,69 @@ const Index = props => {
                   className="ant-dropdown-link"
                 />
               </Dropdown>
-            )}
           </div>
         </div>
         <div className="body">
-          <img src={img}></img>
+          <img src={image}></img>
         </div>
         <div className="likes">
           <Icon
             size={24}
-            icon={iconType}
+            icon={heart}
             className={
-              Object.keys(likes).indexOf(idCurrentUser) !== -1 ? 'isLiked' : ''
+             'isLiked'
             }
-            id={id}
+            id={_id}
             onClick={() => likeHandler()}
           />
           <Ico
             style={{ fontSize: '24px' }}
             type="message"
             onClick={() => {
-              loadComments()
+              //loadComments()
             }}
           />
           <Ico style={{ fontSize: '24px' }} type="link" />
         </div>
         <div className="likes-and-comments">
           <div className="likeCount">
-            <Popover content={whoLikes()}>
-              {likeLocal.length} lượt thích
+            <Popover 
+            //content={whoLikes()}
+            >
+              {likes.length} lượt thích
             </Popover>
           </div>
           <div className="commentsCount">
             <a
               onClick={() => {
-                loadComments()
+                //loadComments()
               }}
             >
-              {commentData.length > 1 ? commentData.length : commentCount} bình
-              luận
+              123 bình luận
             </a>
           </div>
         </div>
         <div className="userContent">
-          <p style={{ margin: '0 5px 0 0' }}>{username}</p>
+          <p style={{ margin: '0 5px 0 0' }}>{`${user.firstName} ${user.lastName}`}</p>
           <p>{content}</p>
         </div>
         <CreateComment
-          idPost={id}
-          idCurrentUser={idCurrentUser}
+          idPost={_id}
+          idCurrentUser={currentUser._id}
           setShowAllComment={e => {
             setShowAllComment(e)
           }}
-          commentData={commentData}
+          commentData=''
         />
         <div className="comments">
-          <Spin spinning={loadingCmt}>
-            {showAllComment && renderComments()}
+          <Spin spinning={false}>
+            {/* {showAllComment && renderComments()} */}
           </Spin>
           {showAllComment && (
             <div className="seeAll">
               <a
                 onClick={() => {
-                  setShowAllComment(false)
+                  
                 }}
               >
                 Hide comments
@@ -261,14 +258,10 @@ const Index = props => {
         <EditPostModal
           visible={editModalVisible}
           onCancel={() => setEditModalVisible(false)}
-          idPost={id}
-          title={title}
-          kind={kind}
+          idPost={_id}
           desc={content}
-          url={img}
-          nameImage={nameImage}
+          url={image}
           currentUser={currentUser}
-          params={props.params}
         />
       </div>
     </>

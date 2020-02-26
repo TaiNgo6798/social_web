@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { Button, Divider, Avatar, Input, Upload, Icon, message, Spin, Select } from 'antd'
-
-
 // import css
 import './index.scss'
 
@@ -9,13 +7,16 @@ import './index.scss'
 import withAuthLogged from '../../components/utils/hoc/authLogged'
 import withAuthUser from '../../components/utils/hoc/authUser'
 
+import maleUser from '@assets/images/man-user.png'
+import femaleUser from '@assets/images/woman-user.png'
+
 const { Option } = Select
 
 const { TextArea } = Input
 
 const Index = (props) => {
   const { user } = props
-  const { image } = user
+  const { avatar, gender } = user
   const [isLoading, setIsLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
   const [url, setUrl] = useState('')
@@ -37,7 +38,7 @@ const Index = (props) => {
   }
 
   useEffect(() => {
-    console.log('reload create post !!!')
+    
     let mounted = true
     if (mounted) {
       const postEditor = window.document.querySelector('.text')
@@ -151,7 +152,7 @@ const Index = (props) => {
           </div>
           <Divider style={{ margin: '10px 0 20px 0' }} />
           <div className='main'>
-            <Avatar size={45} src={image ? image : ''} />
+            <Avatar size={45} src={avatar || (gender === 'female' ? femaleUser : maleUser)} />
             <TextArea
               setfieldvalue={desc}
               className='text'

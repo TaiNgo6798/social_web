@@ -14,7 +14,7 @@ function Index(props) {
   const message = useRef('')
 
   useEffect(() => {
-    console.log('reload chat window !!!')
+    
   }, [])
 
   const sendChatHandler = (e) => {

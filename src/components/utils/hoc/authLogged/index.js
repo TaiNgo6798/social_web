@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import * as jwt from 'jsonwebtoken'
 
 function withAuthLogged(WrappedComponent) {
   return class index extends Component {
@@ -9,15 +10,17 @@ function withAuthLogged(WrappedComponent) {
       }
     }
     componentDidMount() {
-        if(!localStorage.getItem('Authorization')){
-          this.setState({
-            logged: false
-          })
+      try {
+        const token = localStorage.getItem('Authorization').split(' ')[1] || ''
+        const user = jwt.verify(token, 'taingo6798')
+        if(user) {
+          this.setState({logged: true})
         } else {
-          this.setState({
-            logged: true
-          })
+          this.setState({logged: false})
         }
+      } catch (error) {
+        this.setState({logged: false})
+      }
     }
     render() {
       return this.state.logged && <WrappedComponent {...this.props} /> 
