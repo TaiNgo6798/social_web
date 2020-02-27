@@ -47,39 +47,35 @@ function RegistrationForm(props) {
 
   const handleSubmit = e => {
     e.preventDefault()
-
-    props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        setLoading(true)
-        const { email, password, firstName, lastName, gender } = values
-        console.log(values)
-        register({
-          variables: {
-            user: {
-              email,
-              password,
-              firstName,
-              lastName,
-              gender
+      props.form.validateFieldsAndScroll((err, values) => {
+        if (!err) {
+          setLoading(true)
+          const { email, password, firstName, lastName, gender } = values
+          register({
+            variables: {
+              user: {
+                email,
+                password,
+                firstName,
+                lastName,
+                gender
+              }
             }
-          }
-        }).then((res) => {
-          setLoading(false)
-          openNotification(res.data.createUser)
-          if (res.data.createUser) {
-            props.history.push('/login')
-          }
-        }).catch((err) => {
-          Swal.fire({
-            position: 'center',
-            type: 'error',
-            title: err,
-            showConfirmButton: true,
-            timer: 1500
+          }).then((res) => {
+            setLoading(false)
+            openNotification(res.data.createUser)
+            if (res.data.createUser) {
+              props.history.push('/login')
+            }
+          }).catch((err) => {
+            setLoading(false)
+            notification.error({
+              message: 'Đăng kí không thành công !',
+              placement: 'bottomRight'
+            })
           })
-        })
-      }
-    })
+        }
+      })
   }
 
   const handleConfirmBlur = e => {

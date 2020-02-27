@@ -4,7 +4,7 @@
   "main": "./src/index.js",
   "license": "MIT",
   "scripts": {
-    "start:webpack": "NODE_ENV=development webpack-dev-server",
+    "start:webpack": "PORT=3000 NODE_ENV=development webpack-dev-server",
     "build:analyzer": "NODE_ENV=production NODE_TYPE=analyzer webpack",
     "build:webpack": "NODE_ENV=production webpack",
     "start": "npm run start:webpack",
@@ -103,7 +103,6 @@
     "react-bottom-scroll-listener": "^3.0.0",
     "react-cookie": "^4.0.1",
     "react-dom": "^16.9.0",
-    "react-html-parser": "^2.0.2",
     "react-icons-kit": "^1.3.1",
     "react-redux": "^7.1.3",
     "react-router-dom": "^5.0.1",

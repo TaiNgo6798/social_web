@@ -8,6 +8,7 @@ export const UserContext = createContext()
 function Index(props) {
   const [user, setUser] = useState(null)
   const [currentUrl, setCurrentURL] = useState('')
+  const [isLoad, setIsLoad] = useState(false)
 
   useEffect(() => {
     let mounted = true
@@ -44,6 +45,8 @@ function Index(props) {
     currentUrl,
     refreshCurrentUrl,
     decodeToken,
+    isLoad,
+    setIsLoad
   }
 
   return (

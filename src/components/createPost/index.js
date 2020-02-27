@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Button, Divider, Avatar, Input, Upload, Icon, message, Spin, Select } from 'antd'
+import { Button, Divider, Avatar, Input, Upload, Icon, message, Spin, Select, notification } from 'antd'
 // import css
 import './index.scss'
 
@@ -9,36 +9,78 @@ import withAuthUser from '../../components/utils/hoc/authUser'
 
 import maleUser from '@assets/images/man-user.png'
 import femaleUser from '@assets/images/woman-user.png'
+import axios from 'axios'
+import gql from 'graphql-tag'
+import { useMutation } from '@apollo/react-hooks'
 
-const { Option } = Select
 
 const { TextArea } = Input
+const ADD_POST = gql`
+mutation add($content:String!, $image: String!){
+  addPost(post: {content: $content, image: $image})
+}
+`
 
 const Index = (props) => {
   const { user } = props
   const { avatar, gender } = user
   const [isLoading, setIsLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
-  const [url, setUrl] = useState('')
-  const [nameImage, setNameImage] = useState('')
-  const [title, setTitle] = useState('')
-  const [kind, setKind] = useState('')
-  const [desc, setDesc] = useState('')
+  const [content, setContent] = useState('')
   const [posting, setPosting] = useState(false)
   const [ready, setReady] = useState(false)
-
-
+  const [image, setImage] = useState(null)
+  const [addPost] = useMutation(ADD_POST)
 
   const onSubmitPost = () => {
     window.document.querySelector('.text').value = ''
-    window.document.querySelector('[name="title"]').value = ''
-    const closeBtn = window.document.querySelector('.close-button')
     setPosting(true)
+    let formData = new FormData()
+    formData.append('image', image)
+    const config = {
+      headers: { 'content-type': 'multipart/form-data' }
+    }
+    const url = 'http://localhost:14377/file/upload?type=post'
+    axios.post(url, formData, config)
+      .then(res => {
+        addPost({variables:{
+          content,
+          image: res.data
+        }}).then((res) => {
+          setPosting(false)
+          res.data.addPost ? 
+          notification.success({
+            message: 'Tạo xong  !',
+            placement: 'bottomRight'
+          }) : 
+          notification.error({
+            message: 'Đăng bài không thành công !',
+            placement: 'bottomRight'
+          })
+          turnOFFmodal()
+          
+        }).catch(err => console.log(err))
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
 
+  const turnOFFmodal = () => {
+    const createPostForm = window.document.querySelector('.createPostForm')
+    const body = window.document.querySelector('.body-fake')
+    const closeBtn = window.document.querySelector('.close-button')
+    
+    createPostForm.setAttribute('style', 'z-index: 8')
+    window.document.querySelector('.bottom-bar').classList.remove('show-from-post-component')
+    closeBtn.classList.remove('show-from-post-component')
+    body.classList.remove('modal-active')
+    setTimeout(() => {
+      body.classList.remove('show-fake-body')
+    }, 300)
   }
 
   useEffect(() => {
-    
     let mounted = true
     if (mounted) {
       const postEditor = window.document.querySelector('.text')
@@ -56,9 +98,7 @@ const Index = (props) => {
             body.classList.remove('show-fake-body')
           }, 300)
         }
-
       })
-
       postEditor.addEventListener('focus', () => {
         createPostForm.setAttribute('style', 'z-index: 11')
         body.classList.add('show-fake-body')
@@ -67,17 +107,9 @@ const Index = (props) => {
           closeBtn.classList.add('show-from-post-component')
           body.classList.add('modal-active')
         }, 1)
-
-
       })
       closeBtn.addEventListener('click', () => {
-        createPostForm.setAttribute('style', 'z-index: 8')
-        window.document.querySelector('.bottom-bar').classList.remove('show-from-post-component')
-        closeBtn.classList.remove('show-from-post-component')
-        body.classList.remove('modal-active')
-        setTimeout(() => {
-          body.classList.remove('show-fake-body')
-        }, 300)
+        turnOFFmodal()
       }
       )
     }
@@ -87,22 +119,18 @@ const Index = (props) => {
 
   const handleChange = async info => {
     if (info.file.status === 'uploading') {
-      setReady(false)
       setImageUrl('')
+      setReady(false)
       setIsLoading(true)
-      return
     }
     if (info.file.status === 'done') {
-      // let img = await uploadStorage(info.file.originFileObj)
-      // setUrl(img.url)
-      // setNameImage(img.nameImage)
-      // // Get this url from response in real world.
-      // getBase64(info.file.originFileObj, imageUrl => {
-      //   setIsLoading(false)
-      //   setImageUrl(imageUrl)
-      //   setReady(true)
-      // }
-      // )
+      getBase64(info.file.originFileObj, imageUrl => {
+        setIsLoading(false)
+        setImageUrl(imageUrl)
+        setReady(true)
+        setImage(info.file.originFileObj)
+      }
+      )
     }
   }
 
@@ -154,12 +182,12 @@ const Index = (props) => {
           <div className='main'>
             <Avatar size={45} src={avatar || (gender === 'female' ? femaleUser : maleUser)} />
             <TextArea
-              setfieldvalue={desc}
+              setfieldvalue={content}
               className='text'
               placeholder="Bạn có đang muốn chia sẻ cuốn sách nào không ?"
               autoSize={{ minRows: 1, maxRows: 50 }}
               style={{ borderColor: 'transparent', fontSize: '18px' }}
-              onChange={(e) => setDesc(e.target.value)}
+              onChange={(e) => setContent(e.target.value)}
             />
           </div>
           {/* <Divider style={{marginBottom: '15px'}}/> */}
@@ -174,22 +202,8 @@ const Index = (props) => {
                 beforeUpload={beforeUpload}
                 onChange={handleChange}
               >
-                {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                {imageUrl.length > 0 ? <img src={imageUrl} style={{ width: '100%' }} /> : uploadButton}
               </Upload>
-              <div className='input-form'>
-                <p style={{ marginBottom: '5px', color: '#B8BCBC' }}>Dòng này được thêm vào cho đỡ trống ...</p>
-                <Input placeholder='Tiêu đề...' onChange={(e) => setTitle(e.target.value)} setfieldvalue={title} name='title' />
-                <Select
-                  style={{ width: '100%' }}
-                  placeholder="Chọn thể loại ..."
-                  optionFilterProp="children"
-                  onChange={(e) => setKind(e)}
-                >
-                  <Option value="Văn học">Văn học</Option>
-                  <Option value="Tiểu thuyết">Tiểu thuyết</Option>
-                  <Option value="Truyện ngắn">Truyện ngắn</Option>
-                </Select>
-              </div>
             </div>
             {
               ready && (

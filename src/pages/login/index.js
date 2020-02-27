@@ -73,7 +73,13 @@ const Index = (props) => {
           else {
             openNotification('bottomRight')
           }
-        }).catch(err => console.log(err))
+        }).catch(err => {
+          setLoading(false)
+          notification.error({
+            message: 'Không thể đăng nhập lúc này !',
+            placement: 'bottomRight'
+          })
+        })
       }
     })
 

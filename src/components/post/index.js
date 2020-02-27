@@ -13,7 +13,6 @@ import {
 } from 'antd'
 import moment from 'moment'
 import Swal from 'sweetalert2'
-import htmlParser from 'react-html-parser'
 import { Icon } from 'react-icons-kit'
 import { heart } from 'react-icons-kit/fa/heart'
 import { heartO } from 'react-icons-kit/fa/heartO'
@@ -24,12 +23,28 @@ import CreateComment from '../createComment'
 import EditPostModal from './editPostModal'
 import { withRouter } from 'react-router-dom'
 import gql from 'graphql-tag'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useLazyQuery } from '@apollo/react-hooks'
 
 //Context
 import { UserContext } from '@contexts/userContext'
 import { useContext } from 'react'
 
+const GET_COMMENTS = gql`
+query getcmt($id: String!){
+  getCommentsByPostID(postID: $id){
+    _id
+    who{
+      _id
+      firstName
+      lastName
+      email
+    }
+    postID
+    text
+    time
+  }
+}
+`
 
 const Index = props => {
   const {
@@ -41,17 +56,18 @@ const Index = props => {
     time
   } = props
 
-
+const [loadCmts, { loading, data }] = useLazyQuery(GET_COMMENTS, {
+  variables: {
+    id: _id
+  }
+})
 
   const postDay2 = new Date(time)
   const [showAllComment, setShowAllComment] = useState(false)
   const [likeLocal, setLikeLocal] = useState([])
-  const currentUser = useContext(UserContext)
+  const {user: currentUser} = useContext(UserContext)
   const [editModalVisible, setEditModalVisible] = useState(false)
   const { confirm } = Modal
-
-
-
 
   useEffect(() => {
     let mounted = true
@@ -64,7 +80,6 @@ const Index = props => {
       //   })
       // })
       setLikeLocal(likeList)
-
       // const likeBtn = window.document.querySelector(`[id=${_id}]`) 
       // likeBtn.addEventListener('click', () => {
       //   likeBtn.classList.toggle('isLiked')
@@ -101,19 +116,20 @@ const Index = props => {
     </Menu>
   )
 
-  // const loadComments = () => {
-  //   setLoadingCmt(true)
-  //   setShowAllComment(true)
+  const loadComments = () => {
+    
+  }
 
-  // }
-
-  // const whoLikes = () => {
-  //   let html = ''
-  //   likeLocal.forEach(v => {
-  //     html += `<p>${v.name}<p/>`
-  //   })
-  //   return htmlParser(html)
-  // }
+  const whoLikes = () => {
+    try {
+      return likes.map((v) => {
+      return <p key = {v.who._id}>{v.who.firstName + ' ' + v.who.lastName}</p>
+      })
+    } catch (error) {
+      console.log(error)
+    }
+    
+  }
 
   const likeHandler = () => {
 
@@ -178,13 +194,13 @@ const Index = props => {
             </div>
           </div>
           <div className="top-right">
-              <Dropdown overlay={menu} trigger={['click']}>
-                <Ico
-                  style={{ fontSize: '28px' }}
-                  type="ellipsis"
-                  className="ant-dropdown-link"
-                />
-              </Dropdown>
+            <Dropdown overlay={menu} trigger={['click']}>
+              <Ico
+                style={{ fontSize: '28px' }}
+                type="ellipsis"
+                className="ant-dropdown-link"
+              />
+            </Dropdown>
           </div>
         </div>
         <div className="body">
@@ -195,7 +211,9 @@ const Index = props => {
             size={24}
             icon={heart}
             className={
-             'isLiked'
+              likes.map(v => {
+                return v.who._id
+              }).indexOf(currentUser._id) !== -1 ? 'isLiked' : ''
             }
             id={_id}
             onClick={() => likeHandler()}
@@ -204,15 +222,15 @@ const Index = props => {
             style={{ fontSize: '24px' }}
             type="message"
             onClick={() => {
-              //loadComments()
+              loadComments()
             }}
           />
           <Ico style={{ fontSize: '24px' }} type="link" />
         </div>
         <div className="likes-and-comments">
           <div className="likeCount">
-            <Popover 
-            //content={whoLikes()}
+            <Popover
+            content={whoLikes()}
             >
               {likes.length} lượt thích
             </Popover>
@@ -247,7 +265,6 @@ const Index = props => {
             <div className="seeAll">
               <a
                 onClick={() => {
-                  
                 }}
               >
                 Hide comments

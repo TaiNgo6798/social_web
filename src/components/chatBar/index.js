@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Avatar, Badge, Icon, Input } from 'antd'
+import { Avatar, Badge, Empty, Skeleton } from 'antd'
 import ChatWindow from './chatWindow'
 import { withRouter } from 'react-router-dom'
 import gql from 'graphql-tag'
@@ -29,24 +29,23 @@ function Index() {
   const { data , loading } = useQuery(USERS)
 
   const [listActiveChat, setListActiveChat] = useState([])
-  const currentUser = JSON.parse(localStorage.getItem('user'))
 
-  
-  useEffect(() => {
-    if(!loading)
-    console.log(data)
-  }, [data])
 
   const loadUsers = () => {
-    return data.users.map((v, k) => {
-      return (
-        <div className='user_chatBar' onClick={() => onUserClick(v._id)} key={k}>
-          <Avatar size={34} src={v.avatar || (v.gender === 'female' ? femaleUser : maleUser)} />
-          <p >{`${v.firstName} ${v.lastName}`}</p>
-          <Badge color={'green'} />
-        </div>
-      )
-    })
+    try {
+      return data.users.map((v, k) => {
+        return (
+          <div className='user_chatBar' onClick={() => onUserClick(v._id)} key={k}>
+            <Avatar size={34} src={v.avatar || (v.gender === 'female' ? femaleUser : maleUser)} />
+            <p >{`${v.firstName} ${v.lastName}`}</p>
+            <Badge color={'green'} />
+          </div>
+        )
+      })
+    } catch (error) {
+      return <Skeleton loading={true} active />
+    }
+
   }
 
   const closeActiveChatHandler = (_id) => {
