@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useMemo } from 'react'
 //context
 import { PostContext } from '@contexts/postContext'
 import { Skeleton, Empty } from 'antd'
@@ -71,7 +71,7 @@ const Index = () => {
     try {
       if (!postLoading && postList.length === 0) {
         setLoadingSke(false)
-        setPostList([...data.posts])
+        setPostList([...data.posts])// 1
         setLoadingMore(true)
       }
 
@@ -83,7 +83,7 @@ const Index = () => {
 
 
 
-  const loadPosts = () => {
+  const loadPosts = useMemo(() => {
     try {
       if (postList.length !== 0)
         return postList.map((v, k) => {
@@ -104,18 +104,16 @@ const Index = () => {
             time={time}
           />
         })
-      return <Empty />
     }
     catch (err) {
       return 'Không thể tải bài viết  :('
     }
-  }
+  }, [postList])
 
   return (
     <Skeleton loading={loadingSke} active >
       <div className='posts'>
-
-        {loadPosts()}
+        {postList.length > 0  ? loadPosts : <Empty/>}
       </div>
       <div className='postList_loadMore'>
         <Skeleton loading={loadingMore} active ></Skeleton>

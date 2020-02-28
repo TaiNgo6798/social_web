@@ -69,6 +69,7 @@ const [loadCmts, { loading, data }] = useLazyQuery(GET_COMMENTS, {
   const [editModalVisible, setEditModalVisible] = useState(false)
   const { confirm } = Modal
 
+
   useEffect(() => {
     let mounted = true
     if (mounted) {
@@ -222,7 +223,7 @@ const [loadCmts, { loading, data }] = useLazyQuery(GET_COMMENTS, {
             style={{ fontSize: '24px' }}
             type="message"
             onClick={() => {
-              loadComments()
+             // loadComments()
             }}
           />
           <Ico style={{ fontSize: '24px' }} type="link" />

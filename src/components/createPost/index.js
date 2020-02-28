@@ -63,28 +63,32 @@ const Index = (props) => {
     const url = 'http://localhost:14377/file/upload?type=post'
     axios.post(url, formData, config)
       .then(res => {
-        addPost({variables:{
-          content,
-          image: res.data
-        }}).then((res) => {
-          setPosting(false)
-          if(res.data.addPost) {
-            setContent('')
-            setImageUrl('')
-            setImage(null)
-            setAddPostData(res.data.addPost)
-            notification.success({
-              message: 'Tạo xong  !',
-              placement: 'bottomRight'
-            })
-          } else {
-            notification.error({
-              message: 'Đăng bài không thành công !',
-              placement: 'bottomRight'
-            })
-          }
+        if(res.data.status !== 415) {
+          addPost({variables:{
+            content,
+            image: res.data
+          }}).then((res) => {
+            if(res.data.addPost) {
+              setAddPostData(res.data.addPost)
+              notification.success({
+                message: 'Tạo xong  !',
+                placement: 'bottomRight'
+              })
+            } else {
+              notification.error({
+                message: 'Đăng bài không thành công !',
+                placement: 'bottomRight'
+              })
+            }
+            turnOFFmodal()
+          }).catch(err => console.log(err))
+        } else {
           turnOFFmodal()
-        }).catch(err => console.log(err))
+          notification.error({
+            message: res.data.response,
+            placement: 'bottomRight'
+          })
+        }
       })
       .catch(error => {
         console.log(error)
@@ -92,6 +96,10 @@ const Index = (props) => {
   }
 
   const turnOFFmodal = () => {
+    setPosting(false)
+    setContent('')
+    setImageUrl('')
+    setImage(null)
     const createPostForm = window.document.querySelector('.createPostForm')
     const body = window.document.querySelector('.body-fake')
     const closeBtn = window.document.querySelector('.close-button')

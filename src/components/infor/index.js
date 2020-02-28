@@ -34,8 +34,8 @@ const Index = (props) => {
           </div>
         </div>
         <div className='footer'>
-          <p>Design and Code by Ngo Thanh Tai and Vu Tan Dat</p>
-          <p>©2019 BookReview</p>
+          <p>Design and Code by Ngo Thanh Tai</p>
+          <p>©2020 Social App</p>
         </div>
       </div>
     </>
