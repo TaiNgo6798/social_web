@@ -1,0 +1,21 @@
+WHAT I LEANED FROM THIS PROJECT: 
+
+*Front-end (ReactJS):
+- Can use Hook
+- useEffect and clear 
+- useMemo for performance
+- useContext(for User and Post)
+- Graphql + Appolo server
+- Webpack config
+- Router management
+- Lazy Render Component 
+- High Order Component
+- Ant design
+
+*Back-end (NestJS):
+- Know how to upload image to google drive API
+- Know how to use NESTJS + TypeORM + MongoDB
+- Know how to upload file to server
+- Know how to use Guard for authenticating
+- Graphql (Resolver, Realtime, CRUD, Query, Mutation)
+- Login process (create token, Authenticating)
