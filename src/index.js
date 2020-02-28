@@ -4,7 +4,8 @@ import './index.css'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 
-import UserContextProvider from './contexts/userContext'
+import UserContextProvider from '@contexts/userContext'
+import PostContextProvider from '@contexts/postContext'
 
 //server
 import { ApolloClient } from 'apollo-client'
@@ -39,9 +40,11 @@ const client = new ApolloClient({
 ReactDOM.render(
   <ApolloProvider client={client}>
     <UserContextProvider>
-      <Router>
-        <App />
-      </Router>
+      <PostContextProvider>
+        <Router>
+          <App />
+        </Router>
+      </PostContextProvider>
     </UserContextProvider>
   </ApolloProvider>
   , document.getElementById('root'))

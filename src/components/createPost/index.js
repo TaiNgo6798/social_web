@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useContext } from 'react'
 import { Button, Divider, Avatar, Input, Upload, Icon, message, Spin, Select, notification } from 'antd'
 // import css
 import './index.scss'
@@ -13,11 +13,30 @@ import axios from 'axios'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/react-hooks'
 
+//context
+import { PostContext } from '@contexts/postContext'
+
 
 const { TextArea } = Input
 const ADD_POST = gql`
 mutation add($content:String!, $image: String!){
-  addPost(post: {content: $content, image: $image})
+  addPost(post: {content: $content, image: $image}){
+    _id
+    who{
+      email
+      firstName
+      lastName
+      _id
+    }
+    image
+    content
+    time
+    likes{
+      who{
+        email
+      }
+    }
+  }
 }
 `
 
@@ -31,6 +50,7 @@ const Index = (props) => {
   const [ready, setReady] = useState(false)
   const [image, setImage] = useState(null)
   const [addPost] = useMutation(ADD_POST)
+  const {setAddPostData} = useContext(PostContext)
 
   const onSubmitPost = () => {
     window.document.querySelector('.text').value = ''
@@ -48,17 +68,22 @@ const Index = (props) => {
           image: res.data
         }}).then((res) => {
           setPosting(false)
-          res.data.addPost ? 
-          notification.success({
-            message: 'Tạo xong  !',
-            placement: 'bottomRight'
-          }) : 
-          notification.error({
-            message: 'Đăng bài không thành công !',
-            placement: 'bottomRight'
-          })
+          if(res.data.addPost) {
+            setContent('')
+            setImageUrl('')
+            setImage(null)
+            setAddPostData(res.data.addPost)
+            notification.success({
+              message: 'Tạo xong  !',
+              placement: 'bottomRight'
+            })
+          } else {
+            notification.error({
+              message: 'Đăng bài không thành công !',
+              placement: 'bottomRight'
+            })
+          }
           turnOFFmodal()
-          
         }).catch(err => console.log(err))
       })
       .catch(error => {
@@ -123,7 +148,7 @@ const Index = (props) => {
       setReady(false)
       setIsLoading(true)
     }
-    if (info.file.status === 'done') {
+    if (info.file.status === 'done') {setReady
       getBase64(info.file.originFileObj, imageUrl => {
         setIsLoading(false)
         setImageUrl(imageUrl)
@@ -182,7 +207,7 @@ const Index = (props) => {
           <div className='main'>
             <Avatar size={45} src={avatar || (gender === 'female' ? femaleUser : maleUser)} />
             <TextArea
-              setfieldvalue={content}
+              value={content}
               className='text'
               placeholder="Bạn có đang muốn chia sẻ cuốn sách nào không ?"
               autoSize={{ minRows: 1, maxRows: 50 }}

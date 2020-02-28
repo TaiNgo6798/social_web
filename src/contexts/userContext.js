@@ -1,14 +1,12 @@
 import React, { useState, createContext, useEffect } from 'react'
 import jwt from 'jsonwebtoken'
 
-
 export const UserContext = createContext()
 
 
 function Index(props) {
   const [user, setUser] = useState(null)
   const [currentUrl, setCurrentURL] = useState('')
-  const [isLoad, setIsLoad] = useState(false)
 
   useEffect(() => {
     let mounted = true
@@ -44,9 +42,7 @@ function Index(props) {
     refreshUser,
     currentUrl,
     refreshCurrentUrl,
-    decodeToken,
-    isLoad,
-    setIsLoad
+    decodeToken
   }
 
   return (

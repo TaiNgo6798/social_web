@@ -204,7 +204,7 @@ const [loadCmts, { loading, data }] = useLazyQuery(GET_COMMENTS, {
           </div>
         </div>
         <div className="body">
-          <img src={image}></img>
+          <img src={image || ''}></img>
         </div>
         <div className="likes">
           <Icon

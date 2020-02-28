@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 //context
-import { UserContext } from '@contexts/userContext'
+import { PostContext } from '@contexts/postContext'
 import { Skeleton, Empty } from 'antd'
 import { useBottomScrollListener } from 'react-bottom-scroll-listener'
 import { useQuery } from '@apollo/react-hooks'
@@ -43,14 +43,17 @@ const Index = () => {
   const [postList, setPostList] = useState([])
   const [loadingSke, setLoadingSke] = useState(true)
   const [loadingMore, setLoadingMore] = useState(true)
-  const  { isLoad, setIsLoad } = useContext(UserContext)
+  const {addPostData, setAddPostData} = useContext(PostContext)
 
-
-  
+  useEffect(() => {
+    if(addPostData){
+      setPostList([addPostData, ...postList])
+      setAddPostData(null)
+    }
+  }, [addPostData])  
 
   useBottomScrollListener(() => {
     console.log('bottom')
-    setIsLoad(true)
     setSkip((prev) => prev + 5)
     refetch().then((res) => {
       if (res.data.posts.length > 0) {
@@ -104,13 +107,14 @@ const Index = () => {
       return <Empty />
     }
     catch (err) {
-      return 'Cant get posts, something went wrong :('
+      return 'Không thể tải bài viết  :('
     }
   }
 
   return (
     <Skeleton loading={loadingSke} active >
       <div className='posts'>
+
         {loadPosts()}
       </div>
       <div className='postList_loadMore'>
