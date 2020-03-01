@@ -50,7 +50,7 @@ const Index = (props) => {
   const [ready, setReady] = useState(false)
   const [image, setImage] = useState(null)
   const [addPost] = useMutation(ADD_POST)
-  const {setAddPostData} = useContext(PostContext)
+  const { setAddPostData } = useContext(PostContext)
 
   const onSubmitPost = () => {
     window.document.querySelector('.text').value = ''
@@ -63,12 +63,14 @@ const Index = (props) => {
     const url = 'http://localhost:14377/file/upload?type=post'
     axios.post(url, formData, config)
       .then(res => {
-        if(res.data.status !== 415) {
-          addPost({variables:{
-            content,
-            image: res.data
-          }}).then((res) => {
-            if(res.data.addPost) {
+        if (res.data.status !== 415) {
+          addPost({
+            variables: {
+              content,
+              image: res.data
+            }
+          }).then((res) => {
+            if (res.data.addPost) {
               setAddPostData(res.data.addPost)
               notification.success({
                 message: 'Tạo xong  !',
@@ -103,7 +105,7 @@ const Index = (props) => {
     const createPostForm = window.document.querySelector('.createPostForm')
     const body = window.document.querySelector('.body-fake')
     const closeBtn = window.document.querySelector('.close-button')
-    
+
     createPostForm.setAttribute('style', 'z-index: 8')
     window.document.querySelector('.bottom-bar').classList.remove('show-from-post-component')
     closeBtn.classList.remove('show-from-post-component')
@@ -156,7 +158,8 @@ const Index = (props) => {
       setReady(false)
       setIsLoading(true)
     }
-    if (info.file.status === 'done') {setReady
+    if (info.file.status === 'done') {
+      setReady
       getBase64(info.file.originFileObj, imageUrl => {
         setIsLoading(false)
         setImageUrl(imageUrl)
@@ -217,7 +220,7 @@ const Index = (props) => {
             <TextArea
               value={content}
               className='text'
-              placeholder="Bạn có đang muốn chia sẻ cuốn sách nào không ?"
+              placeholder="Bạn đang nghĩ gì ?"
               autoSize={{ minRows: 1, maxRows: 50 }}
               style={{ borderColor: 'transparent', fontSize: '18px' }}
               onChange={(e) => setContent(e.target.value)}

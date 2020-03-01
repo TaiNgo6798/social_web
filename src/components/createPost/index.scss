@@ -1,5 +1,14 @@
 
 
+@media only screen and (min-width: 640px){ // ipad and laptop
+  .top-bar{
+    display: flex !important;
+  }
+  .ant-divider{
+    display: inherit !important;
+  }
+}
+
 .createPostForm{
   position: relative !important;
   z-index: 8;
@@ -12,7 +21,7 @@
   background-color: #FFFFFF;
 
   .top-bar{
-    display: flex;
+    display: none;
     width: 100%;
     padding-right: 10px;
     >h3{
@@ -24,12 +33,17 @@
     }
   }
 
+  .ant-divider{
+    display: none ;
+  }
+
   .main{
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
     >:first-child{
-      margin-right: 12px;
+      margin-right: 10px;
     }
     .text{
       &:focus{

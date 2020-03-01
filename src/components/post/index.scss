@@ -1,7 +1,12 @@
+@media only screen and (min-width: 640px){ // ipad and laptop
+  .postForm{
+    border-radius: 10px;
+  }
+}
+
 .postForm{
   box-shadow: 0 2px 4px rgba(108,111,115,.1);
   border: 1px #EBEDF0 solid;
-  border-radius: 10px;
   background-color: #FFFFFF;
   display: flex;
   flex-direction: column;

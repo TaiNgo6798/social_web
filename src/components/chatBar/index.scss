@@ -1,4 +1,13 @@
+
+@media only screen and (min-width: 1024px) {
+  .container_chatBar{
+    display: inherit !important;
+  }
+}
+
+
 .container_chatBar{
+  display: none;
   transition: all .5s cubic-bezier(0.85, 0.01, 0.13, 0.93);
   background-color: #FFFFFF;
   border: #EBEDF0 solid 1px;
@@ -9,7 +18,7 @@
   position: fixed;
   left: 0;
   top: 0;
-  margin-top: 5.52em;
+  margin-top: 4.3em;
   z-index: 9;
   padding: 1em;
   .user_chatBar{

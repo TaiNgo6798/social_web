@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Input, Badge, Icon } from 'antd'
+import { Input, Badge, Icon, Divider } from 'antd'
 import { withRouter } from 'react-router-dom'
 
 import './index.scss'
 
-import  { UserContext }  from '../../contexts/userContext' 
+import Infor from '@components/infor'
+
+import { UserContext } from '../../contexts/userContext'
 
 const { Search } = Input
 
@@ -19,9 +21,9 @@ function Index(props) {
     }, 10000)
   }
   useEffect(() => {
-   
+
     let mounted = true
-    if(mounted) {
+    if (mounted) {
       //loadNotify()
       window.addEventListener('scroll', () => {
         if (window.scrollY >= 50 && heightChange === true) {
@@ -34,42 +36,49 @@ function Index(props) {
         }
       })
     }
-    return () => {mounted = false}
+    return () => { mounted = false }
   }, [])
 
   const searchHandler = (value) => {
-    
+
   }
 
   return (
-        <div className='nav'>
-          <div className='container'>
-            <div className='logo' onClick={() => props.history.push('/newsFeed')}></div>
-            <div className='searchBar'>
-              <Search
-              placeholder="input search text"
-              onSearch={value => searchHandler(value)}
-              style={{ width: 200 }}
-            />
-            </div>
-            <div className='notify'>
-              <Badge count={messageCount}>
-                <Icon type="mail" className='icon' />
-              </Badge>
-              <Badge count={5}>
-                <Icon type="bell" className='icon' />
-              </Badge>
-              {
-                currentUser && (
-                  <Badge count={0}>
-                    <Icon type="user" className='icon' onClick={() => props.history.push(`/profile/${currentUser._id}`)} />
-                  </Badge>
-                )
-              }
-
-            </div>
-          </div>
+    <div className='nav'>
+      <div className='container'>
+        <div className='logo' onClick={() => props.history.push('/newsFeed')}></div>
+        <div className='searchBar'>
+          <Search
+            placeholder="input search text"
+            onSearch={value => searchHandler(value)}
+            style={{ width: '100%' }}
+          />
         </div>
+        <div className='iconTop'>
+          <Infor user={currentUser ? currentUser : { image: '', firstName: 'anonymous' }} />
+          {/* <Icon type="text" className='icon' /> */}
+          <Badge count={messageCount} className='icon message_icon'>
+            <Icon type="mail"  />
+          </Badge>
+          <Divider type='vertical' style={{margin: 0}} className='message_divider' />
+          <Badge count={5}>
+            <Icon type="bell" className='icon' />
+          </Badge>
+          <Divider type='vertical' style={{margin: 0}}/>
+          {
+            currentUser && (
+              <>
+              <Badge count={0}>
+                <Icon type="user" className='icon' onClick={() => props.history.push(`/profile/${currentUser._id}`)} />
+              </Badge>
+            </>
+            )
+          }
+          <Divider type='vertical' style={{margin: 0}} className='search_icon_divider'/>
+          <Icon type="search" className='icon search_icon' />
+        </div>
+      </div>
+    </div>
   )
 }
 

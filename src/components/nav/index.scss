@@ -4,12 +4,55 @@
   height: 57px !important
 }
 
+@media only screen and (min-width: 640px){ // ipad and laptop
+  .iconTop{
+    min-width: 300px !important;
+    .search_icon{
+      display: none !important;
+    }
+
+    .search_icon_divider{
+      display: none !important;
+    }
+
+    .infor{
+      display: inherit !important;
+    }
+  }
+
+  .logo{
+    display: inherit !important;
+  }
+  .searchBar{
+    display: inherit !important;
+  }
+}
+
+@media only screen and (min-width: 768px){
+
+}
+
+@media only screen and (min-width: 1024px){
+  .container{
+    width: 50% !important;
+    .iconTop{
+      min-width: 230px !important;
+      .message_icon{
+        display:  none !important;
+      }
+      .message_divider{
+        display: none !important;
+      }
+    }
+  }
+}
+
 .nav{
   transition: all 0.2s;
   z-index: 9;
   position: fixed;
   top: 0;
-  height: 77px;
+  height: 60px;
   width: 100vw;
   background-color: #FFFFFF;
   border-bottom: 1px #DBDBDB solid; 
@@ -18,11 +61,10 @@
   display: flex;
   .container{
     background-color: #FFFFFF;
-    max-width: 1000px;
     width: 100%;
     height: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
     .logo{
       content: url('../../assets/images/logo.png');
@@ -32,21 +74,27 @@
         cursor: pointer;
       }
     }
-    .notify{
-      margin-right: 80px;
-      height: 80%;
-      width: 132px;
+    .iconTop{
+      min-width: 100%;
+      height: 70%;
       display: flex;
       align-items: center;
-      >span{
-        margin-left: 26px
-      }
+      justify-content: space-evenly;
       .icon{
-        font-size: 25px;
+        font-size: 22px;
         :hover{
           cursor: pointer;
         }
       }
+      .infor{
+        display: none;
+      }
+    }
+    .logo{
+      display: none;
+    }
+    .searchBar{
+      display: none;
     }
   }
 }
