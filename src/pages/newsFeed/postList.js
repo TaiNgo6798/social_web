@@ -43,14 +43,15 @@ const Index = () => {
   const [postList, setPostList] = useState([])
   const [loadingSke, setLoadingSke] = useState(true)
   const [loadingMore, setLoadingMore] = useState(true)
-  const {addPostData, setAddPostData} = useContext(PostContext)
+  const { addPostData, setAddPostData } = useContext(PostContext)
+
 
   useEffect(() => {
-    if(addPostData){
+    if (addPostData) {
       setPostList([addPostData, ...postList])
       setAddPostData(null)
     }
-  }, [addPostData])  
+  }, [addPostData])
 
   useBottomScrollListener(() => {
     console.log('bottom')
@@ -85,7 +86,7 @@ const Index = () => {
 
   const loadPosts = useMemo(() => {
     try {
-      if (postList.length !== 0)
+      if (postList.length !== 0) {
         return postList.map((v, k) => {
           const {
             _id,
@@ -104,6 +105,8 @@ const Index = () => {
             time={time}
           />
         })
+      }
+
     }
     catch (err) {
       return 'Không thể tải bài viết  :('
@@ -113,7 +116,7 @@ const Index = () => {
   return (
     <Skeleton loading={loadingSke} active >
       <div className='posts'>
-        {postList.length > 0  ? loadPosts : <Empty/>}
+        {postList.length > 0 ? loadPosts : <Empty />}
       </div>
       <div className='postList_loadMore'>
         <Skeleton loading={loadingMore} active ></Skeleton>

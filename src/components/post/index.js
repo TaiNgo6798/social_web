@@ -56,15 +56,9 @@ const Index = props => {
     time
   } = props
 
-const [loadCmts, { loading, data }] = useLazyQuery(GET_COMMENTS, {
-  variables: {
-    id: _id
-  }
-})
 
   const postDay2 = new Date(time)
   const [showAllComment, setShowAllComment] = useState(false)
-  const [likeLocal, setLikeLocal] = useState([])
   const {user: currentUser} = useContext(UserContext)
   const [editModalVisible, setEditModalVisible] = useState(false)
   const { confirm } = Modal
@@ -73,14 +67,12 @@ const [loadCmts, { loading, data }] = useLazyQuery(GET_COMMENTS, {
   useEffect(() => {
     let mounted = true
     if (mounted) {
-      let likeList = []
       // Object.keys(likes).forEach((v, k) => {
       //   likeList.push({
       //     id: v,
       //     name: Object.values(likes)[k]
       //   })
       // })
-      setLikeLocal(likeList)
       // const likeBtn = window.document.querySelector(`[id=${_id}]`) 
       // likeBtn.addEventListener('click', () => {
       //   likeBtn.classList.toggle('isLiked')
@@ -253,9 +245,9 @@ const [loadCmts, { loading, data }] = useLazyQuery(GET_COMMENTS, {
         <CreateComment
           idPost={_id}
           idCurrentUser={currentUser._id}
-          setShowAllComment={e => {
-            setShowAllComment(e)
-          }}
+          // setShowAllComment={e => {
+          //   setShowAllComment(e)
+          // }}
           commentData=''
         />
         <div className="comments">
@@ -275,7 +267,7 @@ const [loadCmts, { loading, data }] = useLazyQuery(GET_COMMENTS, {
         </div>
         <EditPostModal
           visible={editModalVisible}
-          onCancel={() => setEditModalVisible(false)}
+          //onCancel={() => setEditModalVisible(false)}
           idPost={_id}
           desc={content}
           url={image}

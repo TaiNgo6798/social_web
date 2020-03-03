@@ -125,6 +125,7 @@ const Index = (props) => {
 
       window.document.addEventListener('scroll', () => {
         if (window.scrollY >= 350) {
+          createPostForm.setAttribute('style', 'z-index: 8')
           body.classList.remove('modal-active')
           window.document.querySelector('.bottom-bar') && window.document.querySelector('.bottom-bar').classList.remove('show-from-post-component')
           closeBtn.classList.remove('show-from-post-component')

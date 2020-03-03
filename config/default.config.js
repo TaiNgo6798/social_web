@@ -51,7 +51,7 @@ const _default = (isDev, env) => {
     new MiniCssExtractPlugin({
       filename: `${staticPath}/css/[hash].css`,
       chunkFilename: `${staticPath}/css/chunk/[contenthash].chunk.css`,
-      ignoreOrder: false
+      ignoreOrder: true
     }),
     new OptimizeCSSAssetsPlugin({
       cssProcessor: cssnano,
