@@ -10,7 +10,7 @@ WHAT I LEANED FROM THIS PROJECT:
 - useContext(for User and Post)
 - Webpack config
 - Router management
-- Lazy Render Component 
+- Lazy Render Component => Less re-render
 
 *Back-end (NestJS):
 - Graphql (Resolver, Realtime, CRUD, Query, Mutation)
