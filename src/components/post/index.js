@@ -165,16 +165,6 @@ const Index = props => {
   //   })
   // }
 
-  const showEmojiHandler = (e) => {
-    const emoji = window.document.querySelector(`#emoji${_id}`)
-    emoji.classList.add('emoji_show')
-  }
-
-  const hideEmojiHandler = () => {
-    const emoji = window.document.querySelector(`#emoji${_id}`)
-    emoji.classList.remove('emoji_show')
-  }
-
   return (
     <>
       <div className="postForm">
