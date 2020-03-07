@@ -9,16 +9,16 @@ import {
   Icon as Ico,
   Spin,
   Menu,
-  Dropdown
+  Dropdown,
+  Divider
 } from 'antd'
 import moment from 'moment'
-import Swal from 'sweetalert2'
 import { Icon } from 'react-icons-kit'
 import { heart } from 'react-icons-kit/fa/heart'
-import { heartO } from 'react-icons-kit/fa/heartO'
 // import css
 import './index.scss'
 
+import Emoji from './emoji'
 import CreateComment from '../createComment'
 import EditPostModal from './editPostModal'
 import { withRouter } from 'react-router-dom'
@@ -59,7 +59,7 @@ const Index = props => {
 
   const postDay2 = new Date(time)
   const [showAllComment, setShowAllComment] = useState(false)
-  const {user: currentUser} = useContext(UserContext)
+  const { user: currentUser } = useContext(UserContext)
   const [editModalVisible, setEditModalVisible] = useState(false)
   const { confirm } = Modal
 
@@ -67,6 +67,9 @@ const Index = props => {
   useEffect(() => {
     let mounted = true
     if (mounted) {
+
+
+
       // Object.keys(likes).forEach((v, k) => {
       //   likeList.push({
       //     id: v,
@@ -110,19 +113,24 @@ const Index = props => {
   )
 
   const loadComments = () => {
-    
+
   }
 
   const whoLikes = () => {
     try {
       return likes.map((v) => {
-      return <p key = {v.who._id}>{v.who.firstName + ' ' + v.who.lastName}</p>
+        return <p key={v.who._id}>{v.who.firstName + ' ' + v.who.lastName}</p>
       })
     } catch (error) {
       console.log(error)
     }
-    
   }
+
+  const emoji = (
+    <div className='post_emoji' id={`emoji${_id}`}>
+      <Emoji />
+    </div>
+  )
 
   const likeHandler = () => {
 
@@ -157,20 +165,30 @@ const Index = props => {
   //   })
   // }
 
+  const showEmojiHandler = (e) => {
+    const emoji = window.document.querySelector(`#emoji${_id}`)
+    emoji.classList.add('emoji_show')
+  }
+
+  const hideEmojiHandler = () => {
+    const emoji = window.document.querySelector(`#emoji${_id}`)
+    emoji.classList.remove('emoji_show')
+  }
+
   return (
     <>
       <div className="postForm">
         <div className="header">
           <div className="avatar">
             <Avatar
-              size={45}
+              size={40}
               src={user.avatar}
               onClick={() => props.history.push(`/profile/${user._id}`)}
             />
           </div>
           <div className="username">
             <p onClick={() => props.history.push(`/profile/${user._id}`)}>
-              <i>{`${user.firstName || ''} ${user.lastName || ' '}`}</i>
+              {`${user.firstName || ''} ${user.lastName || ' '}`}
             </p>
             <div className="time">
               <a title={time}>
@@ -197,50 +215,47 @@ const Index = props => {
           </div>
         </div>
         <div className="body">
-          <img src={image || ''}></img>
+          <div className="userContent">
+            <p>{content}</p>
+          </div>
+          {image ? <img src={image} className='post_image' ></img> : <></>}
         </div>
         <div className="likes">
-          <Icon
-            size={24}
-            icon={heart}
-            className={
-              likes.map(v => {
-                return v.who._id
-              }).indexOf(currentUser._id) !== -1 ? 'isLiked' : ''
-            }
-            id={_id}
-            onClick={() => likeHandler()}
-          />
-          <Ico
-            style={{ fontSize: '24px' }}
-            type="message"
-            onClick={() => {
-             // loadComments()
-            }}
-          />
-          <Ico style={{ fontSize: '24px' }} type="link" />
-        </div>
-        <div className="likes-and-comments">
-          <div className="likeCount">
-            <Popover
-            content={whoLikes()}
-            >
-              {likes.length} lượt thích
-            </Popover>
-          </div>
-          <div className="commentsCount">
-            <a
-              onClick={() => {
-                //loadComments()
-              }}
-            >
-              123 bình luận
+          <Popover
+            content={emoji}
+            className='emoji_popover'
+          >
+            <Icon
+              size={25}
+              icon={heart}
+              className={
+                likes.map(v => {
+                  return v.who._id
+                }).indexOf(currentUser._id) !== -1 ? 'isLiked' : ''
+              }
+              id={_id}
+              onClick={() => likeHandler()}
+            />
+          </Popover>
+
+          <div className="likes-and-comments-count">
+            <div className="likeCount">
+              <Popover
+                content={whoLikes()}
+              >
+                {likes.length}
+              </Popover>
+            </div>
+            <div className="commentsCount">
+              <a
+                onClick={() => {
+                  //loadComments()
+                }}
+              >
+                123 bình luận
             </a>
+            </div>
           </div>
-        </div>
-        <div className="userContent">
-          <p style={{ margin: '0 5px 0 0' }}>{`${user.firstName} ${user.lastName}`}</p>
-          <p>{content}</p>
         </div>
         <CreateComment
           idPost={_id}

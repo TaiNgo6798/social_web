@@ -5,7 +5,8 @@ import {
   Button,
   Spin,
   notification,
-  Select
+  Select,
+  Divider
 } from 'antd'
 
 import Swal from 'sweetalert2'
@@ -193,6 +194,7 @@ function RegistrationForm(props) {
             ],
           })(<Input.Password onBlur={handleConfirmBlur} />)}
         </Form.Item>
+
         <Button type='primary' className='btnRegister' htmlType='submit'>Đăng kí</Button>
         <Button className='btnBackLogin' onClick={() => { props.backLogin() }}>Về trang đăng nhập</Button>
       </Form>

@@ -32,7 +32,6 @@ function Index(props) {
           onChangeCommentHandler(e)
         }}
       />
-      <Button onClick={() => postCommentHandler()}>Đăng</Button>
     </div>
   )
 }

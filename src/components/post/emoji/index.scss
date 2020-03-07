@@ -1,0 +1,463 @@
+.emoji_list
+    {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .emoji
+    {
+        transition: all .06s linear;
+        margin: .5em;
+        position: relative;
+        width: 120*0.3px;
+        height: 120*0.3px;
+        border-radius: 50%;
+        box-shadow: inset 0 0 8*0.3px rgba(0,0,0,0.3);
+        background-color: #ffda6a;
+        &:hover{
+          cursor: pointer;
+          transform: scale(1.5);
+          z-index: 999;
+        }
+    }
+    .face
+    {
+      position: absolute;
+      width: inherit;
+      height: inherit;
+    }
+    .like
+    {
+        background-color: #548dff;
+
+    }
+    .heart
+    {
+
+        background-color: #f55064;
+    }
+    .angry
+    {
+        background: linear-gradient(#d5234c, #ffda6a);
+    }
+    .emoji .fa
+    {
+        position: absolute;
+        color: white;
+        top: 20%;
+        left: 15%;
+    }
+    .fa-thumbs-up
+    {
+        font-size: 1.8em !important;
+        transform-origin: 0% 100%;
+        animation: like 2s linear infinite;
+    }
+    .fa-heart
+    {
+        font-size: 1.8em !important;
+        animation: heart-beat 1s linear infinite alternate;
+    }
+    @keyframes like
+    {
+      25%
+        {
+        transform: rotate(15deg);
+        }
+      50%
+        {
+        transform: rotate(-15deg) translateY(-10*0.3px);
+        }
+      75%, 100%
+        {
+        transform: rotate(0deg);
+        }
+    }
+    @keyframes heart-beat
+    {
+        25%
+        {
+            transform: scale(1.1);
+        }
+        75%
+        {
+            transform: scale(0.6);
+        }
+    }
+    .face-haha
+    {
+      animation: haha-face 2s linear infinite;
+    }
+    .eyes-haha
+    {
+      position: absolute;
+      width: 26*0.3px;
+      height: 6*0.3px;
+      border-radius: 2*0.3px;
+      left: 47*0.3px;
+      top: 35*0.3px;
+      transform: rotate(20deg);
+      box-shadow: -25*0.3px 5*0.3px 0 0 #000, 25*0.3px -5*0.3px 0 0 #000;
+    }
+    .eyes-haha:after
+    {
+      position: absolute;
+      content: '';
+      width: 26*0.3px;
+      height: 6*0.3px;
+      border-radius: 2*0.3px;
+      transform: rotate(-40deg);
+      box-shadow: -25*0.3px -5*0.3px 0 0 #000, 25*0.3px 5*0.3px 0 0 #000;
+    }
+    .mouth-haha
+    {
+      position: absolute;
+      width: 80*0.3px;
+      height: 40*0.3px;
+      left: 20*0.3px;
+      top: 50%;
+      background: #000;
+      border-radius: 0 0 40*0.3px 40*0.3px;
+      overflow: hidden;
+      animation: haha-mouth 2s linear infinite;
+    }
+    .tongue-haha
+    {
+      position: absolute;
+      width: 70*0.3px;
+      height: 30*0.3px;
+      background: #f55064;
+      left: 5*0.3px;
+      bottom: -10*0.3px;
+      border-radius: 50%;
+    }
+    @keyframes haha-face
+    {
+      10%, 30%, 50% {
+        transform: translateY(25*0.3px);
+      }
+      20%, 40% {
+        transform: translateY(15*0.3px);
+      }
+      60%, 80% {
+        transform: translateY(0);
+      }
+      70%, 90% {
+        transform: translateY(-10*0.3px);
+      }
+    }
+    @keyframes haha-mouth {
+      10%, 30%, 50% {
+        transform: scale(0.6);
+        top: 45%;
+      }
+      20%, 40% {
+        transform: scale(0.8);
+        top: 45%;
+      }
+      60%, 80% {
+        transform: scale(1);
+        top: 50%;
+      }
+      70% {
+        transform: scale(1.2);
+        top: 50%;
+      }
+      90% {
+        transform: scale(1.1);
+        top: 50%;
+      }
+    }
+    .face-wow
+    {
+        animation: wow-face 3s linear infinite;
+    }
+    .eyebrows-wow
+    {
+        position: absolute;
+        top: 15*0.3px;
+        left: 57*0.3px;
+        height: 6*0.3px;
+        width: 6*0.3px;
+        border-radius: 50%;
+        box-shadow: -18*0.3px 0 0 0 #000, -32*0.3px 0 0 0 #000, 18*0.3px 0 0 0 #000, 32*0.3px 0 0 0 #000;
+        animation: wow-brow 3s linear infinite;
+    }
+    .eyebrows-wow:before,
+    .eyebrows-wow:after
+    {
+        position: absolute;
+        content: '';
+        width: 24*0.3px;
+        height: 20*0.3px;
+        border: 6*0.3px solid transparent;
+        box-sizing: border-box;
+        border-radius: 50%;
+        border-top-color: black;
+        top: -3*0.3px;
+        
+    }
+    .eyebrows-wow:before
+    {
+        margin-left: -34*0.3px;
+    }
+    .eyebrows-wow:after
+    {
+        margin-left: 16*0.3px;
+    }
+    .eyes-wow
+    {
+        position: absolute;
+        width: 16*0.3px;
+        height: 24*0.3px;
+        left: 52*0.3px;
+        top: 35*0.3px;
+        border-radius: 50%;
+        box-shadow: 25*0.3px 0 0 0 #000, -25*0.3px 0 0 0 #000;
+    }
+    .mouth-wow
+    {
+        position: absolute;
+        width: 30*0.3px;
+        height: 45*0.3px;
+        left: 45*0.3px;
+        top: 50%;
+        border-radius: 50%;
+        background: #000;
+        animation: wow-mouth 3s linear infinite;
+    }
+    @keyframes wow-face
+    {
+        15%, 25%{transform: rotate(20deg) translateX(-25*0.3px);}
+        45%, 65% {transform: rotate(-20deg) translateX(25*0.3px);}
+        75%, 100% {transform: rotate(0deg) translateX(0);}
+    }
+    @keyframes wow-brow
+    {
+    15%, 65%{top: 25*0.3px;}
+    75%, 100%, 0% {top: 15*0.3px;}
+    }
+    @keyframes wow-mouth
+    {
+    10%, 30%
+        {
+            width: 20*0.3px;
+            height: 20*0.3px;
+            left: 50*0.3px;
+        }
+    50%, 70%
+        {
+            width: 30*0.3px;
+            height: 40*0.3px;
+            left: 45*0.3px;
+        }
+    75%, 100%{height: 50*0.3px;}
+    }
+    .face-sad
+    {
+      animation: sad-face 2s ease-in infinite;
+    }
+    .eyebrows-sad
+    {
+        position: absolute;
+        left: 57*0.3px;
+        top: 35*0.3px;
+        height: 6*0.3px;
+        width: 6*0.3px;
+        border-radius: 50%;
+        box-shadow: -40*0.3px 9*0.3px 0 0 #000, -25*0.3px 0 0 0 #000, 25*0.3px 0 0 0 #000, 40*0.3px 9*0.3px 0 0 #000;
+    }
+    .eyebrows-sad:before,
+    .eyebrows-sad:after
+    {
+        position: absolute;
+        content: '';
+        width: 30*0.3px;
+        height: 20*0.3px;
+        border: 6*0.3px solid transparent;
+        box-sizing: border-box;
+        border-radius: 50%;
+        border-top-color: black;
+        top: 2*0.3px;
+        left: -12*0.3px;
+    }
+    .eyebrows-sad:before
+    {
+        margin-left: -30*0.3px;
+        transform: rotate(-30deg);
+    }
+    .eyebrows-sad:after
+    {
+        margin-left: 30*0.3px;
+        transform: rotate(30deg);
+    }
+    .eyes-sad
+    {
+        position: absolute;
+        width: 14*0.3px;
+        height: 16*0.3px;
+        left: 53*0.3px;
+        top: 50*0.3px;
+        border-radius: 50%;
+        box-shadow: 25*0.3px 0 0 0 #000, -25*0.3px 0 0 0 #000;
+    }
+    .eyes-sad:after
+    {
+        position: absolute;
+        content: '';
+        background: #548dff;
+        width: 12*0.3px;
+        height: 12*0.3px;
+        border-radius: 0 10*0.3px 10*0.3px 10*0.3px;
+        transform-origin: 0% 0%;
+        animation: tear-drop 2s ease-in infinite;
+    }
+    .mouth-sad
+    {
+        position: absolute;
+        width: 60*0.3px;
+        height: 80*0.3px;
+        left: 30*0.3px;
+        top: 80*0.3px;
+        box-sizing: border-box;
+        border: 6*0.3px solid transparent;
+        border-radius: 50%;
+        border-top-color: black;
+        animation: sad-mouth 2s ease-in infinite;
+    }
+    .mouth-sad:after
+    {
+        position: absolute;
+        content: '';
+        width: 6*0.3px;
+        height: 6*0.3px;
+        border-radius: 50%;
+        top: 4*0.3px;
+        left: 21*0.3px;
+        box-shadow: -18*0.3px 0 0 0 #000, 18*0.3px 0 0 0 #000;
+    }
+    @keyframes sad-face
+    {
+        25%, 35% {top: -15*0.3px;}
+        55%, 95% {top: 10*0.3px;}
+        100%, 0% {top: 0;}
+    }
+    @keyframes sad-mouth
+    {
+        25%, 35% {
+        transform: scale(0.85);
+        top: 70*0.3px;
+        }
+        55%, 100%, 0% {
+        transform: scale(1);
+        top: 80*0.3px;
+        }
+    }
+    @keyframes tear-drop
+    {
+        0%, 100% {
+          display: block;
+          left: 32*0.3px;
+          top: 15*0.3px;
+          transform: rotate(45deg) scale(0);
+        }
+        25% {
+          display: block;
+          left: 32*0.3px;
+          transform: rotate(45deg) scale(2);
+            z-index: 1;
+        }
+        49.9% {
+          display: block;
+          left: 32*0.3px;
+          top: 65*0.3px;
+          transform: rotate(45deg) scale(0);
+        }
+        50% {
+          display: block;
+          left: -18*0.3px;
+          top: 15*0.3px;
+          transform: rotate(45deg) scale(0);
+        }
+        75% {
+          display: block;
+          left: -18*0.3px;
+          transform: rotate(45deg) scale(2);
+        }
+        99.9% {
+          display: block;
+          left: -18*0.3px;
+          top: 65*0.3px;
+          transform: rotate(45deg) scale(0);
+            z-index: 1;
+        }
+    }
+    .face-angry
+    {
+        animation: angry-face 2s ease-in infinite;
+    }
+    .eyebrows-angry
+    {
+      position: absolute;
+      left: 57*0.3px;
+      top: 55*0.3px;
+      height: 6*0.3px;
+      width: 6*0.3px;
+      border-radius: 50%;
+      box-shadow: -44*0.3px 5*0.3px 0 0 #000, -9*0.3px 16*0.3px 0 0 #000, 9*0.3px 16*0.3px 0 0 #000, 44*0.3px 5*0.3px 0 0 #000;
+    }
+    .eyebrows-angry:before,
+    .eyebrows-angry:after
+    {
+      position: absolute;
+      content: '';
+      width: 50*0.3px;
+      height: 20*0.3px;
+      border: 6*0.3px solid transparent;
+      box-sizing: border-box;
+      border-radius: 50%;
+      border-bottom-color: black;
+    }
+    .eyebrows-angry:before
+    {
+      margin-left: -47*0.3px;
+      transform: rotate(15deg);
+    }
+    .eyebrows-angry:after
+    {
+      margin-left: 3*0.3px;
+      transform: rotate(-15deg);
+    }
+    .eyes-angry
+    {
+      position: absolute;
+      width: 12*0.3px;
+      height: 12*0.3px;
+      left: 54*0.3px;
+      top: 70*0.3px;
+      border-radius: 50%;
+      box-shadow: 25*0.3px 0 0 0 #000, -25*0.3px 0 0 0 #000;
+    }
+    .mouth-angry
+    {
+      position: absolute;
+      width: 36*0.3px;
+      height: 18*0.3px;
+      left: 42*0.3px;
+      bottom: 15*0.3px;
+      background: #000;
+      border-radius: 50%;
+      animation: angry-mouth 2s ease-in infinite;
+    }
+    @keyframes angry-face
+    {
+      35%, 60% {transform: translateX(0) translateY(10*0.3px) scale(0.9);}
+      40%, 50% {transform: translateX(-5*0.3px) translateY(10*0.3px) scale(0.9);}
+      45%, 55% {transform: translateX(5*0.3px) translateY(10*0.3px) scale(0.9);}
+    }
+    @keyframes angry-mouth
+    {
+      25%, 50% {height: 6*0.3px; bottom: 25*0.3px;}
+    }

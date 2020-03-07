@@ -4,7 +4,7 @@
   "main": "./src/index.js",
   "license": "MIT",
   "scripts": {
-    "start:webpack": "PORT=3000 NODE_ENV=production webpack-dev-server",
+    "start:webpack": "PORT=3000 NODE_ENV=development webpack-dev-server",
     "build:analyzer": "NODE_ENV=production NODE_TYPE=analyzer webpack",
     "build:webpack": "NODE_ENV=production webpack",
     "start": "npm run start:webpack",

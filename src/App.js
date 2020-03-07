@@ -23,18 +23,18 @@ const App = (props) => {
     return () => { mounted = false }
   }, [])
 
+  const NavAndChat = (
+    <>
+    <NavBar />
+    <Chatbar />
+  </>
+  )
+
   const exceptRoute = ['/', '/login', ''] // cac route khong hien thanh chat va thanh NAV
   const { currentUrl, refreshCurrentUrl } = useContext(UserContext)
   return (
     <>
-      {
-        exceptRoute.indexOf(currentUrl) === -1 ?
-          <>
-            <NavBar />
-            <Chatbar />
-          </>
-          : <></>
-      }
+        {exceptRoute.indexOf(currentUrl) === -1 && NavAndChat}
       <Suspense fallback={<div>Loading...</div>}>
         <AppRouters />
       </Suspense>

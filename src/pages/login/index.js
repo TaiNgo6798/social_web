@@ -9,6 +9,8 @@ import ForgotForm from './forgot-form'
 // import css
 import './index.scss'
 
+import background from '@assets/images/login_wallpaper.jpg'
+
 //server
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/react-hooks'
@@ -42,13 +44,9 @@ const Index = (props) => {
 
   const registerClick = () => {
     const loginForm = window.document.querySelector('.login')
-    loginForm.classList.toggle('hide')
+    loginForm.classList.toggle('hide_login')
     const registerForm = window.document.querySelector('.register')
-    registerForm.classList.toggle('show')
-    const imgRight = window.document.querySelector('.right-image')
-    imgRight.classList.toggle('hide-image')
-    const imgLeft = window.document.querySelector('.left-image')
-    imgLeft.classList.toggle('change-image')
+    registerForm.classList.toggle('show_register')
   }
 
 
@@ -88,53 +86,52 @@ const Index = (props) => {
   const { getFieldDecorator } = props.form
 
   return (
-    <div className='container'>
-      <div className='img'>
-        <div style={{ marginLeft: '2em' }}></div>
-        <div className='left-image'></div>
-        <div className='right-image'></div>
-      </div>
+    <div className='login_container'>
+      <img className='login_background' src={background}></img>
       <div className='form-center login'>
-        <h1 style={{ display: 'block', textAlign: 'center' }}>Đăng nhập</h1>
-        <Spin spinning={loading}>
-          <Form onSubmit={handleSubmit} className="login-form">
-            <Form.Item>
-              {getFieldDecorator('username', {
-                rules: [{ required: true, message: 'Vui lòng nhập địa chỉ E-mail !' }],
-              })(
-                <Input
-                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  placeholder="Email"
-                  ref={emailRef}
-                />,
-              )}
-            </Form.Item>
-            <Form.Item>
-              {getFieldDecorator('password', {
-                rules: [{ required: true, message: 'Vui lòng nhập mật khẩu !' }],
-              })(
-                <Input
-                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  type="password"
-                  placeholder="Password"
-                  ref={passwordRef}
-                />,
-              )}
-            </Form.Item>
-            <Form.Item>
-              <a className="forgotBtn" onClick={() => setForgotForm(true)}>
-                Quên mật khẩu ?
+        {/* <img className='login_formCenter_image' src={background}></img> */}
+        <div className='login_form_body'>
+          <h1 style={{ display: 'block', textAlign: 'center' }}>Đăng nhập</h1>
+          <Spin spinning={loading}>
+            <Form onSubmit={handleSubmit} className="login-form">
+              <Form.Item>
+                {getFieldDecorator('username', {
+                  rules: [{ required: true, message: 'Vui lòng nhập địa chỉ E-mail !' }],
+                })(
+                  <Input
+                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    placeholder="Email"
+                    ref={emailRef}
+                  />,
+                )}
+              </Form.Item>
+              <Form.Item>
+                {getFieldDecorator('password', {
+                  rules: [{ required: true, message: 'Vui lòng nhập mật khẩu !' }],
+                })(
+                  <Input
+                    prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    type="password"
+                    placeholder="Password"
+                    ref={passwordRef}
+                  />,
+                )}
+              </Form.Item>
+              <Form.Item>
+                <a className="forgotBtn" onClick={() => setForgotForm(true)}>
+                  Quên mật khẩu ?
                 </a>
-              <Button type="primary" htmlType="submit" className="login-form-button">
-                Đăng nhập
+                <Button type="primary" htmlType="submit" className="login-form-button">
+                  Đăng nhập
                   </Button>
-              Or <a onClick={() => registerClick()}>Đăng kí ngay !</a>
-            </Form.Item>
-          </Form>
-        </Spin>
+                Or <a onClick={() => registerClick()}>Đăng kí ngay !</a>
+              </Form.Item>
+            </Form>
+          </Spin>
+        </div>
       </div>
       <div className='form-center register'>
-        <h2 style={{ display: 'block', textAlign: 'center' }}>Đăng kí</h2>
+        <h1 style={{ display: 'block', textAlign: 'center' }}>Đăng kí</h1>
         <RegisterForm className='form-register' backLogin={() => registerClick()} />
       </div>
       <ForgotForm onCancel={() => setForgotForm(false)} visible={forgotForm} />
