@@ -74,7 +74,7 @@ const Index = () => {
   }, [editData])
 
   useBottomScrollListener(() => {
-    setSkip((prev) => prev + 5)
+    setSkip((prev) => prev + 10)
     refetch().then((res) => {
       if (res.data.posts.length > 0) {
         let newList = postList.concat(res.data.posts)

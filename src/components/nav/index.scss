@@ -18,6 +18,13 @@
     .infor{
       display: inherit !important;
     }
+    .user_icon{
+      display: none !important;
+    }
+    .user_icon_divider{
+      display: none !important;
+    }
+
   }
 
   .logo{
@@ -88,6 +95,13 @@
       }
       .infor{
         display: none;
+      }
+      .home_button{
+        display: flex;
+        align-items: center;
+        &:hover{
+          cursor: pointer;
+        }
       }
     }
     .logo{

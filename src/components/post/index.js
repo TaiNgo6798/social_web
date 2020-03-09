@@ -56,8 +56,8 @@ mutation edit($_id: ID!, $content: String!){
 `
 
 const DELETE_ONE_POST = gql`
-mutation delete($_id: String!){
-  deletePost(postID: $_id)
+mutation delete($deleteInput: DeleteInput!){
+  deletePost(deleteInput: $deleteInput)
 }
 `
 
@@ -72,6 +72,8 @@ const Index = props => {
     content,
     time
   } = props
+
+  const { id: imageID, url: imageUrl } = image
 
   const notify = (text, code) => {
     code === 1 ?
@@ -102,11 +104,18 @@ const Index = props => {
       centered: true,
       onOk() {
         deleteAPost({
-          variables: { _id }
+          variables: {
+            deleteInput: {
+              postID: _id,
+              imageID
+            }
+          }
         }).then((res) => {
-          res.data.deletePost ?
-            notify('Xóa thành công !', 1) : notify('Đã xảy ra lỗi khi xóa !', 2)
-          setDeleteID(_id)
+          if (res.data.deletePost) {
+            notify('Xóa thành công !', 1)
+            setDeleteID(_id)
+          } else notify('Đã xảy ra lỗi khi xóa !', 2)
+
         }).catch((err) => {
           notify(err, 2)
         })
@@ -118,16 +127,18 @@ const Index = props => {
   const editHandler = () => {
     try {
       const newContent = contentEditRef.current.state.value
-      if(content !== newContent) {
-        editAPost({variables:{
-          _id,
-          content: newContent
-        }}).then((res) => {
-          if(res.data.updatePost) {
+      if (content !== newContent) {
+        editAPost({
+          variables: {
+            _id,
+            content: newContent
+          }
+        }).then((res) => {
+          if (res.data.updatePost) {
             notify('Sửa thành công !', 1)
-            setEditData({_id, newContent})
-          } else 
-           notify('Đã có lỗi xảy ra !', 2)
+            setEditData({ _id, newContent })
+          } else
+            notify('Đã có lỗi xảy ra !', 2)
         }).catch(err => {
           notify('Đã có lỗi xảy ra !', 2)
         })
@@ -142,11 +153,11 @@ const Index = props => {
     <Menu>
       <Menu.Item onClick={() => {
         setIsEdit(true)
-        }}>
-        <Ico type="edit" /> Edit this post
+      }}>
+        <Ico type="edit" /> Chỉnh sửa bài viết
       </Menu.Item>
       <Menu.Item onClick={() => deleteHandler()}>
-        <Ico type="delete" /> Delete this post
+        <Ico type="delete" /> Xóa
       </Menu.Item>
     </Menu>
   )
@@ -233,21 +244,26 @@ const Index = props => {
               </a>
             </div>
           </div>
-          <div className="top-right">
-            {
-              isEdit ?
-                <div className='edit_btns'>
-                <Button type='primary' onClick={() => editHandler()}>Xong</Button>
-                </div> :
-                <Dropdown overlay={menu} trigger={['click']}>
-                  <Ico
-                    style={{ fontSize: '28px' }}
-                    type="ellipsis"
-                    className="ant-dropdown-link"
-                  />
-                </Dropdown>
-            }
-          </div>
+          {
+            user._id === currentUser._id &&
+            (
+              <div className="top-right">
+                {
+                  isEdit ?
+                    <div className='edit_btns'>
+                      <Button type='primary' onClick={() => editHandler()}>Xong</Button>
+                    </div> :
+                    <Dropdown overlay={menu} trigger={['click']}>
+                      <Ico
+                        style={{ fontSize: '28px' }}
+                        type="ellipsis"
+                        className="ant-dropdown-link"
+                      />
+                    </Dropdown>
+                }
+              </div>
+            )
+          }
         </div>
         <div className="body">
           <div className="userContent">
@@ -258,12 +274,12 @@ const Index = props => {
                   autoSize
                   autoFocus
                   defaultValue={content}
-                  ref = {contentEditRef}
+                  ref={contentEditRef}
                   style={{ border: 'none' }}
                 /> : <p>{content}</p>
             }
           </div>
-          {image ? <img src={image.url} className='post_image' ></img> : <></>}
+          {image ? <img src={imageUrl} className='post_image' ></img> : <></>}
         </div>
         <div className="likes">
           <Popover

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Input, Badge, Icon, Divider } from 'antd'
+import { Input, Badge, Icon, Divider, Tooltip } from 'antd'
 import { withRouter } from 'react-router-dom'
 
 import './index.scss'
@@ -14,30 +14,6 @@ function Index(props) {
   const [messageCount, setMessageCount] = useState(0)
   const { user: currentUser } = useContext(UserContext)
 
-  let heightChange = true
-  const loadNotify = () => {
-    setInterval(() => {
-      setMessageCount(messageCount => messageCount + 1)
-    }, 10000)
-  }
-  useEffect(() => {
-
-    let mounted = true
-    if (mounted) {
-      //loadNotify()
-      window.addEventListener('scroll', () => {
-        if (window.scrollY >= 50 && heightChange === true) {
-          window.document.querySelector('.inforForm') && window.document.querySelector('.inforForm').classList.add('fixedPos')
-          heightChange = false
-        }
-        if (window.scrollY <= 50 && heightChange === false) {
-          window.document.querySelector('.inforForm') && window.document.querySelector('.inforForm').classList.remove('fixedPos')
-          heightChange = true
-        }
-      })
-    }
-    return () => { mounted = false }
-  }, [])
 
   const searchHandler = (value) => {
 
@@ -56,25 +32,36 @@ function Index(props) {
         </div>
         <div className='iconTop'>
           <Infor user={currentUser ? currentUser : { image: '', firstName: 'anonymous' }} />
-          {/* <Icon type="text" className='icon' /> */}
+          <div className='home_button'>
+            <Tooltip placement="bottom" title='Trang chủ'>
+              <Icon type="home" className='icon home_icon' onClick={() => props.history.push('/newsFeed')} />
+            </Tooltip>
+          </div>
+          <Divider type='vertical' style={{ margin: 0 }} className='home_divider' />
           <Badge count={messageCount} className='icon message_icon'>
-            <Icon type="mail"  />
+            <Tooltip placement="bottom" title='Tin nhắn'>
+              <Icon type="mail" />
+            </Tooltip>
           </Badge>
-          <Divider type='vertical' style={{margin: 0}} className='message_divider' />
+          <Divider type='vertical' style={{ margin: 0 }} className='message_divider' />
           <Badge count={5}>
-            <Icon type="bell" className='icon' />
+            <Tooltip placement="bottom" title='Thông báo'>
+              <Icon type="bell" className='icon' />
+            </Tooltip>
           </Badge>
-          <Divider type='vertical' style={{margin: 0}}/>
+          <Divider type='vertical' className='user_icon_divider' style={{ margin: 0 }} />
           {
             currentUser && (
               <>
-              <Badge count={0}>
-                <Icon type="user" className='icon' onClick={() => props.history.push(`/profile/${currentUser._id}`)} />
-              </Badge>
-            </>
+                <Badge count={0}>
+                  <Tooltip placement="bottom" title='Trang cá nhân'>
+                    <Icon type="user" className='icon user_icon' onClick={() => props.history.push(`/profile/${currentUser._id}`)} />
+                  </Tooltip>
+                </Badge>
+              </>
             )
           }
-          <Divider type='vertical' style={{margin: 0}} className='search_icon_divider'/>
+          <Divider type='vertical' style={{ margin: 0 }} className='search_icon_divider' />
           <Icon type="search" className='icon search_icon' />
         </div>
       </div>

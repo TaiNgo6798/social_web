@@ -16,8 +16,6 @@ function Index(props) {
   return (
     <>
       <div className='content'>
-        <div className='leftBar'>
-        </div>
         <div className='wrapper'>
           <div className='center-content'>
             <CreatePost user={currentUser ? currentUser : { image: '', firstName: 'anonymous' }} />

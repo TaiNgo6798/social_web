@@ -20,7 +20,7 @@ import { PostContext } from '@contexts/postContext'
 const { TextArea } = Input
 const ADD_POST = gql`
 
-mutation add($content:String!, $image: ImageInput!){
+mutation add($content:String!, $image: ImageInput){
   addPost(post: {content: $content, image: $image}){
     _id
     who{
@@ -62,46 +62,47 @@ const Index = (props) => {
   const [imageUrl, setImageUrl] = useState('')
   const [content, setContent] = useState('')
   const [posting, setPosting] = useState(false)
-  const [ready, setReady] = useState(false)
+  const [ready, setReady] = useState(true)
   const [image, setImage] = useState(null)
   const [addPost] = useMutation(ADD_POST)
   const { setAddPostData } = useContext(PostContext)
 
-  const onSubmitPost = () => {
-    window.document.querySelector('.text').value = ''
-    setPosting(true)
+  const upLoadToDrive = () => {
     let formData = new FormData()
     formData.append('image', image)
     const config = {
       headers: { 'content-type': 'multipart/form-data' }
     }
     const url = 'http://localhost:14377/file/upload?type=post'
-    axios.post(url, formData, config)
-      .then(res => {
-        if (res.data.status !== 415) {
-          addPost({
-            variables: {
-              content,
-              image: res.data
-            }
-          }).then((res) => {
-            if (res.data.addPost) {
-              setAddPostData(res.data.addPost)
-              notify('Tạo xong !', 1)
-            } else {
-              notify('Đăng bài không thành công !', 2)
-            }
-          }).catch(err => {
-            notify('Đăng bài không thành công !', 2)
-          })
-        } else {
-          notify('Không thể upload ảnh !', 2)
-        }
-        turnOFFmodal()
-      })
-      .catch(error => {
-        console.log(error)
-      })
+    return axios.post(url, formData, config)
+
+  }
+
+  const onSubmitPost = async () => {
+    window.document.querySelector('.text').value = ''
+    setPosting(true)
+    let newImage = null
+    if (image) {
+      const upload = await upLoadToDrive()
+      newImage = upload.data
+    }
+    addPost({
+      variables: {
+        content,
+        image: newImage || { id: '', url: '' }
+      }
+    }).then((res) => {
+      if (res.data.addPost) {
+        setAddPostData(res.data.addPost)
+        notify('Tạo xong !', 1)
+      } else {
+        notify('Đăng bài không thành công !', 2)
+      }
+      setPosting(false)
+      turnOFFmodal()
+    }).catch(err => {
+      notify('Đăng bài không thành công !', 2)
+    })
   }
 
   const turnOFFmodal = () => {
@@ -112,7 +113,6 @@ const Index = (props) => {
     const createPostForm = window.document.querySelector('.createPostForm')
     const body = window.document.querySelector('.body-fake')
     const closeBtn = window.document.querySelector('.close-button')
-
     createPostForm.setAttribute('style', 'z-index: 8')
     window.document.querySelector('.bottom-bar').classList.remove('show-from-post-component')
     closeBtn.classList.remove('show-from-post-component')
@@ -132,14 +132,7 @@ const Index = (props) => {
 
       window.document.addEventListener('scroll', () => {
         if (window.scrollY >= 350) {
-          createPostForm.setAttribute('style', 'z-index: 8')
-          body.classList.remove('modal-active')
-          window.document.querySelector('.bottom-bar') && window.document.querySelector('.bottom-bar').classList.remove('show-from-post-component')
-          closeBtn.classList.remove('show-from-post-component')
-          window.document.activeElement.blur()
-          setTimeout(() => {
-            body.classList.remove('show-fake-body')
-          }, 300)
+          turnOFFmodal()
         }
       })
       postEditor.addEventListener('focus', () => {
@@ -206,7 +199,7 @@ const Index = (props) => {
 
   const uploadButton = (
     <div>
-      <Icon type={isLoading ? 'loading' : 'plus'} />
+      <Icon type={isLoading ? 'loading' : 'camera'} />
       <div className="ant-upload-text">Upload</div>
     </div>
   )
