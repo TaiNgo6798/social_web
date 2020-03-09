@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react'
 //context
 import { PostContext } from '@contexts/postContext'
-import { Skeleton, Empty } from 'antd'
+import { Skeleton, Empty, Input } from 'antd'
 import { useBottomScrollListener } from 'react-bottom-scroll-listener'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
@@ -18,7 +18,10 @@ query posts($skip: Float!){
       lastName
       _id
     }
-    image
+    image{
+      id
+      url
+    }
     content
     time
     likes{
@@ -43,25 +46,40 @@ const Index = () => {
   const [postList, setPostList] = useState([])
   const [loadingSke, setLoadingSke] = useState(true)
   const [loadingMore, setLoadingMore] = useState(true)
-  const { addPostData, setAddPostData } = useContext(PostContext)
+  const { addPostData, setAddPostData, deleteID, setDeleteID, editData, setEditData } = useContext(PostContext)
 
 
   useEffect(() => {
     if (addPostData) {
       setPostList([addPostData, ...postList])
       setAddPostData(null)
+    } 
+    if(deleteID) {
+      setPostList([...postList.filter(v => v._id !== deleteID)])
+      setDeleteID(null)
     }
-  }, [addPostData])
+  }, [addPostData, deleteID])
+
+  useEffect(() => {
+    if(editData) {
+      const newList = postList.map((v,i) => {
+        if(v._id === editData._id) {
+          v.content = editData.newContent
+        }
+        return v
+      })
+      setPostList([...newList])
+      setEditData(null)
+    }
+  }, [editData])
 
   useBottomScrollListener(() => {
-    console.log('bottom')
     setSkip((prev) => prev + 5)
     refetch().then((res) => {
       if (res.data.posts.length > 0) {
         let newList = postList.concat(res.data.posts)
         setPostList([...newList])
       } else {
-        console.log('tat loading')
         setLoadingMore(false)
       }
 
@@ -75,7 +93,6 @@ const Index = () => {
         setPostList([...data.posts])// 1
         setLoadingMore(true)
       }
-
     } catch (error) {
       setLoadingMore(false)
     }
@@ -85,6 +102,7 @@ const Index = () => {
 
 
   const loadPosts = useMemo(() => {
+    console.log('reload')
     try {
       if (postList.length !== 0) {
         return postList.map((v, k) => {

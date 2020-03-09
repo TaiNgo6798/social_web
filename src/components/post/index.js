@@ -1,15 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks'
 import {
   Avatar,
   Comment,
-  Tooltip,
   Modal,
-  Button,
   Popover,
   Icon as Ico,
   Spin,
   Menu,
   Dropdown,
+  notification,
+  Input,
+  Button,
   Divider
 } from 'antd'
 import moment from 'moment'
@@ -20,13 +22,12 @@ import './index.scss'
 
 import Emoji from './emoji'
 import CreateComment from '../createComment'
-import EditPostModal from './editPostModal'
 import { withRouter } from 'react-router-dom'
 import gql from 'graphql-tag'
-import { useQuery, useLazyQuery } from '@apollo/react-hooks'
 
 //Context
 import { UserContext } from '@contexts/userContext'
+import { PostContext } from '@contexts/postContext'
 import { useContext } from 'react'
 
 const GET_COMMENTS = gql`
@@ -45,6 +46,22 @@ query getcmt($id: String!){
   }
 }
 `
+const EDIT_A_POST = gql`
+mutation edit($_id: ID!, $content: String!){
+  updatePost(post: {
+    _id:$ _id,
+    content: $content
+  })
+}
+`
+
+const DELETE_ONE_POST = gql`
+mutation delete($_id: String!){
+  deletePost(postID: $_id)
+}
+`
+
+const { TextArea } = Input
 
 const Index = props => {
   const {
@@ -56,54 +73,76 @@ const Index = props => {
     time
   } = props
 
-
-  const postDay2 = new Date(time)
-  const [showAllComment, setShowAllComment] = useState(false)
-  const { user: currentUser } = useContext(UserContext)
-  const [editModalVisible, setEditModalVisible] = useState(false)
+  const notify = (text, code) => {
+    code === 1 ?
+      notification.success({
+        message: text,
+        placement: 'bottomRight'
+      }) :
+      notification.error({
+        message: text,
+        placement: 'bottomRight'
+      })
+  }
   const { confirm } = Modal
+  const postDay2 = new Date(time)
+  const { user: currentUser } = useContext(UserContext)
+  const [deleteAPost] = useMutation(DELETE_ONE_POST)
+  const [editAPost] = useMutation(EDIT_A_POST)
+  const { setDeleteID } = useContext(PostContext)
+  const { setEditData } = useContext(PostContext)
 
-
-  useEffect(() => {
-    let mounted = true
-    if (mounted) {
-
-
-
-      // Object.keys(likes).forEach((v, k) => {
-      //   likeList.push({
-      //     id: v,
-      //     name: Object.values(likes)[k]
-      //   })
-      // })
-      // const likeBtn = window.document.querySelector(`[id=${_id}]`) 
-      // likeBtn.addEventListener('click', () => {
-      //   likeBtn.classList.toggle('isLiked')
-      //   likeBtn.classList.contains('isLiked')
-      //     ? setIconType(heart)
-      //     : setIconType(heartO)
-      // })
-    }
-    return () => { mounted = false }
-  }, [])
+  const [showAllComment, setShowAllComment] = useState(false)
+  const [isEdit, setIsEdit] = useState(false)
+  const contentEditRef = useRef(content)
 
   const deleteHandler = () => {
     confirm({
       title: 'Bạn có chắc chắn muốn xoá bài viết này ?',
+      centered: true,
       onOk() {
-
+        deleteAPost({
+          variables: { _id }
+        }).then((res) => {
+          res.data.deletePost ?
+            notify('Xóa thành công !', 1) : notify('Đã xảy ra lỗi khi xóa !', 2)
+          setDeleteID(_id)
+        }).catch((err) => {
+          notify(err, 2)
+        })
       },
       onCancel() { }
     })
   }
 
   const editHandler = () => {
-    setEditModalVisible(true)
+    try {
+      const newContent = contentEditRef.current.state.value
+      if(content !== newContent) {
+        editAPost({variables:{
+          _id,
+          content: newContent
+        }}).then((res) => {
+          if(res.data.updatePost) {
+            notify('Sửa thành công !', 1)
+            setEditData({_id, newContent})
+          } else 
+           notify('Đã có lỗi xảy ra !', 2)
+        }).catch(err => {
+          notify('Đã có lỗi xảy ra !', 2)
+        })
+      }
+    } catch (error) {
+      notify('Đã có lỗi xảy ra !', 2)
+    }
+    setIsEdit(false)
   }
 
   const menu = (
     <Menu>
-      <Menu.Item onClick={() => editHandler()}>
+      <Menu.Item onClick={() => {
+        setIsEdit(true)
+        }}>
         <Ico type="edit" /> Edit this post
       </Menu.Item>
       <Menu.Item onClick={() => deleteHandler()}>
@@ -195,25 +234,42 @@ const Index = props => {
             </div>
           </div>
           <div className="top-right">
-            <Dropdown overlay={menu} trigger={['click']}>
-              <Ico
-                style={{ fontSize: '28px' }}
-                type="ellipsis"
-                className="ant-dropdown-link"
-              />
-            </Dropdown>
+            {
+              isEdit ?
+                <div className='edit_btns'>
+                <Button type='primary' onClick={() => editHandler()}>Xong</Button>
+                </div> :
+                <Dropdown overlay={menu} trigger={['click']}>
+                  <Ico
+                    style={{ fontSize: '28px' }}
+                    type="ellipsis"
+                    className="ant-dropdown-link"
+                  />
+                </Dropdown>
+            }
           </div>
         </div>
         <div className="body">
           <div className="userContent">
-            <p>{content}</p>
+            {
+              isEdit ?
+                <TextArea
+                  id="editText"
+                  autoSize
+                  autoFocus
+                  defaultValue={content}
+                  ref = {contentEditRef}
+                  style={{ border: 'none' }}
+                /> : <p>{content}</p>
+            }
           </div>
-          {image ? <img src={image} className='post_image' ></img> : <></>}
+          {image ? <img src={image.url} className='post_image' ></img> : <></>}
         </div>
         <div className="likes">
           <Popover
             content={emoji}
             className='emoji_popover'
+            placement="topLeft"
           >
             <Icon
               size={25}
@@ -270,14 +326,6 @@ const Index = props => {
             </div>
           )}
         </div>
-        <EditPostModal
-          visible={editModalVisible}
-          //onCancel={() => setEditModalVisible(false)}
-          idPost={_id}
-          desc={content}
-          url={image}
-          currentUser={currentUser}
-        />
       </div>
     </>
   )

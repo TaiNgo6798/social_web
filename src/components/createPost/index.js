@@ -19,7 +19,8 @@ import { PostContext } from '@contexts/postContext'
 
 const { TextArea } = Input
 const ADD_POST = gql`
-mutation add($content:String!, $image: String!){
+
+mutation add($content:String!, $image: ImageInput!){
   addPost(post: {content: $content, image: $image}){
     _id
     who{
@@ -28,7 +29,10 @@ mutation add($content:String!, $image: String!){
       lastName
       _id
     }
-    image
+    image{
+      id
+      url
+    }
     content
     time
     likes{
@@ -41,6 +45,17 @@ mutation add($content:String!, $image: String!){
 `
 
 const Index = (props) => {
+  const notify = (text, code) => {
+    code === 1 ?
+      notification.success({
+        message: text,
+        placement: 'bottomRight'
+      }) :
+      notification.error({
+        message: text,
+        placement: 'bottomRight'
+      })
+  }
   const { user } = props
   const { avatar, gender } = user
   const [isLoading, setIsLoading] = useState(false)
@@ -72,25 +87,17 @@ const Index = (props) => {
           }).then((res) => {
             if (res.data.addPost) {
               setAddPostData(res.data.addPost)
-              notification.success({
-                message: 'Tạo xong  !',
-                placement: 'bottomRight'
-              })
+              notify('Tạo xong !', 1)
             } else {
-              notification.error({
-                message: 'Đăng bài không thành công !',
-                placement: 'bottomRight'
-              })
+              notify('Đăng bài không thành công !', 2)
             }
-            turnOFFmodal()
-          }).catch(err => console.log(err))
-        } else {
-          turnOFFmodal()
-          notification.error({
-            message: res.data.response,
-            placement: 'bottomRight'
+          }).catch(err => {
+            notify('Đăng bài không thành công !', 2)
           })
+        } else {
+          notify('Không thể upload ảnh !', 2)
         }
+        turnOFFmodal()
       })
       .catch(error => {
         console.log(error)
