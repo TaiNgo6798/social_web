@@ -1,5 +1,16 @@
 import React, { useEffect, useState, useRef, useContext } from 'react'
-import { Button, Divider, Avatar, Input, Upload, Icon, message, Spin, Select, notification } from 'antd'
+import {
+  Button,
+  Divider,
+  Avatar,
+  Input,
+  Upload,
+  Icon,
+  message,
+  Spin,
+  Modal,
+  notification,
+} from 'antd'
 // import css
 import './index.scss'
 
@@ -16,105 +27,123 @@ import { useMutation } from '@apollo/react-hooks'
 //context
 import { PostContext } from '@contexts/postContext'
 
-
 const { TextArea } = Input
 const ADD_POST = gql`
-
-mutation add($content:String!, $image: ImageInput){
-  addPost(post: {content: $content, image: $image}){
-    _id
-    who{
-      email
-      firstName
-      lastName
+  mutation add($content: String!, $image: ImageInput) {
+    addPost(post: { content: $content, image: $image }) {
       _id
-    }
-    image{
-      id
-      url
-    }
-    content
-    time
-    likes{
-      who{
+      who {
         email
+        firstName
+        lastName
+        _id
+      }
+      image {
+        id
+        url
+      }
+      content
+      time
+      likes {
+        who {
+          email
+        }
       }
     }
   }
-}
 `
 
-const Index = (props) => {
+const Index = props => {
   const notify = (text, code) => {
-    code === 1 ?
-      notification.success({
-        message: text,
-        placement: 'bottomRight'
-      }) :
-      notification.error({
-        message: text,
-        placement: 'bottomRight'
-      })
+    code === 1
+      ? notification.success({
+          message: text,
+          placement: 'bottomRight',
+        })
+      : notification.error({
+          message: text,
+          placement: 'bottomRight',
+        })
   }
   const { user } = props
   const { avatar, gender } = user
-  const [isLoading, setIsLoading] = useState(false)
+  const { setAddPostData } = useContext(PostContext)
+  const [addPost] = useMutation(ADD_POST)
+
   const [imageUrl, setImageUrl] = useState('')
   const [content, setContent] = useState('')
   const [posting, setPosting] = useState(false)
-  const [ready, setReady] = useState(true)
+  const [ready, setReady] = useState(false)
   const [image, setImage] = useState(null)
-  const [addPost] = useMutation(ADD_POST)
-  const { setAddPostData } = useContext(PostContext)
+  const [isUploadImage, setIsUploadImage] = useState(false)
+  const [previewImage, setPreviewImage] = useState('')
+  const [previewVisible, setPreviewVisible] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    if((image || content.length > 0)){
+      !ready && setReady(true)
+    } else {
+      ready && setReady(false)
+    }
+  }, [content])
 
   const upLoadToDrive = () => {
     let formData = new FormData()
     formData.append('image', image)
     const config = {
-      headers: { 'content-type': 'multipart/form-data' }
+      headers: { 'content-type': 'multipart/form-data' },
     }
     const url = 'http://localhost:14377/file/upload?type=post'
     return axios.post(url, formData, config)
-
   }
 
   const onSubmitPost = async () => {
     window.document.querySelector('.text').value = ''
-    setPosting(true)
-    let newImage = null
-    if (image) {
-      const upload = await upLoadToDrive()
-      newImage = upload.data
-    }
-    addPost({
-      variables: {
-        content,
-        image: newImage || { id: '', url: '' }
+    if (image || content) {
+      setPosting(true)
+      let newImage = null
+      if (image) {
+        const upload = await upLoadToDrive()
+        newImage = upload.data
       }
-    }).then((res) => {
-      if (res.data.addPost) {
-        setAddPostData(res.data.addPost)
-        notify('Tạo xong !', 1)
-      } else {
-        notify('Đăng bài không thành công !', 2)
+      addPost({
+        variables: {
+          content,
+          image: newImage || { id: '', url: '' },
+        },
+      })
+        .then(res => {
+          if (res.data.addPost) {
+            setAddPostData(res.data.addPost)
+            notify('Tạo xong !', 1)
+          } else {
+            notify('Đăng bài không thành công !', 2)
+          }
+          setContent('')
+          setImageUrl('')
+          setImage(null)
+          setReady(false)
+          setIsUploadImage(false)
+          turnOFFmodal()
+        })
+        .catch(err => {
+          notify('Đăng bài không thành công !', 2)
+          turnOFFmodal()
+        })
       }
-      setPosting(false)
-      turnOFFmodal()
-    }).catch(err => {
-      notify('Đăng bài không thành công !', 2)
-    })
+      
   }
 
   const turnOFFmodal = () => {
     setPosting(false)
-    setContent('')
-    setImageUrl('')
-    setImage(null)
     const createPostForm = window.document.querySelector('.createPostForm')
     const body = window.document.querySelector('.body-fake')
     const closeBtn = window.document.querySelector('.close-button')
     createPostForm.setAttribute('style', 'z-index: 8')
-    window.document.querySelector('.bottom-bar').classList.remove('show-from-post-component')
+    window.document
+      .querySelector('.bottom-bar')
+      .classList.remove('show-from-post-component')
     closeBtn.classList.remove('show-from-post-component')
     body.classList.remove('modal-active')
     setTimeout(() => {
@@ -139,19 +168,21 @@ const Index = (props) => {
         createPostForm.setAttribute('style', 'z-index: 11')
         body.classList.add('show-fake-body')
         setTimeout(() => {
-          window.document.querySelector('.bottom-bar').classList.add('show-from-post-component')
+          window.document
+            .querySelector('.bottom-bar')
+            .classList.add('show-from-post-component')
           closeBtn.classList.add('show-from-post-component')
           body.classList.add('modal-active')
         }, 1)
       })
       closeBtn.addEventListener('click', () => {
         turnOFFmodal()
-      }
-      )
+      })
     }
-    return () => { mounted = false }
+    return () => {
+      mounted = false
+    }
   }, [])
-
 
   const handleChange = async info => {
     if (info.file.status === 'uploading') {
@@ -160,7 +191,6 @@ const Index = (props) => {
       setIsLoading(true)
     }
     if (info.file.status === 'done') {
-      setReady
       getBase64(info.file.originFileObj, imageUrl => {
         setIsLoading(false)
         setImageUrl(imageUrl)
@@ -171,9 +201,9 @@ const Index = (props) => {
     }
   }
 
-  const beforeUpload = (file) => {
+  const beforeUpload = file => {
     message.config({
-      top: '90%'
+      top: '90%',
     })
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
     if (!isJpgOrPng) {
@@ -192,6 +222,11 @@ const Index = (props) => {
     reader.readAsDataURL(img)
   }
 
+  const handlePreview = () => {
+    setPreviewImage(imageUrl)
+    setPreviewVisible(true)
+  }
+
   const closeFormHandler = () => {
     const closeBtn = window.document.querySelector('.close-button')
     closeBtn.click()
@@ -199,58 +234,93 @@ const Index = (props) => {
 
   const uploadButton = (
     <div>
-      <Icon type={isLoading ? 'loading' : 'camera'} />
+      <Icon type={isLoading ? 'loading' : 'plus'}  />
       <div className="ant-upload-text">Upload</div>
+    </div>
+  )
+
+  const addImageButton = (
+    <div className="add_image_button" onClick={() => setIsUploadImage(true)}>
+      <Icon type="camera" style={{ fontSize: 20 }} />
+      <p>Ảnh</p>
     </div>
   )
 
   return (
     <>
-      <div className='body-fake' onClick={() => closeFormHandler()}></div>
-      <div className='createPostForm'>
-        <Spin tip="Đang đăng bài ..."
-          spinning={posting}
-        >
-          <div className='top-bar'>
+      <div className="body-fake" onClick={() => closeFormHandler()}></div>
+      <div className="createPostForm">
+        <Spin tip="Đang đăng bài ..." spinning={posting}>
+          <div className="top-bar">
             <h3 style={{ marginBottom: 0 }}>Đăng bài</h3>
-            <a className='close-button' style={{ marginRight: 'auto', marginBottom: 0, float: 'right' }}>x</a>
+            <a
+              className="close-button"
+              style={{ marginRight: 'auto', marginBottom: 0, float: 'right' }}
+            >
+              x
+            </a>
           </div>
           <Divider style={{ margin: '10px 0 20px 0' }} />
-          <div className='main'>
-            <Avatar size={45} src={avatar || (gender === 'female' ? femaleUser : maleUser)} />
+          <div className="main">
+            <Avatar
+              size={45}
+              src={avatar || (gender === 'female' ? femaleUser : maleUser)}
+            />
             <TextArea
               value={content}
-              className='text'
+              className="text"
               placeholder="Bạn đang nghĩ gì ?"
               autoSize={{ minRows: 1, maxRows: 50 }}
               style={{ borderColor: 'transparent', fontSize: '18px' }}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={e => setContent(e.target.value)}
             />
           </div>
-          {/* <Divider style={{marginBottom: '15px'}}/> */}
-          <div className='bottom-bar'>
-            <div className='tool-bar'>
-              <Upload
-                name="avatar"
-                listType="picture-card"
-                className="avatar-uploader"
-                showUploadList={false}
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                beforeUpload={beforeUpload}
-                onChange={handleChange}
-              >
-                {imageUrl.length > 0 ? <img src={imageUrl} style={{ width: '100%' }} /> : uploadButton}
-              </Upload>
+          <div className="bottom-bar">
+            <div className="tool-bar">
+              {isUploadImage ? (
+                <div className='clearfix'>
+                  <Upload
+                    listType="picture-card"
+                    showUploadList={false}
+                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                    beforeUpload={beforeUpload}
+                    onChange={handleChange}
+                    onPreview={handlePreview}
+                    onRemove={() => {
+                      setImage(null)
+                      setImageUrl('')
+                    }}
+                  >
+                    {imageUrl.length > 0 ? <img src={imageUrl} style={{ width: '100%' }} /> : uploadButton}
+                  </Upload>
+                  <Modal
+                    visible={previewVisible}
+                    footer={null}
+                    onCancel={() => setPreviewVisible(false)}
+                  >
+                    <img
+                      alt="example"
+                      style={{ width: '100%' }}
+                      src={previewImage}
+                    />
+                  </Modal>
+                </div>
+              ) : (
+                addImageButton
+              )}
             </div>
-            {
-              ready && (
-                <Button type='primary' style={{ display: 'block', width: '100%' }} onClick={onSubmitPost}>Đăng</Button>
-              )
-            }
+            {ready && (
+              <Button
+                type="primary"
+                style={{ display: 'block', width: '100%' }}
+                onClick={onSubmitPost}
+              >
+                Đăng
+              </Button>
+            )}
           </div>
         </Spin>
       </div>
-
     </>
   )
 }
