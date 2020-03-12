@@ -72,10 +72,9 @@
     "webpackbar": "^4.0.0"
   },
   "dependencies": {
-    "@ant-design/codemod-v4": "^1.0.2",
     "@babel/preset-typescript": "^7.6.0",
     "@ishawnwang/withunmounted": "^1.0.1",
-    "antd": "^3.26.13",
+    "antd": "^4.0.2",
     "apollo-cache-inmemory": "^1.6.3",
     "apollo-client": "^2.6.4",
     "apollo-link": "^1.2.13",

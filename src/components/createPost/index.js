@@ -11,7 +11,7 @@ import {
   Modal,
   notification,
 } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
+import { PlusOutlined, CameraTwoTone } from '@ant-design/icons'
 // import css
 import './index.scss'
 
@@ -240,7 +240,7 @@ const Index = props => {
 
   const addImageButton = (
     <div className="add_image_button" onClick={() => setIsUploadImage(true)}>
-      <Icon type="camera" style={{ fontSize: 20 }} />
+      <CameraTwoTone style={{ fontSize: 20 }} />
       <p>Ảnh</p>
     </div>
   )
