@@ -11,6 +11,7 @@ import {
   Modal,
   notification,
 } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
 // import css
 import './index.scss'
 
@@ -66,7 +67,7 @@ const Index = props => {
         })
   }
   const { user } = props
-  const { avatar, gender } = user
+  const { avatar, gender, firstName } = user
   const { setAddPostData } = useContext(PostContext)
   const [addPost] = useMutation(ADD_POST)
 
@@ -81,7 +82,7 @@ const Index = props => {
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    if((image || content.length > 0)){
+    if (image || content.length > 0) {
       !ready && setReady(true)
     } else {
       ready && setReady(false)
@@ -131,8 +132,7 @@ const Index = props => {
           notify('Đăng bài không thành công !', 2)
           turnOFFmodal()
         })
-      }
-      
+    }
   }
 
   const turnOFFmodal = () => {
@@ -196,8 +196,7 @@ const Index = props => {
         setImageUrl(imageUrl)
         setReady(true)
         setImage(info.file.originFileObj)
-      }
-      )
+      })
     }
   }
 
@@ -234,7 +233,7 @@ const Index = props => {
 
   const uploadButton = (
     <div>
-      <Icon type={isLoading ? 'loading' : 'plus'}  />
+      <PlusOutlined />
       <div className="ant-upload-text">Upload</div>
     </div>
   )
@@ -269,7 +268,7 @@ const Index = props => {
             <TextArea
               value={content}
               className="text"
-              placeholder="Bạn đang nghĩ gì ?"
+              placeholder={`${firstName.split(' ')[0]}, bạn đang nghĩ gì ?`}
               autoSize={{ minRows: 1, maxRows: 50 }}
               style={{ borderColor: 'transparent', fontSize: '18px' }}
               onChange={e => setContent(e.target.value)}
@@ -278,7 +277,7 @@ const Index = props => {
           <div className="bottom-bar">
             <div className="tool-bar">
               {isUploadImage ? (
-                <div className='clearfix'>
+                <div className="clearfix">
                   <Upload
                     listType="picture-card"
                     showUploadList={false}
@@ -291,7 +290,11 @@ const Index = props => {
                       setImageUrl('')
                     }}
                   >
-                    {imageUrl.length > 0 ? <img src={imageUrl} style={{ width: '100%' }} /> : uploadButton}
+                    {imageUrl.length > 0 ? (
+                      <img src={imageUrl} style={{ width: '100%' }} />
+                    ) : (
+                      uploadButton
+                    )}
                   </Upload>
                   <Modal
                     visible={previewVisible}
