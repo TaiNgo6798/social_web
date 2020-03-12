@@ -5,7 +5,6 @@ import {
   Avatar,
   Input,
   Upload,
-  Icon,
   message,
   Spin,
   Modal,
@@ -188,11 +187,9 @@ const Index = props => {
     if (info.file.status === 'uploading') {
       setImageUrl('')
       setReady(false)
-      setIsLoading(true)
     }
     if (info.file.status === 'done') {
       getBase64(info.file.originFileObj, imageUrl => {
-        setIsLoading(false)
         setImageUrl(imageUrl)
         setReady(true)
         setImage(info.file.originFileObj)
@@ -239,7 +236,7 @@ const Index = props => {
   )
 
   const addImageButton = (
-    <div className="add_image_button" onClick={() => setIsUploadImage(true)}>
+    <div className="add_image_button" onClick={() => setIsUploadImage(!isUploadImage)}>
       <CameraTwoTone style={{ fontSize: 20 }} />
       <p>Ảnh</p>
     </div>
@@ -275,52 +272,46 @@ const Index = props => {
             />
           </div>
           <div className="bottom-bar">
+            {
+              (isUploadImage) && (
+                <div className="image_list">
+                <Upload
+                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                  listType="picture-card"
+                  beforeUpload={beforeUpload}
+                  onPreview={handlePreview}
+                  onChange={handleChange}
+                  onRemove={() => {
+                    setImage(null)
+                  }}
+                >
+                  {image ? null : uploadButton}
+                </Upload>
+                <Modal
+                  visible={previewVisible}
+                  footer={null}
+                  onCancel={() => setPreviewVisible(false)}
+                >
+                  <img
+                    alt="example"
+                    style={{ width: '100%' }}
+                    src={previewImage}
+                  />
+                </Modal>
+              </div>
+              )
+            }
             <div className="tool-bar">
-              {isUploadImage ? (
-                <div className="clearfix">
-                  <Upload
-                    listType="picture-card"
-                    showUploadList={false}
-                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                    beforeUpload={beforeUpload}
-                    onChange={handleChange}
-                    onPreview={handlePreview}
-                    onRemove={() => {
-                      setImage(null)
-                      setImageUrl('')
-                    }}
-                  >
-                    {imageUrl.length > 0 ? (
-                      <img src={imageUrl} style={{ width: '100%' }} />
-                    ) : (
-                      uploadButton
-                    )}
-                  </Upload>
-                  <Modal
-                    visible={previewVisible}
-                    footer={null}
-                    onCancel={() => setPreviewVisible(false)}
-                  >
-                    <img
-                      alt="example"
-                      style={{ width: '100%' }}
-                      src={previewImage}
-                    />
-                  </Modal>
-                </div>
-              ) : (
-                addImageButton
-              )}
+              {addImageButton}
             </div>
-            {ready && (
-              <Button
-                type="primary"
-                style={{ display: 'block', width: '100%' }}
-                onClick={onSubmitPost}
-              >
-                Đăng
-              </Button>
-            )}
+                <Button
+                  className='post_button'
+                  type="primary"
+                  disabled = {!ready}
+                  onClick={onSubmitPost}
+                >
+                  Đăng
+                </Button>
           </div>
         </Spin>
       </div>

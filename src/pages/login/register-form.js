@@ -1,13 +1,7 @@
 import React, { useState, useContext } from 'react'
-import {
-  Form,
-  Input,
-  Button,
-  Spin,
-  notification,
-  Select,
-  Divider
-} from 'antd'
+import { Form } from '@ant-design/compatible'
+import '@ant-design/compatible/assets/index.css'
+import { Input, Button, Spin, notification, Select, Divider } from 'antd'
 
 import Swal from 'sweetalert2'
 import { withRouter } from 'react-router-dom'

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Icon, Button, Row, Col } from 'antd'
+import { DesktopOutlined, EditOutlined, HeartFilled, PhoneOutlined, UserOutlined } from '@ant-design/icons'
+import { Button, Row, Col } from 'antd'
 import { withRouter } from 'react-router-dom'
 
 
@@ -25,12 +26,12 @@ function Index(props) {
       {/* //thong tin ca nhan */}
       <Row type='flex' justify='space-between'>
         <Col>
-          <h2><Icon style={{ fontSize: '22px' }} type="user" />  Thông tin cá nhân</h2>
+          <h2><UserOutlined style={{ fontSize: '22px' }} />  Thông tin cá nhân</h2>
         </Col>
         <Col>
         {
           currentUser.id === props.match.params.userID &&
-          <Button type="dashed" onClick={() => setOpenEdit(true)}><Icon type="edit" />Chỉnh sửa</Button>
+          <Button type="dashed" onClick={() => setOpenEdit(true)}><EditOutlined />Chỉnh sửa</Button>
         }
         </Col>
       </Row>
@@ -55,7 +56,7 @@ function Index(props) {
       </div>
 
       {/* // thong tin lien he */}
-      <h2><Icon style={{ fontSize: '22px' }} type="phone" />  Thông tin liên hệ</h2>
+      <h2><PhoneOutlined style={{ fontSize: '22px' }} />  Thông tin liên hệ</h2>
       <div className='infor_detail_profile'>
         <hr className='hr_profile' />
         <div className='row_detail_profile'>
@@ -72,7 +73,7 @@ function Index(props) {
       </div>
 
       {/* // moi quan he */}
-      <h2><Icon style={{ fontSize: '22px' }} type="heart" theme='filled' />  Mối quan hệ</h2>
+      <h2><HeartFilled style={{ fontSize: '22px' }} />  Mối quan hệ</h2>
       <div className='infor_detail_profile'>
         <hr className='hr_profile' />
         <div className='row_detail_profile'>
@@ -84,7 +85,7 @@ function Index(props) {
       </div>
 
       {/* //cong viec */}
-      <h2><Icon style={{ fontSize: '22px' }} type="desktop" />  Công việc và học vấn</h2>
+      <h2><DesktopOutlined style={{ fontSize: '22px' }} />  Công việc và học vấn</h2>
       <div className='infor_detail_profile'>
         <hr className='hr_profile' />
         <div className='row_detail_profile'>

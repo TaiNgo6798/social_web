@@ -1,5 +1,7 @@
 import React, { useRef, useState } from 'react'
-import { Modal, Form, Input, Button, Spin, DatePicker, Select, Alert } from 'antd'
+import { Form } from '@ant-design/compatible'
+import '@ant-design/compatible/assets/index.css'
+import { Modal, Input, Button, Spin, DatePicker, Select, Alert } from 'antd'
 
 // import css
 import './index.scss'

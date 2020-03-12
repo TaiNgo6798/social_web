@@ -1,6 +1,8 @@
 
 import React, { useRef, useState } from 'react'
-import { Form, Input, Button, Modal } from 'antd'
+import { Form } from '@ant-design/compatible'
+import '@ant-design/compatible/assets/index.css'
+import { Input, Button, Modal } from 'antd'
 import { withRouter } from 'react-router-dom'
 
 // import css
@@ -27,55 +29,53 @@ const Index = (props) => {
       forgotHandler(e)
   }
 
-  return (
-    <>
-      < Modal
-        visible={visible}
-        onCancel={() => { onCancel() }}
-        footer={null}
-        width='556px'
-        className='login-form-forgot'
-      >
-        <div className='title'>Forgot password ?</div>
-        <div className='text-1'>
-          Please submit your email to reset password
+  return <>
+    < Modal
+      visible={visible}
+      onCancel={() => { onCancel() }}
+      footer={null}
+      width='556px'
+      className='login-form-forgot'
+    >
+      <div className='title'>Forgot password ?</div>
+      <div className='text-1'>
+        Please submit your email to reset password
 </div>
-        <div className='text-2'>
-          Please check your email after submit
+      <div className='text-2'>
+        Please check your email after submit
 </div>
-        <Form onSubmit={() => { forgotHandler() }}>
-          <Form.Item>
-            {getFieldDecorator('email', {
-              rules: [
-                { required: true, message: 'Vui lòng nhập địa chỉ email' },
-                {
-                  // eslint-disable-next-line max-len
-                  pattern: /^([A-Z|a-z|0-9](\.|_){0,1})+[A-Z|a-z|0-9]@([A-Z|a-z|0-9])+((\.){0,1}[A-Z|a-z|0-9]){2}\.[a-z]{2,3}$/gm,
-                  message: 'Địa chỉ email không hợp lệ'
-                }
-              ]
-            })(<Input ref={forgotEmailRef}
-              size='large'
-              onKeyDown={(e) => { enterHandler(e) }}
-            />)}
-          </Form.Item>
-          <Form.Item>
-            <Button
-              name='btn-send-request'
-              type='primary'
-              size='large'
-              block
-              className='btn-innos'
-              onClick={(e) => forgotHandler(e)}
-            >
-              Send
+      <Form onSubmit={() => { forgotHandler() }}>
+        <Form.Item>
+          {getFieldDecorator('email', {
+            rules: [
+              { required: true, message: 'Vui lòng nhập địa chỉ email' },
+              {
+                // eslint-disable-next-line max-len
+                pattern: /^([A-Z|a-z|0-9](\.|_){0,1})+[A-Z|a-z|0-9]@([A-Z|a-z|0-9])+((\.){0,1}[A-Z|a-z|0-9]){2}\.[a-z]{2,3}$/gm,
+                message: 'Địa chỉ email không hợp lệ'
+              }
+            ]
+          })(<Input ref={forgotEmailRef}
+            size='large'
+            onKeyDown={(e) => { enterHandler(e) }}
+          />)}
+        </Form.Item>
+        <Form.Item>
+          <Button
+            name='btn-send-request'
+            type='primary'
+            size='large'
+            block
+            className='btn-innos'
+            onClick={(e) => forgotHandler(e)}
+          >
+            Send
 </Button>
-          </Form.Item>
-        </Form>
-      </Modal >
+        </Form.Item>
+      </Form>
+    </Modal >
 
-    </>
-  )
+  </>
 
 
 }

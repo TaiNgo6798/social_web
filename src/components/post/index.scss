@@ -1,146 +1,188 @@
-@media only screen and (min-width: 575px){ // ipad and laptop
-  .post_emoji{
+@media only screen and (min-width: 575px) {
+  // ipad and laptop
+  .post_emoji {
     display: flex !important;
   }
 }
 
-
-.postForm{
-  box-shadow: 0 2px 4px rgba(108,111,115,.1);
-  border: 1px #EBEDF0 solid;
-  background-color: #FFFFFF;
+.postForm {
+  box-shadow: 0 2px 4px rgba(108, 111, 115, 0.1);
+  border: 1px #ebedf0 solid;
+  background-color: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-bottom: 2em ;
+  padding-bottom: 2em;
   border-radius: 10px;
   margin: 1.75em 0em;
 
-  .body{
+  .body {
     display: flex;
     flex-direction: column;
     justify-content: center;
     width: 100%;
-    >img{
+    > img {
       object-fit: cover;
       width: 100%;
       max-height: 30em;
-      &:hover{
+      &:hover {
         cursor: pointer;
       }
     }
-    .emoji_popover{
-      width: 300px;
-    }
   }
-  .header{
+  .header {
     display: flex;
     width: 100%;
     padding: 12px 12px;
     align-items: center;
-    .avatar{
-      &:hover{
+    .avatar {
+      &:hover {
         cursor: pointer;
       }
     }
-    >div{
-      margin: 0 8px 0 0
+    > div {
+      margin: 0 8px 0 0;
     }
-    .top-right{
+    .top-right {
       margin-left: auto;
-      &:hover{
+      &:hover {
         cursor: pointer;
       }
-      color: #47A8FF;
-      .edit_btns{
+      color: #47a8ff;
+      .edit_btns {
         display: flex;
       }
     }
-    .username{
-      >p{
+    .username {
+      > p {
         font-family: 'Roboto', sans-serif;
         margin: 0;
-        &:hover{
+        &:hover {
           cursor: pointer;
         }
       }
-      .time{
+      .time {
         display: flex;
-        color: #B5B8BE;
+        color: #b5b8be;
         font-size: smaller;
-        >a{
+        > a {
           margin: 0 4px 0 0;
-          color: #B5B8BE
+          color: #b5b8be;
         }
       }
     }
-    
   }
 
-.share-btn{
-      &:hover{
-        cursor: pointer;
-      }
+  .share-btn {
+    &:hover {
+      cursor: pointer;
+    }
   }
 
-  .isLiked{
-    color: red
+  .isLiked {
+    color: red;
   }
 
-  .likes{
+  .likes {
+    height: 2em;
     width: 100%;
     display: flex;
-    padding: 0 20px;
-    margin-top: 1em;
-    >i{
-      margin-right: 10px;
-      :hover{
-        cursor: pointer;
+    padding: 0 1em 0 1em;
+    margin-top: 0.75em;
+
+    .commentsCount {
+      > a {
+        color: #9a9a9a !important;
+      }
+    }
+
+    .likeCount {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      .emoji {
+        zoom: 0.5;
+        margin-right: -0.5em;
+      }
+      > :last-child {
+        margin-left: 0.75em;
+        &:hover {
+          cursor: pointer;
+        }
       }
     }
   }
 
-  .commentsCount{
-    >a{
-      color: #9a9a9a  !important
-    }
-  }
-
-  .likeCount{
-    font-weight: bold;
-    >:first-child{
-      &:hover{
-        cursor: pointer;
-      }
-    }
-  }
-
-  .likes-and-comments-count{
+  .likes-and-comments-count {
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 
-  .userContent{
+  .userContent {
     width: 100%;
     display: flex;
-    padding: 0 12px 10px 12px;
-    flex-wrap:  wrap;
-    :first-child{
-      margin: 0
+    padding: 0 12px 12px 12px;
+    flex-wrap: wrap;
+    :first-child {
+      margin: 0;
     }
   }
 
-  .comments{
+  .bigger_content {
+    font-size: x-large;
+  }
+
+  .reactions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5em;
+    width: 100%;
+    .buttons {
+      display: flex;
+      justify-content: center;
+      padding-top: 0.5em;
+      width: 95%;
+      border-top: solid 1px #e9ebee;
+      > button {
+        .emoji {
+          transform: scale(0.5);
+          position: absolute;
+          top: -0.7em;
+          left: 4em;
+        }
+        .reacted {
+          font-family: 'Roboto', sans-serif;
+          font-weight: bold;
+        }
+        width: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        box-shadow: none;
+        &:hover {
+          cursor: pointer;
+          background-color: #f1f1f1f1;
+        }
+        > p {
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  .comments {
     width: 100%;
     padding: 0 20px;
-    .seeAll{
+    .seeAll {
       display: flex;
       justify-content: center;
       width: 100%;
       margin-bottom: 20px;
     }
   }
-
 }

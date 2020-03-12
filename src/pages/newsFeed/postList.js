@@ -30,6 +30,7 @@ query posts($skip: Float!){
         firstName
         lastName
       }
+      react
     }
   }
 }

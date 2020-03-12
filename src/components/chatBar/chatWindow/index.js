@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Avatar, Badge, Icon, Input } from 'antd'
+import { CloseOutlined } from '@ant-design/icons'
+import { Avatar, Badge, Input } from 'antd'
 
 import './index.scss'
 
@@ -49,15 +50,13 @@ function Index(props) {
         </Badge>
         <p >{name}</p>
       </div>
-      <Icon
-        type="close"
+      <CloseOutlined
         onClick={() => onClose(htmlid)}
         style={{
           position: 'absolute',
           marginTop: '1em',
           marginLeft: classNameBody ? '12em' : '18em'
-        }}
-      />
+        }} />
       <div className={`content_window_chatBar window_width ${classNameBody ? 'hide_window_chatBar' : ''}`} >
         {loadChats()}
       </div>

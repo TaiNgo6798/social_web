@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Input, Badge, Icon, Divider, Tooltip } from 'antd'
+import { BellOutlined, HomeOutlined, MailOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons'
+import { Input, Badge, Divider, Tooltip } from 'antd'
 import { withRouter } from 'react-router-dom'
 
 import './index.scss'
@@ -34,19 +35,21 @@ function Index(props) {
           <Infor user={currentUser ? currentUser : { image: '', firstName: 'anonymous' }} />
           <div className='home_button'>
             <Tooltip placement="bottom" title='Trang chủ'>
-              <Icon type="home" className='icon home_icon' onClick={() => props.history.push('/newsFeed')} />
+              <HomeOutlined
+                className='icon home_icon'
+                onClick={() => props.history.push('/newsFeed')} />
             </Tooltip>
           </div>
           <Divider type='vertical' style={{ margin: 0 }} className='home_divider' />
           <Badge count={messageCount} className='icon message_icon'>
             <Tooltip placement="bottom" title='Tin nhắn'>
-              <Icon type="mail" />
+              <MailOutlined />
             </Tooltip>
           </Badge>
           <Divider type='vertical' style={{ margin: 0 }} className='message_divider' />
           <Badge count={5}>
             <Tooltip placement="bottom" title='Thông báo'>
-              <Icon type="bell" className='icon' />
+              <BellOutlined className='icon' />
             </Tooltip>
           </Badge>
           <Divider type='vertical' className='user_icon_divider' style={{ margin: 0 }} />
@@ -55,14 +58,16 @@ function Index(props) {
               <>
                 <Badge count={0}>
                   <Tooltip placement="bottom" title='Trang cá nhân'>
-                    <Icon type="user" className='icon user_icon' onClick={() => props.history.push(`/profile/${currentUser._id}`)} />
+                    <UserOutlined
+                      className='icon user_icon'
+                      onClick={() => props.history.push(`/profile/${currentUser._id}`)} />
                   </Tooltip>
                 </Badge>
               </>
             )
           }
           <Divider type='vertical' style={{ margin: 0 }} className='search_icon_divider' />
-          <Icon type="search" className='icon search_icon' />
+          <SearchOutlined className='icon search_icon' />
         </div>
       </div>
     </div>

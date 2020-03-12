@@ -72,6 +72,7 @@
     "webpackbar": "^4.0.0"
   },
   "dependencies": {
+    "@ant-design/compatible": "^1.0.1",
     "@babel/preset-typescript": "^7.6.0",
     "@ishawnwang/withunmounted": "^1.0.1",
     "antd": "^4.0.2",
@@ -90,6 +91,7 @@
     "ckeditor4-react": "^1.0.0",
     "concurrently": "^5.0.0",
     "customize-cra": "^0.8.0",
+    "emoji-mart": "^2.11.2",
     "fs": "0.0.1-security",
     "googleapis": "^47.0.0",
     "graphql": "^14.5.4",

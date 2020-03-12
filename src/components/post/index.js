@@ -1,26 +1,29 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks'
 import {
+  DeleteOutlined,
+  EditOutlined,
+  EllipsisOutlined,
+} from '@ant-design/icons'
+import {
   Avatar,
-  Comment,
   Modal,
   Popover,
-  Icon as Ico,
   Spin,
   Menu,
   Dropdown,
   notification,
   Input,
   Button,
-  Divider
 } from 'antd'
 import moment from 'moment'
-import { Icon } from 'react-icons-kit'
-import { heart } from 'react-icons-kit/fa/heart'
+
 // import css
 import './index.scss'
 
-import Emoji from './emoji'
+
+import EmojiReaction, { LIKE, HEART, HAHA, WOW, SAD, ANGRY } from './emoji'
+
 import CreateComment from '../createComment'
 import { withRouter } from 'react-router-dom'
 import gql from 'graphql-tag'
@@ -30,73 +33,66 @@ import { UserContext } from '@contexts/userContext'
 import { PostContext } from '@contexts/postContext'
 import { useContext } from 'react'
 
-const GET_COMMENTS = gql`
-query getcmt($id: String!){
-  getCommentsByPostID(postID: $id){
-    _id
-    who{
-      _id
-      firstName
-      lastName
-      email
-    }
-    postID
-    text
-    time
-  }
-}
-`
 const EDIT_A_POST = gql`
-mutation edit($_id: ID!, $content: String!){
-  updatePost(post: {
-    _id:$ _id,
-    content: $content
-  })
-}
+  mutation edit($_id: ID!, $content: String!) {
+    updatePost(post: { _id: $_id, content: $content })
+  }
 `
 
 const DELETE_ONE_POST = gql`
-mutation delete($deleteInput: DeleteInput!){
-  deletePost(deleteInput: $deleteInput)
-}
+  mutation delete($deleteInput: DeleteInput!) {
+    deletePost(deleteInput: $deleteInput)
+  }
+`
+
+const DO_LIKE = gql`
+  mutation like($postID: String!, $react: REACT!) {
+    doLike(likeInput: { postID: $postID, react: $react })
+  }
 `
 
 const { TextArea } = Input
 
 const Index = props => {
-  const {
-    _id,
-    image,
-    user,
-    likes,
-    content,
-    time
-  } = props
-
+  const { _id, image, user, likes, content, time } = props
+  const listReactions = likes.map(v => v.react)
   const { id: imageID, url: imageUrl } = image
 
   const notify = (text, code) => {
-    code === 1 ?
-      notification.success({
-        message: text,
-        placement: 'bottomRight'
-      }) :
-      notification.error({
-        message: text,
-        placement: 'bottomRight'
-      })
+    code === 1
+      ? notification.success({
+          message: text,
+          placement: 'bottomRight',
+        })
+      : notification.error({
+          message: text,
+          placement: 'bottomRight',
+        })
   }
   const { confirm } = Modal
-  const postDay2 = new Date(time)
+  const postDay = new Date(time)
+  const TIME = moment([
+    postDay.getFullYear(),
+    postDay.getMonth(),
+    postDay.getDate(),
+    postDay.getHours(),
+    postDay.getMinutes(),
+    postDay.getSeconds(),
+    postDay.getMilliseconds(),
+  ])
   const { user: currentUser } = useContext(UserContext)
   const [deleteAPost] = useMutation(DELETE_ONE_POST)
   const [editAPost] = useMutation(EDIT_A_POST)
+  const [likeAPost] = useMutation(DO_LIKE)
   const { setDeleteID } = useContext(PostContext)
   const { setEditData } = useContext(PostContext)
 
   const [showAllComment, setShowAllComment] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
   const contentEditRef = useRef(content)
+  const [commentCount, setCommentCount] = useState(10)
+  const [emojiVisible, setEmojiVisible] = useState(false)
+
 
   const deleteHandler = () => {
     confirm({
@@ -107,21 +103,48 @@ const Index = props => {
           variables: {
             deleteInput: {
               postID: _id,
-              imageID
-            }
-          }
-        }).then((res) => {
-          if (res.data.deletePost) {
-            notify('Xóa thành công !', 1)
-            setDeleteID(_id)
-          } else notify('Đã xảy ra lỗi khi xóa !', 2)
-
-        }).catch((err) => {
-          notify(err, 2)
+              imageID,
+            },
+          },
         })
+          .then(res => {
+            if (res.data.deletePost) {
+              notify('Xóa thành công !', 1)
+              setDeleteID(_id)
+            } else notify('Đã xảy ra lỗi khi xóa !', 2)
+          })
+          .catch(err => {
+            notify(err, 2)
+          })
       },
-      onCancel() { }
+      onCancel() {},
     })
+  }
+
+  const getEmojiFromLikes = reaction => {
+    let newSet = new Set(listReactions)
+    if (newSet.has(reaction)) return true
+    return false
+  }
+
+  const getCurrentReact = () => {
+    let react = likes.find(v => v.who._id === currentUser._id).react
+    switch (react) {
+      case 'LIKE':
+        return <p style={{color: '#2078F4', margin: 0}} className='reacted'>Thích</p>
+      case 'LOVE':
+        return <p style={{color: '#F33E58', margin: 0}} className='reacted'>Yêu thích</p>
+      case 'WOW':
+        return <p style={{color: '#F7B126', margin: 0}} className='reacted'>Wow</p>
+      case 'HAHA':
+        return <p style={{color: '#F7B126', margin: 0}} className='reacted'>Haha</p>
+      case 'SAD':
+        return <p style={{color: '#F7B126', margin: 0}} className='reacted'>Buồn</p>
+      case 'ANGRY':
+        return <p style={{color: '#E9710E', margin: 0}} className='reacted'>Phẫn nộ</p>
+      default:
+        return ''
+    }
   }
 
   const editHandler = () => {
@@ -131,17 +154,18 @@ const Index = props => {
         editAPost({
           variables: {
             _id,
-            content: newContent
-          }
-        }).then((res) => {
-          if (res.data.updatePost) {
-            notify('Sửa thành công !', 1)
-            setEditData({ _id, newContent })
-          } else
-            notify('Đã có lỗi xảy ra !', 2)
-        }).catch(err => {
-          notify('Đã có lỗi xảy ra !', 2)
+            content: newContent,
+          },
         })
+          .then(res => {
+            if (res.data.updatePost) {
+              notify('Sửa thành công !', 1)
+              setEditData({ _id, newContent })
+            } else notify('Đã có lỗi xảy ra !', 2)
+          })
+          .catch(err => {
+            notify('Đã có lỗi xảy ra !', 2)
+          })
       }
     } catch (error) {
       notify('Đã có lỗi xảy ra !', 2)
@@ -151,24 +175,24 @@ const Index = props => {
 
   const menu = (
     <Menu>
-      <Menu.Item onClick={() => {
-        setIsEdit(true)
-      }}>
-        <Ico type="edit" /> Chỉnh sửa bài viết
+      <Menu.Item
+        onClick={() => {
+          setIsEdit(true)
+        }}
+      >
+        <EditOutlined /> Chỉnh sửa bài viết
       </Menu.Item>
       <Menu.Item onClick={() => deleteHandler()}>
-        <Ico type="delete" /> Xóa
+        <DeleteOutlined /> Xóa
       </Menu.Item>
     </Menu>
   )
 
-  const loadComments = () => {
-
-  }
+  const loadComments = () => {}
 
   const whoLikes = () => {
     try {
-      return likes.map((v) => {
+      return likes.map(v => {
         return <p key={v.who._id}>{v.who.firstName + ' ' + v.who.lastName}</p>
       })
     } catch (error) {
@@ -177,13 +201,19 @@ const Index = props => {
   }
 
   const emoji = (
-    <div className='post_emoji' id={`emoji${_id}`}>
-      <Emoji />
+    <div className="post_emoji" id={`emoji${_id}`}>
+      <EmojiReaction reactHandler={e => reactHandler(e)} />
     </div>
   )
 
-  const likeHandler = () => {
-
+  const reactHandler = reaction => {
+    setEmojiVisible(false)
+    likeAPost({
+      variables: {
+        postID: _id,
+        react: reaction,
+      },
+    })
   }
 
   // const renderComments = () => {
@@ -231,92 +261,83 @@ const Index = props => {
               {`${user.firstName || ''} ${user.lastName || ' '}`}
             </p>
             <div className="time">
-              <a title={time}>
-                {moment([
-                  postDay2.getFullYear(),
-                  postDay2.getMonth(),
-                  postDay2.getDate(),
-                  postDay2.getHours(),
-                  postDay2.getMinutes(),
-                  postDay2.getSeconds(),
-                  postDay2.getMilliseconds()
-                ]).fromNow()}
-              </a>
+              <a title={postDay}>{TIME.fromNow()}</a>
             </div>
           </div>
-          {
-            user._id === currentUser._id &&
-            (
-              <div className="top-right">
-                {
-                  isEdit ?
-                    <div className='edit_btns'>
-                      <Button type='primary' onClick={() => editHandler()}>Xong</Button>
-                    </div> :
-                    <Dropdown overlay={menu} trigger={['click']}>
-                      <Ico
-                        style={{ fontSize: '28px' }}
-                        type="ellipsis"
-                        className="ant-dropdown-link"
-                      />
-                    </Dropdown>
-                }
-              </div>
-            )
-          }
+          {user._id === currentUser._id && (
+            <div className="top-right">
+              {isEdit ? (
+                <div className="edit_btns">
+                  <Button type="primary" onClick={() => editHandler()}>
+                    Xong
+                  </Button>
+                </div>
+              ) : (
+                <Dropdown overlay={menu} trigger={['click']}>
+                  <EllipsisOutlined
+                    style={{ fontSize: '28px' }}
+                    className="ant-dropdown-link"
+                  />
+                </Dropdown>
+              )}
+            </div>
+          )}
         </div>
         <div className="body">
-          <div className="userContent">
-            {
-              isEdit ?
-                <TextArea
-                  id="editText"
-                  autoSize
-                  autoFocus
-                  defaultValue={content}
-                  ref={contentEditRef}
-                  style={{ border: 'none' }}
-                /> : <p>{content}</p>
-            }
+          <div className={`userContent ${image.url ? '' : 'bigger_content'}`}>
+            {isEdit ? (
+              <TextArea
+                id="editText"
+                autoSize
+                autoFocus
+                defaultValue={content}
+                ref={contentEditRef}
+                style={{ border: 'none' }}
+              />
+            ) : (
+              <p>{content}</p>
+            )}
           </div>
-          {image ? <img src={imageUrl} className='post_image' ></img> : <></>}
+          {image ? <img src={imageUrl} className="post_image"></img> : <></>}
         </div>
-        <div className="likes">
-          <Popover
-            content={emoji}
-            className='emoji_popover'
-            placement="topLeft"
-          >
-            <Icon
-              size={25}
-              icon={heart}
-              className={
-                likes.map(v => {
-                  return v.who._id
-                }).indexOf(currentUser._id) !== -1 ? 'isLiked' : ''
-              }
-              id={_id}
-              onClick={() => likeHandler()}
-            />
-          </Popover>
-
-          <div className="likes-and-comments-count">
-            <div className="likeCount">
-              <Popover
-                content={whoLikes()}
-              >
-                {likes.length}
-              </Popover>
+        {(likes.length > 0 || commentCount > 0) && (
+          <div className="likes">
+            <div className="likes-and-comments-count">
+              <div className="likeCount">
+                {getEmojiFromLikes('LIKE') && LIKE}
+                {getEmojiFromLikes('LOVE') && HEART}
+                {getEmojiFromLikes('WOW') && WOW}
+                {getEmojiFromLikes('HAHA') && HAHA}
+                {getEmojiFromLikes('SAD') && SAD}
+                {getEmojiFromLikes('ANGRY') && ANGRY}
+                {likes.length > 0 && (
+                  <Popover content={whoLikes()}>{likes.length}</Popover>
+                )}
+              </div>
+              {commentCount > 0 && (
+                <div className="commentsCount">
+                  <a>{commentCount} bình luận</a>
+                </div>
+              )}
             </div>
-            <div className="commentsCount">
-              <a
-                onClick={() => {
-                  //loadComments()
-                }}
-              >
-                123 bình luận
-            </a>
-            </div>
+          </div>
+        )}
+        <div className="reactions">
+          <div className="buttons">
+            <Popover
+              content={emoji}
+              className="emoji_popover"
+              placement="top"
+              visible={emojiVisible}
+              onVisibleChange={e => setEmojiVisible(e)}
+            >
+                <Button>
+                  {
+                    likes.map(v => v.who._id).indexOf(currentUser._id) !== -1 ? getCurrentReact() : 'Thích'
+                  }
+                </Button>
+            </Popover>
+            <Button>Bình luận</Button>
           </div>
         </div>
         <CreateComment
@@ -325,7 +346,7 @@ const Index = props => {
           // setShowAllComment={e => {
           //   setShowAllComment(e)
           // }}
-          commentData=''
+          commentData=""
         />
         <div className="comments">
           <Spin spinning={false}>
@@ -333,12 +354,7 @@ const Index = props => {
           </Spin>
           {showAllComment && (
             <div className="seeAll">
-              <a
-                onClick={() => {
-                }}
-              >
-                Hide comments
-              </a>
+              <a onClick={() => {}}>Hide comments</a>
             </div>
           )}
         </div>

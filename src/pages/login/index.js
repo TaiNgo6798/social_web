@@ -1,6 +1,9 @@
 
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import { Form, Icon, Input, Button, notification, Spin } from 'antd'
+import { LockOutlined, UserOutlined } from '@ant-design/icons'
+import { Form } from '@ant-design/compatible'
+import '@ant-design/compatible/assets/index.css'
+import { Input, Button, notification, Spin } from 'antd'
 import { withRouter } from 'react-router-dom'
 
 import RegisterForm from './register-form'
@@ -99,7 +102,7 @@ const Index = (props) => {
                   rules: [{ required: true, message: 'Vui lòng nhập địa chỉ E-mail !' }],
                 })(
                   <Input
-                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
                     placeholder="Email"
                     ref={emailRef}
                   />,
@@ -110,7 +113,7 @@ const Index = (props) => {
                   rules: [{ required: true, message: 'Vui lòng nhập mật khẩu !' }],
                 })(
                   <Input
-                    prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
                     type="password"
                     placeholder="Password"
                     ref={passwordRef}
@@ -136,7 +139,6 @@ const Index = (props) => {
       </div>
       <ForgotForm onCancel={() => setForgotForm(false)} visible={forgotForm} />
     </div>
-
   )
 }
 
