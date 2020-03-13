@@ -1,10 +1,9 @@
 import React from 'react'
 import './index.scss'
+import LikeGif from '@assets/icons/like.gif'
 
 const LIKE = (
-  <div className="emoji like" >
-    <i className="fa fa-thumbs-up fa-5x" />
-  </div>
+  <img src={LikeGif}/>
 )
 
 const HEART = (
