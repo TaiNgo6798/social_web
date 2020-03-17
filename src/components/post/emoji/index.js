@@ -1,70 +1,121 @@
-import React from 'react'
+import React, { useState } from 'react'
+import {Popover, Button} from 'antd'
+
 import './index.scss'
 import LikeGif from '@assets/icons/like.gif'
+import LoveGif from '@assets/icons/love.gif'
+import HahaGif from '@assets/icons/haha.gif'
+import WowGif from '@assets/icons/wow.gif'
+import SadGif from '@assets/icons/sad.gif'
+import AngryGif from '@assets/icons/angry.gif'
 
-const LIKE = (
-  <img src={LikeGif}/>
-)
+const LIKE = <img src={LikeGif} className="icon_gif" />
 
-const HEART = (
-  <div className="emoji heart" >
-    <i className="fa fa-heart fa-5x" />
-  </div>
-)
+const HEART = <img src={LoveGif} className="icon_gif" />
 
-const HAHA = (
-  <div className="emoji haha" >
-    <div className="face face-haha">
-      <div className="eyes-haha" />
-      <div className="mouth-haha">
-        <div className="tongue-haha" />
-      </div>
-    </div>
-  </div>
-)
+const HAHA = <img src={HahaGif} className="icon_gif" />
 
-const WOW = (
-  <div className="emoji wow" >
-    <div className="face face-wow">
-      <div className="eyebrows-wow" />
-      <div className="eyes-wow" />
-      <div className="mouth-wow" />
-    </div>
-  </div>
-)
+const WOW = <img src={WowGif} className="icon_gif" />
 
-const SAD = (
-  <div className="emoji sad" >
-    <div className="face face-sad">
-      <div className="eyebrows-sad" />
-      <div className="eyes-sad" />
-      <div className="mouth-sad" />
-    </div>
-  </div>
-)
+const SAD = <img src={SadGif} className="icon_gif" />
 
-const ANGRY = (
-  <div className="emoji angry" >
-    <div className="face face-angry">
-      <div className="eyebrows-angry" />
-      <div className="eyes-angry" />
-      <div className="mouth-angry" />
-    </div>
-  </div>
-)
+const ANGRY = <img src={AngryGif} className="icon_gif" />
+
+
 
 const Index = props => {
-  const { reactHandler } = props
+  const { reactHandler, likes, currentUser } = props
+  const [emojiVisible, setEmojiVisible] = useState(false)
+
+  const getCurrentReact = () => {
+    let react = likes.find(v => v.who._id === currentUser._id).react
+    switch (react) {
+      case 'LIKE':
+        return (
+          <>
+            {LIKE}
+            <p style={{ color: '#2078F4', margin: 0 }} className="reacted">
+              Thích
+            </p>
+          </>
+        )
+      case 'LOVE':
+        return (
+          <>
+            {HEART}
+            <p style={{ color: '#F33E58', margin: 0 }} className="reacted">
+              Yêu thích
+            </p>
+          </>
+        )
+      case 'WOW':
+        return (
+          <>
+            {WOW}
+            <p style={{ color: '#F7B126', margin: 0 }} className="reacted">
+              Wow
+            </p>
+          </>
+        )
+      case 'HAHA':
+        return (
+          <>
+            {HAHA}
+            <p style={{ color: '#F7B126', margin: 0 }} className="reacted">
+              Haha
+            </p>
+          </>
+        )
+      case 'SAD':
+        return (
+          <>
+            {SAD}
+            <p style={{ color: '#F7B126', margin: 0 }} className="reacted">
+              Buồn
+            </p>
+          </>
+        )
+      case 'ANGRY':
+        return (
+          <>
+            {ANGRY}
+            <p style={{ color: '#E9710E', margin: 0 }} className="reacted">
+              Tức á !
+            </p>
+          </>
+        )
+      default:
+        return null
+    }
+  }
+
+  const iconClick = (react) => {
+    reactHandler(react)
+    setEmojiVisible(false)
+  }
 
   return (
-    <div className="emoji_list">
-      <div onClick={() => reactHandler('LIKE')}>{LIKE}</div>
-      <div onClick={() => reactHandler('LOVE')}>{HEART}</div>
-      <div onClick={() => reactHandler('HAHA')}>{HAHA}</div>
-      <div onClick={() => reactHandler('WOW')}>{WOW}</div>
-      <div onClick={() => reactHandler('SAD')}>{SAD}</div>
-      <div onClick={() => reactHandler('ANGRY')}>{ANGRY}</div>
-    </div>
+    <Popover
+      content={
+        <div className="emoji_list">
+          <div onClick={() => iconClick('LIKE')}>{LIKE}</div>
+          <div onClick={() => iconClick('LOVE')}>{HEART}</div>
+          <div onClick={() => iconClick('HAHA')}>{HAHA}</div>
+          <div onClick={() => iconClick('WOW')}>{WOW}</div>
+          <div onClick={() => iconClick('SAD')}>{SAD}</div>
+          <div onClick={() => iconClick('ANGRY')}>{ANGRY}</div>
+        </div>
+      }
+      placement="left"
+      visible={emojiVisible}
+      onVisibleChange={e => setEmojiVisible(e)}
+    >
+      <Button>
+        {likes.map(v => v.who._id).indexOf(currentUser._id) !== -1
+          ? getCurrentReact()
+          : 'Thích'}
+      </Button>
+    </Popover>
   )
 }
 

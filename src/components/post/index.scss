@@ -1,8 +1,5 @@
 @media only screen and (min-width: 575px) {
   // ipad and laptop
-  .post_emoji {
-    display: flex !important;
-  }
 }
 
 .postForm {
@@ -107,6 +104,14 @@
           cursor: pointer;
         }
       }
+      .icon_gif {
+        margin-right: -0.25em;
+        height: 1.2em;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+     
     }
   }
 
@@ -144,12 +149,6 @@
       width: 95%;
       border-top: solid 1px #e9ebee;
       > button {
-        .emoji {
-          transform: scale(0.5);
-          position: absolute;
-          top: -0.7em;
-          left: 4em;
-        }
         .reacted {
           font-family: 'Roboto', sans-serif;
           font-weight: bold;
@@ -167,6 +166,10 @@
         > p {
           margin: 0;
         }
+        .icon_gif {
+          height: 1.2em;
+          margin-right: 0.5em;
+        }
       }
     }
   }
@@ -182,3 +185,40 @@
     }
   }
 }
+
+.who_like_item{
+  &:hover{
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}
+
+.icon_gif {
+  transition: all 0.06s linear;
+  height: 2.5em;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.emoji_list{
+  display: flex;
+  flex-direction: column;
+  * {
+    margin-bottom: 10px;
+    &:hover{
+      transform: scale(1.2);
+    }
+  }
+  :last-child{
+    margin: 0;
+  }
+}
+
+  .ant-popover-inner{
+  border-radius: 35px;
+  .ant-popover-inner-content{
+    padding: 0.5em;
+  }
+}
+

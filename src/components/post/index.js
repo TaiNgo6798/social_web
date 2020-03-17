@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks'
 import {
   DeleteOutlined,
@@ -15,12 +15,12 @@ import {
   notification,
   Input,
   Button,
+  Tooltip,
 } from 'antd'
 import moment from 'moment'
 
 // import css
 import './index.scss'
-
 
 import EmojiReaction, { LIKE, HEART, HAHA, WOW, SAD, ANGRY } from './emoji'
 
@@ -54,8 +54,9 @@ const DO_LIKE = gql`
 const { TextArea } = Input
 
 const Index = props => {
-  const { _id, image, user, likes, content, time } = props
-  const listReactions = likes.map(v => v.react)
+  const { history } = props
+  const { _id, image, user, likes: dataLikes, content, time } = props
+
   const { id: imageID, url: imageUrl } = image
 
   const notify = (text, code) => {
@@ -92,7 +93,7 @@ const Index = props => {
   const contentEditRef = useRef(content)
   const [commentCount, setCommentCount] = useState(10)
   const [emojiVisible, setEmojiVisible] = useState(false)
-
+  const [likes, setLikes] = useState(dataLikes) // current Likes
 
   const deleteHandler = () => {
     confirm({
@@ -121,30 +122,10 @@ const Index = props => {
     })
   }
 
-  const getEmojiFromLikes = reaction => {
-    let newSet = new Set(listReactions)
+  const isThisPostHasEmoji = reaction => {
+    let newSet = new Set(likes.map(v => v.react))
     if (newSet.has(reaction)) return true
     return false
-  }
-
-  const getCurrentReact = () => {
-    let react = likes.find(v => v.who._id === currentUser._id).react
-    switch (react) {
-      case 'LIKE':
-        return <p style={{color: '#2078F4', margin: 0}} className='reacted'>Thích</p>
-      case 'LOVE':
-        return <p style={{color: '#F33E58', margin: 0}} className='reacted'>Yêu thích</p>
-      case 'WOW':
-        return <p style={{color: '#F7B126', margin: 0}} className='reacted'>Wow</p>
-      case 'HAHA':
-        return <p style={{color: '#F7B126', margin: 0}} className='reacted'>Haha</p>
-      case 'SAD':
-        return <p style={{color: '#F7B126', margin: 0}} className='reacted'>Buồn</p>
-      case 'ANGRY':
-        return <p style={{color: '#E9710E', margin: 0}} className='reacted'>Phẫn nộ</p>
-      default:
-        return ''
-    }
   }
 
   const editHandler = () => {
@@ -193,21 +174,39 @@ const Index = props => {
   const whoLikes = () => {
     try {
       return likes.map(v => {
-        return <p key={v.who._id}>{v.who.firstName + ' ' + v.who.lastName}</p>
+        return (
+          <p
+            className="who_like_item"
+            key={v.who._id}
+            onClick={() => {
+              history.push(`/profile/${v.who._id}`)
+            }}
+          >
+            {v.who.firstName + ' ' + v.who.lastName}
+          </p>
+        )
       })
     } catch (error) {
       console.log(error)
     }
   }
 
-  const emoji = (
-    <div className="post_emoji" id={`emoji${_id}`}>
-      <EmojiReaction reactHandler={e => reactHandler(e)} />
-    </div>
-  )
-
   const reactHandler = reaction => {
-    setEmojiVisible(false)
+    let newLike = {
+      who: currentUser,
+      react: reaction,
+    }
+    if (likes.filter(v => v.who._id === currentUser._id).length === 0) {
+      setLikes([...likes, newLike])
+    } else {
+      let newList = likes.map(v => {
+        if (v.who._id === currentUser._id) {
+          v.react = reaction
+        }
+        return v
+      })
+      setLikes([...newList])
+    }
     likeAPost({
       variables: {
         postID: _id,
@@ -244,6 +243,19 @@ const Index = props => {
   //     )
   //   })
   // }
+
+  const postEditor = isEdit ? (
+    <TextArea
+      id="editText"
+      autoSize
+      autoFocus
+      defaultValue={content}
+      ref={contentEditRef}
+      style={{ border: 'none' }}
+    />
+  ) : (
+    <p>{content}</p>
+  )
 
   return (
     <>
@@ -285,18 +297,7 @@ const Index = props => {
         </div>
         <div className="body">
           <div className={`userContent ${image.url ? '' : 'bigger_content'}`}>
-            {isEdit ? (
-              <TextArea
-                id="editText"
-                autoSize
-                autoFocus
-                defaultValue={content}
-                ref={contentEditRef}
-                style={{ border: 'none' }}
-              />
-            ) : (
-              <p>{content}</p>
-            )}
+            {postEditor}
           </div>
           {image ? <img src={imageUrl} className="post_image"></img> : <></>}
         </div>
@@ -304,14 +305,14 @@ const Index = props => {
           <div className="likes">
             <div className="likes-and-comments-count">
               <div className="likeCount">
-                {getEmojiFromLikes('LIKE') && LIKE}
-                {getEmojiFromLikes('LOVE') && HEART}
-                {getEmojiFromLikes('WOW') && WOW}
-                {getEmojiFromLikes('HAHA') && HAHA}
-                {getEmojiFromLikes('SAD') && SAD}
-                {getEmojiFromLikes('ANGRY') && ANGRY}
+                {isThisPostHasEmoji('LIKE') && LIKE}
+                {isThisPostHasEmoji('LOVE') && HEART}
+                {isThisPostHasEmoji('WOW') && WOW}
+                {isThisPostHasEmoji('HAHA') && HAHA}
+                {isThisPostHasEmoji('SAD') && SAD}
+                {isThisPostHasEmoji('ANGRY') && ANGRY}
                 {likes.length > 0 && (
-                  <Popover content={whoLikes()}>{likes.length}</Popover>
+                  <Tooltip title={whoLikes()}>{likes.length}</Tooltip>
                 )}
               </div>
               {commentCount > 0 && (
@@ -324,19 +325,12 @@ const Index = props => {
         )}
         <div className="reactions">
           <div className="buttons">
-            <Popover
-              content={emoji}
-              className="emoji_popover"
-              placement="top"
-              visible={emojiVisible}
-              onVisibleChange={e => setEmojiVisible(e)}
-            >
-                <Button>
-                  {
-                    likes.map(v => v.who._id).indexOf(currentUser._id) !== -1 ? getCurrentReact() : 'Thích'
-                  }
-                </Button>
-            </Popover>
+            <EmojiReaction
+              key={_id}
+              reactHandler={e => reactHandler(e)}
+              likes={likes}
+              currentUser={currentUser}
+            />
             <Button>Bình luận</Button>
           </div>
         </div>

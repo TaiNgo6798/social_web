@@ -15,7 +15,6 @@ function Index(props) {
   const [messageCount, setMessageCount] = useState(0)
   const { user: currentUser } = useContext(UserContext)
 
-
   const searchHandler = (value) => {
 
   }
