@@ -232,25 +232,25 @@ const Index = props => {
     })
   }
 
-  const renderComments = () => {
-    return Object.values(commentData).map((v, k) => {
-      return (
-        <Comment
-          key={v.id}
-          author={v.nameUser}
-          avatar={<Avatar src={v.imageUser} alt={v.time} onClick={() => props.history.push(`profile/${v.id_user}`)} />}
-          content={<p>{v.body}</p>}
-          datetime={
-            <Tooltip title={time2.toLocaleString()}>
-              <span>
-                {TIME.fromNow()}
-              </span>
-            </Tooltip>
-          }
-        />
-      )
-    })
-  }
+  // const renderComments = () => {
+  //   return Object.values(commentData).map((v, k) => {
+  //     return (
+  //       <Comment
+  //         key={v.id}
+  //         author={v.nameUser}
+  //         avatar={<Avatar src={v.imageUser} alt={v.time} onClick={() => props.history.push(`profile/${v.id_user}`)} />}
+  //         content={<p>{v.body}</p>}
+  //         datetime={
+  //           <Tooltip title={time2.toLocaleString()}>
+  //             <span>
+  //               {TIME.fromNow()}
+  //             </span>
+  //           </Tooltip>
+  //         }
+  //       />
+  //     )
+  //   })
+  // }
 
   const postEditor = isEdit ? (
     <TextArea

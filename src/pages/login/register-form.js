@@ -1,18 +1,7 @@
 import React, { useState, useContext } from 'react'
 import '@ant-design/compatible/assets/index.css'
 
-import {
-  Form,
-  Input,
-  Tooltip,
-  Select,
-  Row,
-  Col,
-  Checkbox,
-  Button,
-  Spin,
-  notification
-} from 'antd'
+import { Form, Input, Select, Button, Spin, notification } from 'antd'
 
 import { withRouter } from 'react-router-dom'
 //server
@@ -20,7 +9,6 @@ import gql from 'graphql-tag'
 import { useMutation } from '@apollo/react-hooks'
 // import css
 import './index.scss'
-
 import { UserContext } from '../../contexts/userContext'
 
 const REGISTER = gql`
@@ -146,8 +134,8 @@ function RegistrationForm(props) {
         ]}
       >
         <Select placeholder="Giới tính">
-          <Option value="male">Nam</Option>
-          <Option value="female">Nữ</Option>
+          <Select.Option value="male">Nam</Select.Option>
+          <Select.Option value="female">Nữ</Select.Option> 
         </Select>
       </Form.Item>
       <Form.Item
@@ -205,7 +193,9 @@ function RegistrationForm(props) {
       </Form.Item>
 
       <div className="bottom-button">
-        <Button type="dash" onClick={() => props.backLogin()}>Về trang đăng nhập</Button>
+        <Button type="dash" onClick={() => props.backLogin()}>
+          Về trang đăng nhập
+        </Button>
         <Button type="primary" htmlType="submit">
           Đăng kí
         </Button>
