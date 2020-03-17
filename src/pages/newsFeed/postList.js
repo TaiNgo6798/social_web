@@ -55,19 +55,22 @@ const Index = () => {
   } = useContext(PostContext)
 
   useEffect(() => {
-    if (addPostData || deleteID || editData) {
-      refetch().then(res => {
-        setPostList(res.data.posts)
-      })
-    }
-
     if (addPostData) {
+      setPostList([addPostData, ...postList])
       setAddPostData(null)
     }
     if (deleteID) {
+      setPostList([...postList.filter(v => v._id !== deleteID)])
       setDeleteID(null)
     }
     if (editData) {
+      let newList = postList.map(v => {
+        if(v._id === editData._id) {
+          v.content = editData.newContent
+        }
+        return v
+      })
+      setPostList([...newList])
       setEditData(null)
     }
   }, [addPostData, deleteID, editData])

@@ -1,9 +1,19 @@
 import React, { useState, useContext } from 'react'
-import { Form } from '@ant-design/compatible'
 import '@ant-design/compatible/assets/index.css'
-import { Input, Button, Spin, notification, Select, Divider } from 'antd'
 
-import Swal from 'sweetalert2'
+import {
+  Form,
+  Input,
+  Tooltip,
+  Select,
+  Row,
+  Col,
+  Checkbox,
+  Button,
+  Spin,
+  notification
+} from 'antd'
+
 import { withRouter } from 'react-router-dom'
 //server
 import gql from 'graphql-tag'
@@ -13,90 +23,57 @@ import './index.scss'
 
 import { UserContext } from '../../contexts/userContext'
 
-const { Option } = Select
-
 const REGISTER = gql`
-mutation createUser($user: UserInput!) {
-  createUser(user: $user)
-}
+  mutation createUser($user: UserInput!) {
+    createUser(user: $user)
+  }
 `
 
-
 function RegistrationForm(props) {
+  const [form] = Form.useForm()
   const [register] = useMutation(REGISTER)
-  const [confirmDirty, setConfirmDirty] = useState(false)
   const [loading, setLoading] = useState(false)
-  const { refreshCurrentUrl } = useContext(UserContext)
 
-  const openNotification = (status) => status ? (
-    notification.success({
-      message: 'Đăng kí thành công !',
-      placement: 'bottomRight'
+  const openNotification = status =>
+    status
+      ? notification.success({
+          message: 'Đăng kí thành công !',
+          placement: 'bottomRight',
+        })
+      : notification.error({
+          message: 'Email đã tồn tại !',
+          placement: 'bottomRight',
+        })
+
+  const handleSubmit = values => {
+    setLoading(true)
+    const { email, password, firstName, lastName, gender } = values
+    register({
+      variables: {
+        user: {
+          email,
+          password,
+          firstName,
+          lastName,
+          gender,
+        },
+      },
     })
-  ) : (
-      notification.error({
-        message: 'Email đã tồn tại !',
-        placement: 'bottomRight'
-      })
-    )
-
-  const handleSubmit = e => {
-    e.preventDefault()
-      props.form.validateFieldsAndScroll((err, values) => {
-        if (!err) {
-          setLoading(true)
-          const { email, password, firstName, lastName, gender } = values
-          register({
-            variables: {
-              user: {
-                email,
-                password,
-                firstName,
-                lastName,
-                gender
-              }
-            }
-          }).then((res) => {
-            setLoading(false)
-            openNotification(res.data.createUser)
-            if (res.data.createUser) {
-              props.history.push('/login')
-            }
-          }).catch((err) => {
-            setLoading(false)
-            notification.error({
-              message: 'Đăng kí không thành công !',
-              placement: 'bottomRight'
-            })
-          })
+      .then(res => {
+        setLoading(false)
+        openNotification(res.data.createUser)
+        if (res.data.createUser) {
+          props.history.push('/login')
         }
       })
+      .catch(err => {
+        setLoading(false)
+        notification.error({
+          message: 'Đăng kí không thành công !',
+          placement: 'bottomRight',
+        })
+      })
   }
-
-  const handleConfirmBlur = e => {
-    const { value } = e.target
-    setConfirmDirty(confirmDirty || !!value)
-  }
-
-  const compareToFirstPassword = (rule, value, callback) => {
-    const { form } = props
-    if (value && value !== form.getFieldValue('password')) {
-      callback('Xác nhận mật khẩu không đúng !')
-    } else {
-      callback()
-    }
-  }
-
-  const validateToNextPassword = (rule, value, callback) => {
-    const { form } = props
-    if (value && confirmDirty) {
-      form.validateFields(['confirm'], { force: true })
-    }
-    callback()
-  }
-
-
-  const { getFieldDecorator } = props.form
 
   const formItemLayout = {
     labelCol: {
@@ -109,94 +86,139 @@ function RegistrationForm(props) {
     },
   }
 
+  const registerForm = (
+    <Form
+      size="middle"
+      style={{ width: '35em' }}
+      {...formItemLayout}
+      form={form}
+      name="register"
+      onFinish={handleSubmit}
+      scrollToFirstError
+    >
+      <Form.Item
+        label="Họ tên"
+        style={{ marginBottom: 0 }}
+        rules={[
+          {
+            required: true,
+          },
+        ]}
+      >
+        <Form.Item
+          style={{
+            display: 'inline-block',
+            width: 'calc(50% - 5px)',
+            marginRight: 8,
+          }}
+          name="firstName"
+          rules={[
+            {
+              required: true,
+              message: 'Vui lòng điền họ của bạn !',
+            },
+          ]}
+        >
+          <Input placeholder="Họ" />
+        </Form.Item>
+        <Form.Item
+          style={{ display: 'inline-block', width: 'calc(50% - 5px)' }}
+          name="lastName"
+          rules={[
+            {
+              required: true,
+              message: 'Vui lòng điền tên của bạn !',
+            },
+          ]}
+        >
+          <Input placeholder="Tên" />
+        </Form.Item>
+      </Form.Item>
+
+      <Form.Item
+        name="gender"
+        label="Giới tính"
+        rules={[
+          {
+            required: true,
+            message: 'Vui lòng chọn giới tính !',
+          },
+        ]}
+      >
+        <Select placeholder="Giới tính">
+          <Option value="male">Nam</Option>
+          <Option value="female">Nữ</Option>
+        </Select>
+      </Form.Item>
+      <Form.Item
+        name="email"
+        label="E-mail"
+        rules={[
+          {
+            type: 'email',
+            message: 'Email không hợp lệ !',
+          },
+          {
+            required: true,
+            message: 'Vui lòng nhập E-mail !',
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        name="password"
+        label="Mật khẩu"
+        rules={[
+          {
+            required: true,
+            message: 'Vui lòng điền mật khẩu !',
+          },
+        ]}
+        hasFeedback
+      >
+        <Input.Password />
+      </Form.Item>
+
+      <Form.Item
+        name="confirm"
+        label="Xác nhận mật khẩu"
+        dependencies={['password']}
+        hasFeedback
+        rules={[
+          {
+            required: true,
+            message: 'Vui lòng xác nhận mật khẩu !',
+          },
+          ({ getFieldValue }) => ({
+            validator(rule, value) {
+              if (!value || getFieldValue('password') === value) {
+                return Promise.resolve()
+              }
+              return Promise.reject('Xác nhận mật khẩu không đúng !')
+            },
+          }),
+        ]}
+      >
+        <Input.Password />
+      </Form.Item>
+
+      <div className="bottom-button">
+        <Button type="dash" onClick={() => props.backLogin()}>Về trang đăng nhập</Button>
+        <Button type="primary" htmlType="submit">
+          Đăng kí
+        </Button>
+      </div>
+    </Form>
+  )
 
   return (
-    <Spin spinning={loading}>
-      <Form {...formItemLayout} onSubmit={handleSubmit}>
-        <Form.Item label="Họ" className='registerForm'>
-          {getFieldDecorator('firstName', {
-            rules: [
-              {
-                required: true,
-                message: 'Vui lòng nhập Họ !',
-              },
-            ],
-          })(<Input />)}
-        </Form.Item>
-        <Form.Item label="Tên" className='registerForm'>
-          {getFieldDecorator('lastName', {
-            rules: [
-              {
-                required: true,
-                message: 'Vui lòng nhập Tên !',
-              },
-            ],
-          })(<Input />)}
-        </Form.Item>
-        <Form.Item label="E-mail" className='registerForm'>
-          {getFieldDecorator('email', {
-            rules: [
-              {
-                type: 'email',
-                message: 'Địa chỉ E-mail không hợp lệ !',
-              },
-              {
-                required: true,
-                message: 'Vui lòng nhập địa chỉ E-mail !',
-              },
-            ],
-          })(<Input />)}
-        </Form.Item>
-        <Form.Item label="Giới tính" className='registerForm'>
-          {getFieldDecorator('gender', {
-            rules: [
-              {
-                required: true,
-                message: 'Vui lòng chọn giới tính !',
-              },
-            ],
-          })(
-            <Select style={{ width: '100%' }}>
-              <Option value="male">Nam</Option>
-              <Option value="female">Nữ</Option>
-            </Select>
-          )}
-        </Form.Item>
-        <Form.Item label="Mật khẩu" hasFeedback className='registerForm'>
-          {getFieldDecorator('password', {
-            rules: [
-              {
-                required: true,
-                message: 'Vui lòng nhập mật khẩu !',
-              },
-              {
-                validator: validateToNextPassword,
-              },
-            ],
-          })(<Input.Password />)}
-        </Form.Item>
-        <Form.Item label="Xác nhận mật khẩu" hasFeedback className='registerForm'>
-          {getFieldDecorator('confirm', {
-            rules: [
-              {
-                required: true,
-                message: 'Vui lòng xác nhận mật khẩu !',
-              },
-              {
-                validator: compareToFirstPassword,
-              },
-            ],
-          })(<Input.Password onBlur={handleConfirmBlur} />)}
-        </Form.Item>
-
-        <Button type='primary' className='btnRegister' htmlType='submit'>Đăng kí</Button>
-        <Button className='btnBackLogin' onClick={() => { props.backLogin() }}>Về trang đăng nhập</Button>
-      </Form>
-    </Spin>
-
+    <>
+      <h1 style={{ display: 'block', textAlign: 'center' }}>Đăng kí</h1>
+      <Spin spinning={loading}>{registerForm}</Spin>
+    </>
   )
 }
 
-const WrappedRegistrationForm = Form.create({ name: 'register' })(RegistrationForm)
-
-export default withRouter(WrappedRegistrationForm)
+export default withRouter(RegistrationForm)

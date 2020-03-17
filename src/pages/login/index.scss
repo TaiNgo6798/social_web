@@ -1,149 +1,146 @@
+@media only screen and (min-width: 640px) {
+  // ipad and laptop
 
-
-@media only screen and (min-width: 640px){ // ipad and laptop
-
-	.form-center{
-		width: fit-content !important;
-		height: fit-content !important;
-		border-radius: 20px !important;
-		padding: 2em !important;
-		overflow: hidden !important;
-
-		.registerForm{
-			width: 35em !important;
-		}
-		.btnRegister{
-			width: auto !important
-		}
-		.btnBackLogin{
-			width: auto !important
-		}
-
+  .form-center {
+    max-height: 80% !important;
+    border-radius: 20px !important;
+    padding: 2em !important;
+    overflow: hidden !important;
+    height: fit-content !important;
+    
+    .btnRegister {
+      width: auto !important;
+    }
+    .btnBackLogin {
+      width: auto !important;
+    }
 	}
+	.login{
+		width: 25em !important;
+		height: fit-content !important;
+  }
+
 }
 
-.login_container{
-width: 100vw;
-height: 100vh;
-display: flex;
-align-items: center;
-justify-content: center;
-overflow: hidden;
+.login_container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 
-.login_background{
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	position: fixed;
-	z-index: -99;
-	filter: brightness(.8);
-}
-}
-
-.login{
-opacity: 1;
-z-index: 1;
+  .login_background {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: fixed;
+    z-index: -99;
+    filter: brightness(0.8);
+  }
 }
 
-.register{
-opacity: 0;
-position: absolute;
-transform: translateY(-200px);
-z-index: -999;
+.login {
+  opacity: 1;
+  z-index: 1;
 }
 
-.show_register{
-z-index: 1 !important;
-opacity: 1;
-transform: translateY(0);
+.register {
+  opacity: 0;
+  position: absolute;
+  transform: translateY(-200px);
+  z-index: -999;
 }
 
-.hide_login{
-opacity: 0;
-transform: translateY(200px);
+.show_register {
+  z-index: 1 !important;
+  opacity: 1;
+  transform: translateY(0);
+  
 }
 
+.hide_login {
+  opacity: 0;
+  transform: translateY(200px);
+}
 
 .login-form-forgot {
-.ant-modal-content {
-top: 50px;
-width: 556px;
-.ant-modal-body {
-	padding: 46px 53px 65px 53px;
-	.title {
-		color: cornflowerblue;
-		font-size: 24px;
-		font-weight: 600;
-		letter-spacing: 0.01em;
-		margin-bottom: 40px;
-		text-align: center;
-	}
-	.text-1 {
-		color: #666666;
-		font-size: 16px;
-		font-weight: 600;
-		letter-spacing: 0.01em;
-		text-align: center;
-	}
-	.text-2 {
-		color: #999999;
-		font-size: 14px;
-		letter-spacing: 0.01em;
-		margin-bottom: 19px;
-		text-align: center;
-	}
-	
-	.ant-btn,
-	.ant-input-lg {
-		height: 50px;
-	}
+  .ant-modal-content {
+    top: 50px;
+    width: 556px;
+    .ant-modal-body {
+      padding: 46px 53px 65px 53px;
+      .title {
+        color: cornflowerblue;
+        font-size: 24px;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        margin-bottom: 40px;
+        text-align: center;
+      }
+      .text-1 {
+        color: #666666;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        text-align: center;
+      }
+      .text-2 {
+        color: #999999;
+        font-size: 14px;
+        letter-spacing: 0.01em;
+        margin-bottom: 19px;
+        text-align: center;
+      }
 
-	.ant-input-lg {
-		border-radius: 3px;
-		font-size: 18px;
-	}
+      .ant-btn,
+      .ant-input-lg {
+        height: 50px;
+      }
 
-	.btn-innos{
-		height: 50px;
-		width: 450px;
-	}
+      .ant-input-lg {
+        border-radius: 3px;
+        font-size: 18px;
+      }
 
-}
-}
+      .btn-innos {
+        height: 50px;
+        width: 450px;
+      }
+    }
+  }
 }
 
 .login-form-button {
-width: 100%;
+  width: 100%;
 }
 
-.form-center{
-transition: all 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-height: 100vh;
-width: 100vw;
-background-color: #FFFFFF;
-padding:  2em;
-padding-top: 20%;
-overflow: auto;
+.form-center {
+  transition: all 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  height: 100vh;
+  width: 100vw;
+  background-color: #ffffff;
+  padding: 2em;
+  padding-top: 20%;
+  overflow: auto;
 
-.login_formCenter_image{
-	display: none;
-}
+  .login_formCenter_image {
+    display: none;
+  }
 
-.registerForm{
-width: auto;
-
-}
-.btnRegister{
-float: right;
-width: 100%;
-}
-.btnBackLogin{
-float: left;
-width:100%;
-margin-top: .5em
-}
-.forgotBtn{
-float: right;
-}
-
+  .registerForm {
+    width: auto;
+  }
+  .btnRegister {
+    float: right;
+    width: 100%;
+  }
+  .btnBackLogin {
+    float: left;
+    width: 100%;
+    margin-top: 0.5em;
+  }
+  .forgotBtn {
+    float: right;
+  }
 }

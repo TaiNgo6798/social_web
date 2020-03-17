@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react'
-import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks'
+import React, { useState, useRef, useContext } from 'react'
+import { useMutation, useLazyQuery } from '@apollo/react-hooks'
 import {
   DeleteOutlined,
   EditOutlined,
@@ -8,7 +8,6 @@ import {
 import {
   Avatar,
   Modal,
-  Popover,
   Spin,
   Menu,
   Dropdown,
@@ -18,9 +17,12 @@ import {
   Tooltip,
 } from 'antd'
 import moment from 'moment'
+import Img from 'react-image'
+import LoadingImage from '@assets/images/loading.gif'
 
 // import css
 import './index.scss'
+
 
 import EmojiReaction, { LIKE, HEART, HAHA, WOW, SAD, ANGRY } from './emoji'
 
@@ -31,7 +33,6 @@ import gql from 'graphql-tag'
 //Context
 import { UserContext } from '@contexts/userContext'
 import { PostContext } from '@contexts/postContext'
-import { useContext } from 'react'
 
 const EDIT_A_POST = gql`
   mutation edit($_id: ID!, $content: String!) {
@@ -49,6 +50,23 @@ const DO_LIKE = gql`
   mutation like($postID: String!, $react: REACT!) {
     doLike(likeInput: { postID: $postID, react: $react })
   }
+`
+
+const GET_COMMENTS = gql`
+query getCmt($postID: String!) {
+  getCommentsByPostID(postID: $postID){
+    _id
+    who{
+      _id
+      firstName
+      lastName
+      email
+    }
+    postID
+    text
+    time
+  }
+}
 `
 
 const { TextArea } = Input
@@ -87,12 +105,11 @@ const Index = props => {
   const [likeAPost] = useMutation(DO_LIKE)
   const { setDeleteID } = useContext(PostContext)
   const { setEditData } = useContext(PostContext)
+  const [getComments, { loading: loadingComments, data: commentsData }] = useLazyQuery(GET_COMMENTS)
 
-  const [showAllComment, setShowAllComment] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
   const contentEditRef = useRef(content)
   const [commentCount, setCommentCount] = useState(10)
-  const [emojiVisible, setEmojiVisible] = useState(false)
   const [likes, setLikes] = useState(dataLikes) // current Likes
 
   const deleteHandler = () => {
@@ -215,34 +232,25 @@ const Index = props => {
     })
   }
 
-  // const renderComments = () => {
-  //   return Object.values(commentData).map((v, k) => {
-  //     let time2 = new Date(v.time)
-  //     return (
-  //       <Comment
-  //         key={v.id}
-  //         author={v.nameUser}
-  //         avatar={<Avatar src={v.imageUser} alt={v.time} onClick={() => props.history.push(`profile/${v.id_user}`)} />}
-  //         content={<p>{v.body}</p>}
-  //         datetime={
-  //           <Tooltip title={time2.toLocaleString()}>
-  //             <span>
-  //               {moment([
-  //                 time2.getFullYear(),
-  //                 time2.getMonth(),
-  //                 time2.getDate(),
-  //                 time2.getHours(),
-  //                 time2.getMinutes(),
-  //                 time2.getSeconds(),
-  //                 time2.getMilliseconds()
-  //               ]).fromNow()}
-  //             </span>
-  //           </Tooltip>
-  //         }
-  //       />
-  //     )
-  //   })
-  // }
+  const renderComments = () => {
+    return Object.values(commentData).map((v, k) => {
+      return (
+        <Comment
+          key={v.id}
+          author={v.nameUser}
+          avatar={<Avatar src={v.imageUser} alt={v.time} onClick={() => props.history.push(`profile/${v.id_user}`)} />}
+          content={<p>{v.body}</p>}
+          datetime={
+            <Tooltip title={time2.toLocaleString()}>
+              <span>
+                {TIME.fromNow()}
+              </span>
+            </Tooltip>
+          }
+        />
+      )
+    })
+  }
 
   const postEditor = isEdit ? (
     <TextArea
@@ -299,7 +307,14 @@ const Index = props => {
           <div className={`userContent ${image.url ? '' : 'bigger_content'}`}>
             {postEditor}
           </div>
-          {image ? <img src={imageUrl} className="post_image"></img> : <></>}
+          {image ? (
+              <Img 
+              src={imageUrl}
+              loader={<img src={LoadingImage} width='100%' style={{objectFit: 'cover'}}/>}
+              />
+          ) : (
+            <></>
+          )}
         </div>
         {(likes.length > 0 || commentCount > 0) && (
           <div className="likes">
@@ -337,20 +352,12 @@ const Index = props => {
         <CreateComment
           idPost={_id}
           idCurrentUser={currentUser._id}
-          // setShowAllComment={e => {
-          //   setShowAllComment(e)
-          // }}
           commentData=""
         />
         <div className="comments">
           <Spin spinning={false}>
-            {/* {showAllComment && renderComments()} */}
+
           </Spin>
-          {showAllComment && (
-            <div className="seeAll">
-              <a onClick={() => {}}>Hide comments</a>
-            </div>
-          )}
         </div>
       </div>
     </>

@@ -1,9 +1,6 @@
-
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import { LockOutlined, UserOutlined } from '@ant-design/icons'
-import { Form } from '@ant-design/compatible'
-import '@ant-design/compatible/assets/index.css'
-import { Input, Button, notification, Spin } from 'antd'
+import { LockOutlined, UserOutlined, MailOutlined } from '@ant-design/icons'
+import { Form, Input, Button, Spin, notification } from 'antd'
 import { withRouter } from 'react-router-dom'
 
 import RegisterForm from './register-form'
@@ -21,13 +18,13 @@ import { useMutation } from '@apollo/react-hooks'
 import { UserContext } from '../../contexts/userContext'
 
 const LOGIN = gql`
-mutation login($email: String!, $password: String!) {
-  login(loginInput: {email: $email, password: $password}) {
-    token
-    status
-    message
+  mutation login($email: String!, $password: String!) {
+    login(loginInput: { email: $email, password: $password }) {
+      token
+      status
+      message
+    }
   }
-}
 `
 const openNotification = placement => {
   notification.error({
@@ -36,7 +33,7 @@ const openNotification = placement => {
   })
 }
 
-const Index = (props) => {
+const Index = props => {
   const { history } = props
   const emailRef = useRef(null)
   const passwordRef = useRef(null)
@@ -52,95 +49,98 @@ const Index = (props) => {
     registerForm.classList.toggle('show_register')
   }
 
-
-  const handleSubmit = e => {
-    e.preventDefault()
-    props.form.validateFields((err, values) => {
-      if (!err) {
+  const handleSubmit = () => {
         setLoading(true)
         login({
           variables: {
             email: emailRef.current.state.value,
-            password: passwordRef.current.state.value
-          }
-        }).then(res => {
-          setLoading(false)
-          const { token } = res.data.login
-          if (token) {
-            localStorage.setItem('Authorization', `Bearer ${token}`)
-            refreshUser()
-            history.push('/newsFeed')
-          }
-          else {
-            openNotification('bottomRight')
-          }
-        }).catch(err => {
-          setLoading(false)
-          notification.error({
-            message: 'Không thể đăng nhập lúc này !',
-            placement: 'bottomRight'
-          })
+            password: passwordRef.current.state.value,
+          },
         })
-      }
-    })
-
+          .then(res => {
+            setLoading(false)
+            const { token } = res.data.login
+            if (token) {
+              localStorage.setItem('Authorization', `Bearer ${token}`)
+              refreshUser()
+              history.push('/newsFeed')
+            } else {
+              openNotification('bottomRight')
+            }
+          })
+          .catch(err => {
+            setLoading(false)
+            notification.error({
+              message: 'Không thể đăng nhập lúc này !',
+              placement: 'bottomRight',
+            })
+          })
   }
 
-  const { getFieldDecorator } = props.form
+
+  const loginForm = (
+    <Form name="normal_login" className="login-form" onFinish={handleSubmit}>
+      <Form.Item
+        name="email"
+        rules={[
+          {
+            type: 'email',
+            message: 'Email không hợp lệ !',
+          },
+          {
+            required: true,
+            message: 'Vui lòng nhập E-mail !',
+          },
+        ]}
+      >
+        <Input
+          prefix={<MailOutlined className="site-form-item-icon" />}
+          placeholder="Email"
+          ref={emailRef}
+        />
+      </Form.Item>
+      <Form.Item
+      style={{marginBottom: '0.25em'}}
+        name="password"
+        rules={[{ required: true, message: 'Vui lòng nhập mật khẩu !' }]}
+      >
+        <Input
+          prefix={<LockOutlined className="site-form-item-icon" />}
+          type="password"
+          placeholder="Mật khẩu"
+          ref={passwordRef}
+        />
+      </Form.Item>
+      <Form.Item style={{marginBottom: '1em'}}>
+        <a className="login-form-forgot" onClick={() => setForgotForm(true)} style={{float: 'right'}}>
+          Quên mật khẩu
+        </a>
+      </Form.Item>
+
+      <Form.Item>
+        <Button type="primary" htmlType="submit" className="login-form-button" style={{marginBottom: '0.5em'}}>
+          Đăng nhập
+        </Button>
+        Hoặc <a onClick={() => registerClick()}>đăng kí ngay !</a>
+      </Form.Item>
+    </Form>
+  )
 
   return (
-    <div className='login_container'>
-      <img className='login_background' src={background}></img>
-      <div className='form-center login'>
-        {/* <img className='login_formCenter_image' src={background}></img> */}
-        <div className='login_form_body'>
+    <div className="login_container">
+      <img className="login_background" src={background}></img>
+      <div className="form-center login">
+        <div className="login_form_body">
           <h1 style={{ display: 'block', textAlign: 'center' }}>Đăng nhập</h1>
-          <Spin spinning={loading}>
-            <Form onSubmit={handleSubmit} className="login-form">
-              <Form.Item>
-                {getFieldDecorator('username', {
-                  rules: [{ required: true, message: 'Vui lòng nhập địa chỉ E-mail !' }],
-                })(
-                  <Input
-                    prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    placeholder="Email"
-                    ref={emailRef}
-                  />,
-                )}
-              </Form.Item>
-              <Form.Item>
-                {getFieldDecorator('password', {
-                  rules: [{ required: true, message: 'Vui lòng nhập mật khẩu !' }],
-                })(
-                  <Input
-                    prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    type="password"
-                    placeholder="Password"
-                    ref={passwordRef}
-                  />,
-                )}
-              </Form.Item>
-              <Form.Item>
-                <a className="forgotBtn" onClick={() => setForgotForm(true)}>
-                  Quên mật khẩu ?
-                </a>
-                <Button type="primary" htmlType="submit" className="login-form-button">
-                  Đăng nhập
-                  </Button>
-                Or <a onClick={() => registerClick()}>Đăng kí ngay !</a>
-              </Form.Item>
-            </Form>
-          </Spin>
+          <Spin spinning={loading}>{loginForm}</Spin>
         </div>
       </div>
-      <div className='form-center register'>
-        <h1 style={{ display: 'block', textAlign: 'center' }}>Đăng kí</h1>
-        <RegisterForm className='form-register' backLogin={() => registerClick()} />
+      <div className="form-center register">
+        <RegisterForm backLogin={() => registerClick()} />
       </div>
       <ForgotForm onCancel={() => setForgotForm(false)} visible={forgotForm} />
     </div>
   )
 }
 
-const WrappedNormalLoginForm = Form.create({ name: 'normal_login' })(Index)
-export default withRouter(WrappedNormalLoginForm)
+export default withRouter(Index)
