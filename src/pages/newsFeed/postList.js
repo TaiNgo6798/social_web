@@ -31,6 +31,7 @@ const POSTS = gql`
         }
         react
       }
+      commentsCount
     }
   }
 `
@@ -104,7 +105,7 @@ const Index = () => {
     try {
       if (postList.length !== 0) {
         return postList.map((v, k) => {
-          const { _id, who, image, content, time, likes } = v
+          const { _id, who, image, content, time, likes, commentsCount } = v
           return (
             <Post
               key={_id}
@@ -114,6 +115,7 @@ const Index = () => {
               likes={likes || []}
               content={content}
               time={time}
+              commentsCount = {commentsCount}
             />
           )
         })

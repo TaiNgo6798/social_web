@@ -67,7 +67,7 @@ function Index() {
   const loadActiveChat = () => {
     return listActiveChat.map((v, k) => {
       return <ChatWindow
-        key={k}
+        key={v._id}
         htmlid={v._id}
         onClose={(_id) => closeActiveChatHandler(_id)}
         image={v.avatar}

@@ -7,6 +7,7 @@
     padding: 2em !important;
     overflow: hidden !important;
     height: fit-content !important;
+    width: fit-content !important;
     
     .btnRegister {
       width: auto !important;
@@ -50,6 +51,11 @@
   position: absolute;
   transform: translateY(-200px);
   z-index: -999;
+  .bottom-button{
+    :last-child{
+      float: right;
+    }
+  }
 }
 
 .show_register {
@@ -124,13 +130,6 @@
   padding-top: 20%;
   overflow: auto;
 
-  .login_formCenter_image {
-    display: none;
-  }
-
-  .registerForm {
-    width: auto;
-  }
   .btnRegister {
     float: right;
     width: 100%;
@@ -143,4 +142,5 @@
   .forgotBtn {
     float: right;
   }
+
 }

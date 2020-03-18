@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import {Popover, Button} from 'antd'
+import { Popover, Button } from 'antd'
 
 import './index.scss'
 import LikeGif from '@assets/icons/like.gif'
@@ -20,8 +20,6 @@ const WOW = <img src={WowGif} className="icon_gif" />
 const SAD = <img src={SadGif} className="icon_gif" />
 
 const ANGRY = <img src={AngryGif} className="icon_gif" />
-
-
 
 const Index = props => {
   const { reactHandler, likes, currentUser } = props
@@ -89,7 +87,7 @@ const Index = props => {
     }
   }
 
-  const iconClick = (react) => {
+  const iconClick = react => {
     reactHandler(react)
     setEmojiVisible(false)
   }

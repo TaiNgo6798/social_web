@@ -23,8 +23,10 @@ import LoadingImage from '@assets/images/loading.gif'
 // import css
 import './index.scss'
 
+//import components
+import Comments from '@components/comments'
 
-import EmojiReaction, { LIKE, HEART, HAHA, WOW, SAD, ANGRY } from './emoji'
+import EmojiReaction, { LIKE, HEART, HAHA, WOW, SAD, ANGRY } from './emoji-reaction-button'
 
 import CreateComment from '../createComment'
 import { withRouter } from 'react-router-dom'
@@ -52,28 +54,13 @@ const DO_LIKE = gql`
   }
 `
 
-const GET_COMMENTS = gql`
-query getCmt($postID: String!) {
-  getCommentsByPostID(postID: $postID){
-    _id
-    who{
-      _id
-      firstName
-      lastName
-      email
-    }
-    postID
-    text
-    time
-  }
-}
-`
+
 
 const { TextArea } = Input
 
 const Index = props => {
   const { history } = props
-  const { _id, image, user, likes: dataLikes, content, time } = props
+  const { _id, image, user, likes: dataLikes, content, time, commentsCount: dataCommentsCount } = props
 
   const { id: imageID, url: imageUrl } = image
 
@@ -105,12 +92,12 @@ const Index = props => {
   const [likeAPost] = useMutation(DO_LIKE)
   const { setDeleteID } = useContext(PostContext)
   const { setEditData } = useContext(PostContext)
-  const [getComments, { loading: loadingComments, data: commentsData }] = useLazyQuery(GET_COMMENTS)
 
   const [isEdit, setIsEdit] = useState(false)
   const contentEditRef = useRef(content)
-  const [commentCount, setCommentCount] = useState(10)
+  const [commentsCount] = useState(dataCommentsCount)
   const [likes, setLikes] = useState(dataLikes) // current Likes
+  const [showComments, setShowComments] = useState(false)
 
   const deleteHandler = () => {
     confirm({
@@ -186,8 +173,6 @@ const Index = props => {
     </Menu>
   )
 
-  const loadComments = () => {}
-
   const whoLikes = () => {
     try {
       return likes.map(v => {
@@ -232,25 +217,7 @@ const Index = props => {
     })
   }
 
-  // const renderComments = () => {
-  //   return Object.values(commentData).map((v, k) => {
-  //     return (
-  //       <Comment
-  //         key={v.id}
-  //         author={v.nameUser}
-  //         avatar={<Avatar src={v.imageUser} alt={v.time} onClick={() => props.history.push(`profile/${v.id_user}`)} />}
-  //         content={<p>{v.body}</p>}
-  //         datetime={
-  //           <Tooltip title={time2.toLocaleString()}>
-  //             <span>
-  //               {TIME.fromNow()}
-  //             </span>
-  //           </Tooltip>
-  //         }
-  //       />
-  //     )
-  //   })
-  // }
+  
 
   const postEditor = isEdit ? (
     <TextArea
@@ -308,16 +275,21 @@ const Index = props => {
             {postEditor}
           </div>
           {image ? (
-              <Img 
+            <Img
               src={imageUrl}
-              loader={<img src={LoadingImage} width='100%' style={{objectFit: 'cover'}}/>}
-              />
+              loader={
+                <img
+                  src={LoadingImage}
+                  width="100%"
+                  style={{ objectFit: 'cover' }}
+                />
+              }
+            />
           ) : (
             <></>
           )}
         </div>
-        {(likes.length > 0 || commentCount > 0) && (
-          <div className="likes">
+        {(likes.length > 0 || commentsCount > 0) && (
             <div className="likes-and-comments-count">
               <div className="likeCount">
                 {isThisPostHasEmoji('LIKE') && LIKE}
@@ -330,13 +302,12 @@ const Index = props => {
                   <Tooltip title={whoLikes()}>{likes.length}</Tooltip>
                 )}
               </div>
-              {commentCount > 0 && (
+              {commentsCount > 0 && (
                 <div className="commentsCount">
-                  <a>{commentCount} bình luận</a>
+                  <a>{commentsCount} bình luận</a>
                 </div>
               )}
             </div>
-          </div>
         )}
         <div className="reactions">
           <div className="buttons">
@@ -346,7 +317,7 @@ const Index = props => {
               likes={likes}
               currentUser={currentUser}
             />
-            <Button>Bình luận</Button>
+            <Button onClick={() => commentsCount > 0 && setShowComments(true)}>Bình luận</Button>
           </div>
         </div>
         <CreateComment
@@ -355,9 +326,9 @@ const Index = props => {
           commentData=""
         />
         <div className="comments">
-          <Spin spinning={false}>
-
-          </Spin>
+          {
+            showComments ? <Comments postID={_id}/> : null
+          }
         </div>
       </div>
     </>

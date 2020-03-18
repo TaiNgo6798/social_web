@@ -1,0 +1,21 @@
+
+.emoji_list{
+  display: flex;
+  flex-direction: column;
+  * {
+    margin-bottom: 10px;
+    &:hover{
+      transform: scale(1.2);
+    }
+  }
+  :last-child{
+    margin: 0;
+  }
+}
+
+  .ant-popover-inner{
+  border-radius: 35px;
+  .ant-popover-inner-content{
+    padding: 0.5em;
+  }
+}

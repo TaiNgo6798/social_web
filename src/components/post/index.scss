@@ -80,12 +80,14 @@
     color: red;
   }
 
-  .likes {
+  .likes-and-comments-count {
     height: 2em;
-    width: 100%;
-    display: flex;
     padding: 0 1em 0 1em;
     margin-top: 0.75em;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
     .commentsCount {
       > a {
@@ -115,12 +117,6 @@
     }
   }
 
-  .likes-and-comments-count {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
 
   .userContent {
     width: 100%;
@@ -177,6 +173,7 @@
   .comments {
     width: 100%;
     padding: 0 20px;
+    
     .seeAll {
       display: flex;
       justify-content: center;
@@ -201,24 +198,4 @@
   }
 }
 
-.emoji_list{
-  display: flex;
-  flex-direction: column;
-  * {
-    margin-bottom: 10px;
-    &:hover{
-      transform: scale(1.2);
-    }
-  }
-  :last-child{
-    margin: 0;
-  }
-}
-
-  .ant-popover-inner{
-  border-radius: 35px;
-  .ant-popover-inner-content{
-    padding: 0.5em;
-  }
-}
 
