@@ -8,33 +8,62 @@ import UserContextProvider from '@contexts/userContext'
 import PostContextProvider from '@contexts/postContext'
 
 //server
-import { ApolloClient } from 'apollo-client'
-import { InMemoryCache } from 'apollo-cache-inmemory'
+import ApolloClient from 'apollo-client'
+// Setup the network "links"
+import { WebSocketLink } from 'apollo-link-ws'
 import { HttpLink } from 'apollo-link-http'
+import { split } from 'apollo-link'
+import { getMainDefinition } from 'apollo-utilities'
+import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloProvider } from '@apollo/react-hooks'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { setContext } from 'apollo-link-context'
 
 const cache = new InMemoryCache()
+const token = localStorage.getItem('Authorization')
+
 const httpLink = new HttpLink({
-  uri: 'http://localhost:14377/graphql'
+  uri: 'http://localhost:14377/graphql', // use https for secure endpoint
 })
+
+// Create a WebSocket link:
+const wsLink = new WebSocketLink({
+  uri: 'ws://localhost:14377/graphql', // use wss for a secure endpoint
+  options: {
+    reconnect: true,
+    connectionParams: {
+      Authorization: token,
+  },
+  },
+})
+
+// using the ability to split links, you can send data to each link
+// depending on what kind of operation is being sent
+const link = split(
+  // split based on operation type
+  ({ query }) => {
+    const { kind, operation } = getMainDefinition(query)
+    return kind === 'OperationDefinition' && operation === 'subscription'
+  },
+  wsLink,
+  httpLink
+)
 
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
-  const token = localStorage.getItem('Authorization')
   // return the headers to the context so httpLink can read them
   return {
     headers: {
       ...headers,
       authorization: token || '',
-    }
+    },
   }
 })
 
+// Instantiate client
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
-  cache
+  link: authLink.concat(link),
+  cache,
 })
 
 ReactDOM.render(
@@ -46,8 +75,9 @@ ReactDOM.render(
         </Router>
       </PostContextProvider>
     </UserContextProvider>
-  </ApolloProvider>
-  , document.getElementById('root'))
+  </ApolloProvider>,
+  document.getElementById('root')
+)
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

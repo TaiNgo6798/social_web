@@ -20,6 +20,7 @@ import withAuthUser from '../../components/utils/hoc/authUser'
 
 import maleUser from '@assets/images/man-user.png'
 import femaleUser from '@assets/images/woman-user.png'
+
 import axios from 'axios'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/react-hooks'
@@ -78,7 +79,6 @@ const Index = props => {
   const [isUploadImage, setIsUploadImage] = useState(false)
   const [previewImage, setPreviewImage] = useState('')
   const [previewVisible, setPreviewVisible] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     if (image || content.length > 0) {

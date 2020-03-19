@@ -16,6 +16,8 @@ const POSTS = gql`
         firstName
         lastName
         _id
+        gender
+        avatar
       }
       image {
         id
