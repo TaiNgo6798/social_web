@@ -1,16 +1,12 @@
 import React, { useMemo, useEffect, useState } from 'react'
-import { Comment, Tooltip, Spin, Avatar, Popover } from 'antd'
+import { withRouter } from 'react-router-dom'
+import { Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import { useQuery, useSubscription } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
-import moment from 'moment'
-
-import maleUser from '@assets/images/man-user.png'
-import femaleUser from '@assets/images/woman-user.png'
-import typingImage from '@assets/images/typing.gif'
 
 import './index.scss'
-import { withRouter } from 'react-router-dom'
+import AComment from './AComment'
 
 const GET_COMMENTS = gql`
   query getCmt($postID: String!) {
@@ -99,7 +95,9 @@ const Index = props => {
   useEffect(() => {
     let mounted = true
     if (mounted) {
-      if (listComment.length > 0) setCommentCount(listComment.length)
+      if (listComment.length >= 0) {
+        setCommentCount(listComment.length)
+      }
     }
     return () => {
       mounted = false
@@ -115,35 +113,14 @@ const Index = props => {
     }
   }
 
-  const AComment = v => {
-    return (
-      <Comment
-        key={v._id}
-        author={`${v.who.firstName} ${v.who.lastName}`}
-        avatar={
-          <Avatar
-            src={
-              v.who.avatar ||
-              (v.who.gender === 'female' ? femaleUser : maleUser)
-            }
-            alt={v.time}
-            onClick={() => props.history.push(`profile/${v.who._id}`)}
-          />
-        }
-        content={<p>{v.text}</p>}
-        datetime={
-          <Tooltip title={v.time}>
-            <span>{moment(v.time).fromNow()}</span>
-          </Tooltip>
-        }
-      />
-    )
+  const removeComment = (_id) => {
+    setListComment([...listComment.filter(v => v._id !== _id)])
   }
 
   const renderComments = useMemo(() => {
     try {
       return listComment.map(v => {
-        return AComment(v)
+        return <AComment key={v._id} data={v} removeComment={(_id) => removeComment(_id)}/>
       })
     } catch (error) {
       console.log(error)
@@ -152,7 +129,6 @@ const Index = props => {
 
   const typing = (
     <div className={'typing_comment'}>
-      <img src={typingImage} />
       <p>Có ai đó đang nhập bình luận ...</p>
     </div>
   )

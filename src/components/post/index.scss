@@ -45,7 +45,6 @@
       &:hover {
         cursor: pointer;
       }
-      color: #47a8ff;
       .edit_btns {
         display: flex;
       }
@@ -53,6 +52,7 @@
     .username {
       > p {
         font-family: 'Roboto', sans-serif;
+        color: #3f72af;
         margin: 0;
         &:hover {
           cursor: pointer;

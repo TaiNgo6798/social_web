@@ -102,17 +102,18 @@ const Index = props => {
     postDay.getMilliseconds(),
   ])
   const { user: currentUser } = useContext(UserContext)
+  const { setDeleteID, setEditData } = useContext(PostContext)
   const [deleteAPost] = useMutation(DELETE_ONE_POST)
   const [editAPost] = useMutation(EDIT_A_POST)
   const [likeAPost] = useMutation(DO_LIKE)
-  const { setDeleteID } = useContext(PostContext)
-  const { setEditData } = useContext(PostContext)
 
+  //local state
   const [isEdit, setIsEdit] = useState(false)
   const contentEditRef = useRef(content)
   const [commentsCount, setCommentCount] = useState(dataCommentsCount)
   const [likes, setLikes] = useState(dataLikes) // current Likes
   const [showComments, setShowComments] = useState(false)
+  const [localContent, setLocalContent] = useState(content)
 
   const deleteHandler = () => {
     confirm({
@@ -134,7 +135,7 @@ const Index = props => {
             } else notify('Đã xảy ra lỗi khi xóa !', 2)
           })
           .catch(err => {
-            notify(err, 2)
+            notify('Đã xảy ra lỗi khi xóa !', 2)
           })
       },
       onCancel() {},
@@ -160,7 +161,7 @@ const Index = props => {
           .then(res => {
             if (res.data.updatePost) {
               notify('Sửa thành công !', 1)
-              setEditData({ _id, newContent })
+              setLocalContent(newContent)
             } else notify('Đã có lỗi xảy ra !', 2)
           })
           .catch(err => {
@@ -232,17 +233,17 @@ const Index = props => {
     })
   }
 
-  const postEditor = isEdit ? (
+  const postContent = isEdit ? (
     <TextArea
       id="editText"
       autoSize
       autoFocus
-      defaultValue={content}
+      defaultValue={localContent}
       ref={contentEditRef}
       style={{ border: 'none' }}
     />
   ) : (
-    <p>{content}</p>
+    <p>{localContent}</p>
   )
 
   return (
@@ -251,6 +252,7 @@ const Index = props => {
         <div className="header">
           <div className="avatar">
             <Avatar
+              key={_id}
               size={40}
               src={
                 user.avatar ||
@@ -288,7 +290,7 @@ const Index = props => {
         </div>
         <div className="body">
           <div className={`userContent ${image.url ? '' : 'bigger_content'}`}>
-            {postEditor}
+            {postContent}
           </div>
           {image ? (
             <Img
@@ -341,11 +343,15 @@ const Index = props => {
         <div className="comments">
           {showComments ? (
             <>
-            <CreateComment postID={_id} setShowComments={e => setShowComments(e)} user={currentUser}/>
-            <Comments
-              postID={_id}
-              setCommentCount={(e) => setCommentCount(e)}
-            />
+              <CreateComment
+                postID={_id}
+                user={currentUser}
+              />
+              <Comments
+                postID={_id}
+                currentUser={currentUser}
+                setCommentCount={e => setCommentCount(e)}
+              />
             </>
           ) : null}
         </div>

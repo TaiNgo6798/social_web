@@ -53,8 +53,6 @@ const Index = () => {
     setAddPostData,
     deleteID,
     setDeleteID,
-    editData,
-    setEditData,
   } = useContext(PostContext)
 
   useEffect(() => {
@@ -66,17 +64,7 @@ const Index = () => {
       setPostList([...postList.filter(v => v._id !== deleteID)])
       setDeleteID(null)
     }
-    if (editData) {
-      let newList = postList.map(v => {
-        if(v._id === editData._id) {
-          v.content = editData.newContent
-        }
-        return v
-      })
-      setPostList([...newList])
-      setEditData(null)
-    }
-  }, [addPostData, deleteID, editData])
+  }, [addPostData, deleteID])
 
   useBottomScrollListener(() => {
     setSkip(prev => prev + 10)
@@ -106,7 +94,7 @@ const Index = () => {
   const loadPosts = useMemo(() => {
     try {
       if (postList.length !== 0) {
-        return postList.map((v, k) => {
+        return postList.map((v) => {
           const { _id, who, image, content, time, likes, commentsCount } = v
           return (
             <Post

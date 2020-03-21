@@ -38,6 +38,7 @@ const ADD_POST = gql`
         firstName
         lastName
         _id
+        gender
       }
       image {
         id

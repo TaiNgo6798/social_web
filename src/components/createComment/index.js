@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 import withAuthLogged from '../utils/hoc/authLogged'
-import { Input, Avatar } from 'antd'
+import { Input, Avatar, Spin } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
 import './index.scss'
 
 import gql from 'graphql-tag'
@@ -21,15 +22,17 @@ const TYPING = gql`
     commentStatus(input: $input)
   }
 `
+const loadingIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
 
 function Index(props) {
-  const { postID, setShowComments, user } = props
+  const { postID, user } = props
   const { avatar, gender, _id } = user
   const textRef = useRef(null)
   const [typingStatus, setTypingStatus] = useState(false)
 
   const [postComment] = useMutation(POST_COMMENT)
   const [typing] = useMutation(TYPING)
+  const [postingComment, setPostingComment] = useState(false)
 
   const onChange = e => {
     const text = e.target.value
@@ -40,7 +43,7 @@ function Index(props) {
           input: {
             postID,
             status: true,
-            idWho: _id
+            idWho: _id,
           },
         },
       })
@@ -52,7 +55,7 @@ function Index(props) {
           input: {
             postID,
             status: false,
-            idWho: _id
+            idWho: _id,
           },
         },
       })
@@ -64,6 +67,7 @@ function Index(props) {
       e.preventDefault()
       const text = textRef.current.state.value
       if (text.length > 0) {
+        setPostingComment(true)
         postComment({
           variables: {
             commentInput: {
@@ -72,17 +76,18 @@ function Index(props) {
             },
           },
         }).then(() => {
-          setShowComments(true)
           setTypingStatus(false)
+          setPostingComment(false)
           typing({
             variables: {
               input: {
                 postID,
                 status: false,
-                idWho: _id
+                idWho: _id,
               },
             },
           })
+          
           window.document.querySelector('[id="cmtText"]').value = ''
           textRef.current.state.value = null
         })
@@ -91,6 +96,7 @@ function Index(props) {
   }
 
   return (
+    <Spin spinning={postingComment} indicator={loadingIcon}>
     <div className="postComment">
       <Avatar
         size={25}
@@ -98,7 +104,7 @@ function Index(props) {
       />
       <TextArea
         id="cmtText"
-        placeholder="Type comment here ..."
+        placeholder="Viết bình luận ..."
         autoSize
         style={{ borderRadius: '10px' }}
         onKeyPress={e => postCommentHandler(e)}
@@ -106,6 +112,7 @@ function Index(props) {
         onChange={e => onChange(e)}
       />
     </div>
+    </Spin>
   )
 }
 
