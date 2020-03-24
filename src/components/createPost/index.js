@@ -237,7 +237,10 @@ const Index = props => {
   )
 
   const addImageButton = (
-    <div className="add_image_button" onClick={() => setIsUploadImage(!isUploadImage)}>
+    <div
+      className="add_image_button"
+      onClick={() => setIsUploadImage(!isUploadImage)}
+    >
       <CameraTwoTone style={{ fontSize: 20 }} />
       <p>Ảnh</p>
     </div>
@@ -254,7 +257,7 @@ const Index = props => {
               className="close-button"
               style={{ marginRight: 'auto', marginBottom: 0, float: 'right' }}
             >
-              x
+              <p>x</p>
             </a>
           </div>
           <Divider style={{ margin: '10px 0 20px 0' }} />
@@ -273,9 +276,8 @@ const Index = props => {
             />
           </div>
           <div className="bottom-bar">
-            {
-              (isUploadImage) && (
-                <div className="image_list">
+            {isUploadImage && (
+              <div className="image_list">
                 <Upload
                   action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                   listType="picture-card"
@@ -300,19 +302,16 @@ const Index = props => {
                   />
                 </Modal>
               </div>
-              )
-            }
-            <div className="tool-bar">
-              {addImageButton}
-            </div>
-                <Button
-                  className='post_button'
-                  type="primary"
-                  disabled = {!ready}
-                  onClick={onSubmitPost}
-                >
-                  Đăng
-                </Button>
+            )}
+            <div className="tool-bar">{addImageButton}</div>
+            <Button
+              className="post_button"
+              type="primary"
+              disabled={!ready}
+              onClick={onSubmitPost}
+            >
+              Đăng
+            </Button>
           </div>
         </Spin>
       </div>

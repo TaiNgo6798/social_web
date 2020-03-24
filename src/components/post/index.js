@@ -92,15 +92,7 @@ const Index = props => {
   }
   const { confirm } = Modal
   const postDay = new Date(time)
-  const TIME = moment([
-    postDay.getFullYear(),
-    postDay.getMonth(),
-    postDay.getDate(),
-    postDay.getHours(),
-    postDay.getMinutes(),
-    postDay.getSeconds(),
-    postDay.getMilliseconds(),
-  ])
+  
   const { user: currentUser } = useContext(UserContext)
   const { setDeleteID, setEditData } = useContext(PostContext)
   const [deleteAPost] = useMutation(DELETE_ONE_POST)
@@ -266,7 +258,9 @@ const Index = props => {
               {`${user.firstName || ''} ${user.lastName || ' '}`}
             </p>
             <div className="time">
-              <a title={postDay}>{TIME.fromNow()}</a>
+            <Tooltip title={moment(postDay).format('YYYY-MM-DD HH:mm:ss')}>
+            <span>{moment(postDay).fromNow()}</span>
+          </Tooltip>
             </div>
           </div>
           {user._id === currentUser._id && (

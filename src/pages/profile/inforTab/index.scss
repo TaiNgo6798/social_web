@@ -16,7 +16,6 @@
   .row_detail_profile{
     display: flex;
     >p{
-      font-size: 1.35em;
       margin-bottom: .5em;
     }
     :first-child{
@@ -24,7 +23,6 @@
     }
     :last-child{
       width: 60%;
-      font-weight: bold;
     }
   }
 }

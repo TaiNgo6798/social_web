@@ -142,7 +142,7 @@ const _default = (isDev, env) => {
                   options: {
                     javascriptEnabled: true,
                     modifyVars: {
-                      '@font-family': 'Comfortaa, sans-serif'
+                      'font-family': 'Quicksand, sans-serif'
                     }
                   }
                 },

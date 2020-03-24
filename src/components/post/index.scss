@@ -51,7 +51,8 @@
     }
     .username {
       > p {
-        font-family: 'Roboto', sans-serif;
+        font-weight: 700;
+        font-size: larger;
         color: #3f72af;
         margin: 0;
         &:hover {
@@ -59,9 +60,9 @@
         }
       }
       .time {
+        font-size: small;
         display: flex;
         color: #b5b8be;
-        font-size: smaller;
         > a {
           margin: 0 4px 0 0;
           color: #b5b8be;
@@ -99,7 +100,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      font-weight: bold;
       > :last-child {
         margin-left: 0.75em;
         &:hover {
@@ -146,8 +146,7 @@
       border-top: solid 1px #e9ebee;
       > button {
         .reacted {
-          font-family: 'Roboto', sans-serif;
-          font-weight: bold;
+          font-weight: 700;
         }
         width: 50%;
         display: flex;

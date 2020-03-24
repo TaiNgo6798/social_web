@@ -128,7 +128,7 @@ const Index = props => {
   }, [listComment])
 
   const typing = (
-    <div className={'typing_comment'}>
+    <div className='typing_comment'>
       <p>Có ai đó đang nhập bình luận ...</p>
     </div>
   )

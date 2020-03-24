@@ -1,6 +1,7 @@
 import React, { useState, useContext, useRef } from 'react'
 import { withRouter } from 'react-router-dom'
-import { Comment, Avatar, Menu, Dropdown, Spin, notification, Modal } from 'antd'
+import moment from 'moment'
+import { Comment, Avatar, Menu, Dropdown, Spin, notification, Modal, Tooltip } from 'antd'
 import {
   DeleteOutlined,
   EditOutlined,
@@ -128,6 +129,7 @@ const Index = props => {
 
   return (
     <div className="A_comment">
+      <div className='comment-body'>
       <Comment
         avatar={
           <Avatar
@@ -143,7 +145,6 @@ const Index = props => {
           isEdit ? (
             <Spin spinning={editing} indicator={loadingIcon}>
               <TextArea
-                id="AComment_text"
                 autoSize
                 autoFocus
                 defaultValue={textData}
@@ -152,6 +153,7 @@ const Index = props => {
                   border: 'none',
                   backgroundColor: '#F2F2F2',
                   boxShadow: 'none',
+                  width: '26em',
                 }}
                 onPressEnter={e => editHandler(e)}
               />
@@ -177,6 +179,12 @@ const Index = props => {
             />
           </Dropdown>
         ))}
+      </div>
+        <div className='comment-footer'>
+        <Tooltip title={moment(time).format('YYYY-MM-DD HH:mm:ss')}>
+            <span>{moment(time).fromNow()}</span>
+          </Tooltip>
+        </div>
     </div>
   )
 }

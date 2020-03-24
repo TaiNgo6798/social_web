@@ -40,9 +40,9 @@ function Index(props) {
             </Tooltip>
           </div>
           <Divider type='vertical' style={{ margin: 0 }} className='home_divider' />
-          <Badge count={messageCount} className='icon message_icon'>
+          <Badge count={messageCount} className=' message_icon'>
             <Tooltip placement="bottom" title='Tin nhắn'>
-              <MailOutlined />
+              <MailOutlined className='icon'/>
             </Tooltip>
           </Badge>
           <Divider type='vertical' style={{ margin: 0 }} className='message_divider' />
