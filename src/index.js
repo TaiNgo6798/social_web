@@ -23,12 +23,12 @@ const cache = new InMemoryCache()
 const token = localStorage.getItem('Authorization')
 
 const httpLink = new HttpLink({
-  uri: 'http://localhost:14377/graphql', // use https for secure endpoint
+  uri: 'http://localhost:4444/graphql', // use https for secure endpoint
 })
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
-  uri: 'ws://localhost:14377/graphql', // use wss for a secure endpoint
+  uri: 'ws://localhost:4444/graphql', // use wss for a secure endpoint 
   options: {
     reconnect: true,
     connectionParams: {

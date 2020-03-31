@@ -4,7 +4,7 @@
   "main": "./src/index.js",
   "license": "MIT",
   "scripts": {
-    "start:webpack": "PORT=3000 NODE_ENV=development webpack-dev-server",
+    "start:webpack": "PORT=3000 NODE_ENV=production webpack-dev-server",
     "build:analyzer": "NODE_ENV=production NODE_TYPE=analyzer webpack",
     "build:webpack": "NODE_ENV=production webpack",
     "start": "npm run start:webpack",
@@ -87,6 +87,7 @@
     "axios": "^0.19.2",
     "babel-plugin-import": "^1.12.2",
     "babel-plugin-root-import": "^6.4.1",
+    "bcrypt": "^4.0.1",
     "chart.js": "^2.9.3",
     "ckeditor4": "^4.13.0",
     "ckeditor4-react": "^1.0.0",
