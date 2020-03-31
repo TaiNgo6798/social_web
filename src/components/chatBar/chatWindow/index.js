@@ -1,76 +1,94 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { CloseOutlined } from '@ant-design/icons'
-import { Avatar, Badge, Input } from 'antd'
+import { Avatar, Badge } from 'antd'
 
 import './index.scss'
 
-
 function Index(props) {
-
   const { htmlid, onClose, image, name } = props
   const [classNameBody, setClassNameBody] = useState(false)
   const [classNameHeader, setClassNameHeader] = useState(false)
   const [chatData, setChatData] = useState([])
-  const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('user')))
-  const message = useRef('')
+  const [currentUser, setCurrentUser] = useState(
+    JSON.parse(localStorage.getItem('user'))
+    )
+    const message = useRef('')
 
-  useEffect(() => {
-    
-  }, [])
+  useEffect(() => {}, [])
 
-  const sendChatHandler = (e) => {
-    if(e.key === 'Enter'){
-      window.document.querySelector(`[id="${htmlid}"]`).value=''
+  const sendChatHandler = e => {
+    if (e.key === 'Enter') {
+      window.document.querySelector(`[id="${htmlid}"]`).value = ''
     }
   }
 
-  const loadChats = () => {
-      return chatData.map((v,k) => {
-        let className = ''
-        let img = v.body.idUser === currentUser.id ? currentUser.image : v.body.image
-        className=v.body.idUser === currentUser.id ? 'myChat' : ''
-        return (
+  const loadChatItem = () => {
+    return chatData.map((v, k) => {
+      let className = ''
+      let img =
+        v.body.idUser === currentUser.id ? currentUser.image : v.body.image
+      className = v.body.idUser === currentUser.id ? 'myChat' : ''
+      return (
         <div className={`chat_item ${className}`} key={k}>
-        <Avatar size={32} src={img} style={{marginTop: '8px'}}/>
-        <div className='chat_data'>
-          {v.body.body}
+          <Avatar size={32} src={img} style={{ marginTop: '8px' }} />
+          <div className="chat_data">{v.body.body}</div>
         </div>
-        </div>
-      )})
+      )
+    })
   }
 
-  return <>
-    <div className={`window_chatBar ${classNameHeader ? 'minimize_window_chatBar' : ''}`}  >
-      <div className='header_window_chatBar window_width' onClick={() => {
-        setClassNameBody(!classNameBody)
-        setClassNameHeader(!classNameHeader)
-      }}>
-        <Badge color='green' style={{ backgroundColor: '#52c41a', margin: '5px' }}>
-          <Avatar size={32} src={image} />
-        </Badge>
-        <p >{name}</p>
-      </div>
-      <CloseOutlined
-        onClick={() => onClose(htmlid)}
-        style={{
-          position: 'absolute',
-          marginTop: '1em',
-          marginLeft: classNameBody ? '12em' : '18em'
-        }} />
-      <div className={`content_window_chatBar window_width ${classNameBody ? 'hide_window_chatBar' : ''}`} >
-        {loadChats()}
-      </div>
-      <div className={`footer_window_chatBar window_width ${classNameBody ? 'hide_window_chatBar' : ''}`} >
-        <input 
-        id={htmlid}
-        placeholder='Nhập tin nhắn ...'  
-        ref={message} 
-        onKeyDown={(e) => sendChatHandler(e)}
+  return (
+    <>
+      <div
+        className={`window_chatBar ${
+          classNameHeader ? 'minimize_window_chatBar' : ''
+        }`}
+      >
+        <div
+          className="header_window_chatBar window_width"
+          onClick={() => {
+            setClassNameBody(!classNameBody)
+            setClassNameHeader(!classNameHeader)
+          }}
+        >
+          <Badge
+            color="green"
+            style={{ backgroundColor: '#52c41a', margin: '5px' }}
+          >
+            <Avatar size={32} src={image} />
+          </Badge>
+          <p>{name}</p>
+        </div>
+        <CloseOutlined
+          onClick={() => onClose(htmlid)}
+          style={{
+            position: 'absolute',
+            marginTop: '1em',
+            marginLeft: classNameBody ? '12em' : '18em',
+          }}
         />
+        <div
+          className={`content_window_chatBar window_width ${
+            classNameBody ? 'hide_window_chatBar' : ''
+          }`}
+        >
+          {loadChatItem()}
+        </div>
+        <div
+          className={`footer_window_chatBar window_width ${
+            classNameBody ? 'hide_window_chatBar' : ''
+          }`}
+        >
+          <input
+            id={htmlid}
+            placeholder="Nhập tin nhắn ..."
+            ref={message}
+            onKeyDown={e => sendChatHandler(e)}
+          />
+        </div>
       </div>
-    </div>
-
-  </>
+    </>
+  )
 }
 
 export default Index

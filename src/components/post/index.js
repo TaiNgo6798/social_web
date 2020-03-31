@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext } from 'react'
-import { useMutation, useLazyQuery } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/react-hooks'
 import {
   DeleteOutlined,
   EditOutlined,
@@ -92,7 +92,7 @@ const Index = props => {
   }
   const { confirm } = Modal
   const postDay = new Date(time)
-  
+
   const { user: currentUser } = useContext(UserContext)
   const { setDeleteID, setEditData } = useContext(PostContext)
   const [deleteAPost] = useMutation(DELETE_ONE_POST)
@@ -206,9 +206,11 @@ const Index = props => {
       who: currentUser,
       react: reaction,
     }
+    // them like moi
     if (likes.filter(v => v.who._id === currentUser._id).length === 0) {
       setLikes([...likes, newLike])
     } else {
+      // thay doi reaction (like => love)
       let newList = likes.map(v => {
         if (v.who._id === currentUser._id) {
           v.react = reaction
@@ -258,9 +260,9 @@ const Index = props => {
               {`${user.firstName || ''} ${user.lastName || ' '}`}
             </p>
             <div className="time">
-            <Tooltip title={moment(postDay).format('YYYY-MM-DD HH:mm:ss')}>
-            <span>{moment(postDay).fromNow()}</span>
-          </Tooltip>
+              <Tooltip title={moment(postDay).format('YYYY-MM-DD HH:mm:ss')}>
+                <span>{moment(postDay).fromNow()}</span>
+              </Tooltip>
             </div>
           </div>
           {user._id === currentUser._id && (
@@ -337,10 +339,7 @@ const Index = props => {
         <div className="comments">
           {showComments ? (
             <>
-              <CreateComment
-                postID={_id}
-                user={currentUser}
-              />
+              <CreateComment postID={_id} user={currentUser} />
               <Comments
                 postID={_id}
                 currentUser={currentUser}
